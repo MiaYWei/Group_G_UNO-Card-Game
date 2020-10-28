@@ -85,9 +85,28 @@ const Deck *delete_card(void)
  * @return true  remaining pile is empty
  * @return false remaining pile is not empty
  */
-bool is_remaining_pile_empty() 
+bool is_remaining_pile_empty(void) 
 {
     return remaining_cards == NULL;
+}
+
+/**
+ * @brief Get the remaining pile length 
+ * 
+ * @return int the length of the remaining pile, 
+ *         which means how many cards are available in the remaining pile.
+ */
+int get_remaining_pile_length(void)
+{
+    int length = 0;
+    Deck* temp_pile = remaining_cards;
+
+    while (temp_pile != NULL){
+        temp_pile = temp_pile->next;
+        length++;
+    }
+
+    return length;
 }
 
 /**

@@ -71,7 +71,15 @@ const Deck *delete_card(void);
  * @return true  remaining pile is empty
  * @return false remaining pile is not empty
  */
-bool is_remaining_pile_empty();
+bool is_remaining_pile_empty(void);
+
+/**
+ * @brief Get the remaining pile length 
+ * 
+ * @return int the length of the remaining pile, 
+ *         which means how many cards are available in the remaining pile.
+ */
+int get_remaining_pile_length(void);
 
 /**
  * @brief Determins the card is playable or not by comparing the card with current card
