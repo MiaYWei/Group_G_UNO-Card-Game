@@ -73,5 +73,13 @@ const Deck *delete_card(void);
  */
 bool is_remaining_pile_empty();
 
+/**
+ * @brief Determins the card is playable or not by comparing the card with current card
+ *        If the color or the name is same, then it's playable
+ * @param card The card which needs to be checked is playable or not
+ * @return true The card is playable
+ * @return false The card is not playable
+ */
+bool is_playable_card(Card card);
 
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once

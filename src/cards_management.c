@@ -5,8 +5,9 @@
 #include "cards_management.h"
 
 /* Global variables */
-Deck* remaining_cards = NULL;               /** remaining cards to draw */
-Deck* discard_cards = NULL;                 /** discarded cards */
+Deck* remaining_cards = NULL;               /* remaining cards to draw */
+Deck* discard_cards = NULL;                 /* discarded cards */
+Card current_card;                          /* last played card on the table */
 
 int main (void)
 {
@@ -31,8 +32,8 @@ int initialize_cards(void)
     Card card;
     int result = 0;
 
-    for (i = RED; i <= YELLOW; i++){
-        for (j = ZERO; j <= NINE; j++){
+    for (i = RED; i <= YELLOW; i++) {
+        for (j = ZERO; j <= NINE; j++) {
             card.color = i;
             card.name = j;
             result += insert_card(card);
@@ -53,8 +54,7 @@ int initialize_cards(void)
 int insert_card(const Card card) 
 {
     Deck* cards_link = (Deck*)malloc(sizeof(Deck));
-    if (cards_link == NULL)
-    {
+    if (cards_link == NULL) {
         printf("Fail to malloc memory when insert the card.\n");
         return MALLOC_FAIL;
     }
@@ -88,4 +88,22 @@ const Deck *delete_card(void)
 bool is_remaining_pile_empty() 
 {
     return remaining_cards == NULL;
+}
+
+/**
+ * @brief Determins the card is playable or not by comparing the card with current card
+ *        If the color or the name is same, then it's playable
+ * @param card The card which needs to be checked is playable or not
+ * @return true The card is playable
+ * @return false The card is not playable
+ */
+bool is_playable_card(Card card)
+{
+    bool result = false;
+
+    if ((card.color == current_card.color) || (card.name == current_card.name)) {
+        result = true;
+    }
+
+    return result;
 }
