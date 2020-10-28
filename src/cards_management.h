@@ -7,35 +7,35 @@
 /* Totally 52 cards, which includes
 * Release 1: 10 cards per colour;
 * Release 2: 4 Skip cards; 4 Draw One cards; 2 Wild cards; 2 Wild Draw Two cards*/
-#define MAX_CARDS_NUM   52 
+#define MAX_CARDS_NUM   40
 #define LINE_SIZE       1000         /*LINESIZE to read input */
 #define MALLOC_FAIL     1
 #define SUCCESS         0
 #define PLAYERS_NUM     2
 #define DEAL_CARDS_NUM  5
 
-typedef enum playerType { HUMAN_PLAYER, COMPUTER } PlayerType;
+typedef enum playerType { HUMAN_PLAYER, COMPUTER_PLAYER } PlayerType;
 typedef enum direction { CLOCKWISE, COUNTER_CLOCKWISE } Direction;
 typedef enum color { RED, BLUE, GREEN, YELLOW } Color;
 typedef enum card_name { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE } CardName;
 
 /* Card struct */
 typedef struct card {
-    Color color;      /* Color code for card */
-    CardName name;    /* Name code for card */
+    Color color;               /* Color code for card */
+    CardName name;             /* Name code for card */
 } Card;
 
 /* Deck struct, which is a Linked-list */
 typedef struct deck {
-    Card card;            /* The current card this deck holds */
-    struct deck* next;    /* Pointer to the next deck item */
+    Card card;                  /* The current card this deck holds */
+    struct deck* next;          /* Pointer to the next deck item */
 } Deck;
 
 /* Player struct */
 typedef struct player {
     PlayerType type;            /* The player type*/
-    int length;           /* The length of the deck on the player's hand */
-    Deck* cards_on_hand;          /* Pointer to the player's deck on hand */
+    int length;                 /* The length of the deck on the player's hand */
+    Deck* cards_on_hand;        /* Pointer to the player's deck on hand */
 } Player;
 
 
@@ -63,7 +63,7 @@ int insert_card(const Card card);
  * 
  * @return struct Deck* pointer which points to the deleted card
  */
-const Deck *delete_card(void);
+const Deck *get_card_from_remaining_pile(void);
 
 /**
  * @brief Checks the if there is still have available cads in the remianing pile.
@@ -89,5 +89,20 @@ int get_remaining_pile_length(void);
  * @return false The card is not playable
  */
 bool is_playable_card(Card card);
+
+/**
+ * @brief Initialize players global variables
+ * 
+ */
+void initialize_players(void);
+
+/**
+ * @brief Deals each player 5 cards at the start of the game setup
+ *        Use current_position and next player to deal card to players in order
+ * 
+ * @return int   0 - Inserting is successful;
+ *               1 - Inserting card is failed, since malloc memory fails.
+ */
+int deal_cards(void);
 
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once
