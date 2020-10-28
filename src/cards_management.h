@@ -189,9 +189,21 @@ void swap_cards(Card* a, Card* b);
  */
 int discard_card(PlayerType player);
 
+/**
+ * @brief Draws the requested number of cards from the remaining pile for the current player
+ *        If there is no cards left in the remaining pile, then place all the cards from discard pile
+ *        into the remaining pile.
+ *
+ * @param num_draw_cards number of draw cards
+ * @param player emum type variable: The specific playe who draws the cards
+ * @return int   0 - Successful;
+ *               1 - Failed.
+ */
+int draw_cards(int num_draw_cards, PlayerType player);
 
 int test_initialize_cards(void);
 int test_deal_cards(void);
 int test_sort_cards_on_hand(void);
 int test_discard_card(void);
+int test_draw_cards(void);
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once

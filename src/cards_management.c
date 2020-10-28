@@ -21,6 +21,7 @@ int main (void)
     result += test_deal_cards();
     result += test_sort_cards_on_hand();
     result += test_discard_card();
+    result += test_draw_cards();
     return result;
 }
 
@@ -161,11 +162,8 @@ const Deck *get_card_from_player_on_hand(PlayerType player)
  */
 const Deck* find_playable_card(Card on_table_card, PlayerType player) 
 {
-    //start from the first link
     Deck* current = players[player].cards_on_hand;
-
-    /*if list is empty */
-    if(players[player].cards_on_hand == NULL) {
+    if (current == NULL) {
         return NULL;
     }
 
@@ -197,7 +195,7 @@ void display_cards_list(const Deck *list_ptr)
         temp_list_ptr = temp_list_ptr->next;
     }
         
-    printf(" ]");
+    printf(" ]\n");
 }
 
 /**
@@ -412,27 +410,37 @@ int discard_card(PlayerType player)
     return result;
 }
 
-// /**
-//  * @brief Draws the requested number of cards from the remaining pile for the current player
-//  *        If there is no cards left in the remaining pile, then place all the cards from discard pile
-//  *        into the remaining pile.
-//  *
-//  * @param num_draw_cards number of draw cards
-//  */
-// int draw_cards(int num_draw_cards)
-// {   
-//     int i;
-//     Deck* draw_card;
+/**
+ * @brief Draws the requested number of cards from the remaining pile for the current player
+ *        If there is no cards left in the remaining pile, then place all the cards from discard pile
+ *        into the remaining pile.
+ *
+ * @param num_draw_cards number of draw cards
+ * @param player emum type variable: The specific playe who draws the cards
+ * @return int   0 - Successful;
+ *               1 - Failed.
+ */
+int draw_cards(int num_draw_cards, PlayerType player)
+{   
+    int i;
+    const Deck* draw_card;
+    const Deck* temp_deck;
+    int result;
     
-//     for (i = 0; i < num_draw_cards; i++) 
-//     {
-//         if (remaining_cards != NULL)
-//         {
-//             draw_card = delete_card_from_remaining_pile();
-//         }
-//     }
+    for (i = 0; i < num_draw_cards; i++) 
+    {
+        if (remaining_cards == NULL)
+        {
+            while (discard_cards != NULL){
+                temp_deck = get_card_from_discard_pile();
+                result += add_card_remaining_pile(temp_deck->card);
+            }
+        }
 
-// }
+        draw_card = get_card_from_remaining_pile();
+        result = add_card_on_hand(draw_card->card, player);        
+    }
+}
 
 /*#################################### Test Functions ####################################*/
 int test_initialize_cards(void)
@@ -498,6 +506,26 @@ int test_discard_card(void)
     display_cards_list(players[HUMAN_PLAYER].cards_on_hand);
     printf("\n Computer Player Cards List: ");
     display_cards_list(players[COMPUTER_PLAYER].cards_on_hand);
+
+    return result;
+}
+
+int test_draw_cards(void)
+{   
+    current_card.color = BLUE;
+    current_card.name = NINE;
+
+    int result;
+    printf("\n------- Draw Card-------\n");
+    printf("Before......");
+    display_cards_list(players[HUMAN_PLAYER].cards_on_hand);
+    result = draw_cards(1, HUMAN_PLAYER);
+    printf("After.......");
+    display_cards_list(players[HUMAN_PLAYER].cards_on_hand);
+    printf("\nThe last card on the table: (%d, %d) \n", current_card.color, current_card.name);
+    printf("Then sort card.......");
+    result += sort_cards_on_hand(HUMAN_PLAYER);
+    display_cards_list(players[HUMAN_PLAYER].cards_on_hand);
 
     return result;
 }
