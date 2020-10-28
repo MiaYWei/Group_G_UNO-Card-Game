@@ -98,11 +98,28 @@ void initialize_players(void);
 
 /**
  * @brief Deals each player 5 cards at the start of the game setup
- *        Use current_position and next player to deal card to players in order
  * 
  * @return int   0 - Inserting is successful;
  *               1 - Inserting card is failed, since malloc memory fails.
  */
 int deal_cards(void);
+
+/**
+ * @brief Sorts the on hand cards for the specific player by
+ *        placing all the playable card on the top of the player's deck.
+ * 
+ * @param sort_player emum type variable: The specific player needs to sort his/her on hand cards 
+ * @return int SUCCESS - Initialization is successful
+ *             MALLOC_FAIL - Initialization is failed because of memory malloc fails 
+ */
+int sort_cards_on_hand(PlayerType sort_player);
+
+/**
+ * @brief Swaps the position of card a and card b
+ *
+ * @param a pointer to card a;
+ * @param b pointer to card b;
+ */
+void swap_cards(Card* a, Card* b);
 
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once

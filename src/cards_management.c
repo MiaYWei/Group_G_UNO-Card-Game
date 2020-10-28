@@ -102,7 +102,7 @@ const Deck *get_card_from_remaining_pile(void)
  * @return true  remaining pile is empty
  * @return false remaining pile is not empty
  */
-bool is_remaining_pile_empty() 
+bool is_remaining_pile_empty(void) 
 {
     return remaining_cards == NULL;
 }
@@ -159,7 +159,6 @@ void initialize_players(void)
 
 /**
  * @brief Deals each player 5 cards at the start of the game setup
- *        Use current_position and next player to deal card to players in order
  * 
  * @return int   0 - Inserting is successful;
  *               1 - Inserting card is failed, since malloc memory fails.
@@ -187,4 +186,75 @@ int deal_cards(void)
     }
 
     return SUCCESS;
+}
+
+/**
+ * @brief Sorts the on hand cards for the specific player by
+ *        placing all the playable card on the top of the player's deck.
+ * 
+ * @param sort_player emum type variable: The specific player needs to sort his/her on hand cards 
+ * @return int SUCCESS - Initialization is successful
+ *             MALLOC_FAIL - Initialization is failed because of memory malloc fails 
+ */
+int sort_cards_on_hand(PlayerType sort_player)
+{
+    int i;
+    int length = players[sort_player].length;
+    int index = 0;
+
+    /*Copy the cards from the current player's hand into array*/
+    Deck* current = malloc(sizeof(Deck));
+    if (current == NULL) {
+        printf("Fail to malloc memory when sort the on hand cards.\n");
+        return MALLOC_FAIL;
+    } 
+    current = players[sort_player].cards_on_hand;
+
+    Card* sorted_cards = malloc(sizeof(Card) * length);
+    if (sorted_cards == NULL) {
+        printf("Fail to malloc memory when sort the on hand cards.\n");
+        free (current);
+        return MALLOC_FAIL;
+    }
+
+    for (i = 0; i < length; i++) 
+    {
+        sorted_cards[i].color = current->card.color;
+        sorted_cards[i].name = current->card.name;
+        current = current->next;
+    }
+
+    /* Place all the playable cards on the top of the player's deck*/
+    for (i = 0; i < length; i++) {
+        if (is_playable_card(sorted_cards[i])) 
+        {
+            swap_cards(&sorted_cards[i], &sorted_cards[index]);
+            index++;
+        }
+    }
+
+    /*Copy the sorted cards to player's on hand deck*/
+    current = players[sort_player].cards_on_hand;
+
+    for (i = 0; i < length; i++) {
+        current->card = sorted_cards[i];
+        current = current->next;
+    }
+
+    free (current);
+    free (sorted_cards);
+    return SUCCESS;
+}
+
+/**
+ * @brief Swaps the position of card a and card b
+ *
+ * @param a pointer to card a;
+ * @param b pointer to card b;
+ */
+void swap_cards(Card* a, Card* b)
+{
+    Card temp = *a;
+    *a = *b;
+    *b = temp;
 }
