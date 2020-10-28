@@ -4,33 +4,34 @@
 #include <string.h>
 #include "cards_management.h"
 
+
 /* Global variables */
 Deck* remaining_cards = NULL;               /* remaining cards to draw */
 Deck* discard_cards = NULL;                 /* discarded cards */
 Card current_card;                          /* last played card on the table */
-Player players[PLAYERS_NUM];                /* array of players */                      
+Player players[PLAYERS_NUM];                /* array of players */ 
 
 int main (void)
 {
-    int result; 
-    int length;
-    result = initialize_cards();
-    length = get_remaining_pile_length();
-    if ((0 == result) && (length == MAX_CARDS_NUM)) {
-        printf("initialize_cards......successful!\n");
-    }
+    int result = 0; 
 
+    printf("--------------- Start the Game ---------------\n");
+    result = test_initialize_cards();
+    result += test_deal_cards();
+    result += test_sort_cards_on_hand();
+    return result;
+}
+
+/**
+ * @brief initialize game which includes initialize cards and initialize players
+ * 
+ * @return int 0 - Initialization is successful;
+ *             1 - Initialization is failed, since malloc memory fails
+ */
+int initialize_game(void)
+{
+    int result = initialize_cards();
     initialize_players();
-
-    result += deal_cards();
-    length = get_remaining_pile_length();
-    if ((0 == result) 
-        && (length == (MAX_CARDS_NUM - DEAL_CARDS_NUM * PLAYERS_NUM))
-        && (players[0].length == DEAL_CARDS_NUM) 
-        && (players[1].length == DEAL_CARDS_NUM)) {
-        printf("deal_cards......successful!\n");
-    }
-
     return result;
 }
 
@@ -52,7 +53,7 @@ int initialize_cards(void)
         for (j = ZERO; j <= NINE; j++) {
             card.color = i;
             card.name = j;
-            result += insert_card(card);
+            result += add_card_remaining_pile(card);
         }
     }
     
@@ -62,13 +63,13 @@ int initialize_cards(void)
 
 /**
  * @brief All the cards are managed in a linked list. 
- *        This function is used to insert a new card to the head of the link. 
+ *        This function is used to add a new card to the head of the link. 
  * 
  * @param card The specific card which is inserted.
- * @return int   0 - Inserting is successful;
- *               1 - Inserting card is failed, since malloc memory fails.
+ * @return int   0 - Successful;
+ *               1 - Failed, since malloc memory fails.
  */
-int insert_card(const Card card) 
+int add_card_remaining_pile(const Card card) 
 {
     Deck* cards_link = (Deck*)malloc(sizeof(Deck));
     if (cards_link == NULL) {
@@ -94,6 +95,26 @@ const Deck *get_card_from_remaining_pile(void)
     Deck* temp_deck = remaining_cards;
     remaining_cards = remaining_cards->next; 
     return temp_deck;  
+}
+
+/**
+ * @brief Displays the detailed card infomation from the card list 
+ * 
+ * @param list_ptr The pointer which points to the beginning of the cards list
+ */
+void display_cards_list(const Deck *list_ptr) 
+{
+    const Deck *temp_list_ptr;
+    temp_list_ptr = list_ptr;
+
+    printf("[ ");
+
+    while(temp_list_ptr != NULL) {
+        printf("(%d,%d) ", temp_list_ptr->card.color, temp_list_ptr->card.name);
+        temp_list_ptr = temp_list_ptr->next;
+    }
+        
+    printf(" ]");
 }
 
 /**
@@ -135,13 +156,11 @@ int get_remaining_pile_length(void)
  */
 bool is_playable_card(Card card)
 {
-    bool result = false;
-
     if ((card.color == current_card.color) || (card.name == current_card.name)) {
-        result = true;
+        return true;
     }
 
-    return result;
+    return false;
 }
 
 /**
@@ -155,35 +174,53 @@ void initialize_players(void)
         players[i].length = 0;
         players[i].cards_on_hand = NULL;
     }
+
+    return;
 }
 
 /**
  * @brief Deals each player 5 cards at the start of the game setup
  * 
- * @return int   0 - Inserting is successful;
- *               1 - Inserting card is failed, since malloc memory fails.
+ * @return int   0 - Successful;
+ *               1 - Failed, since malloc memory fails.
  */
 int deal_cards(void)
 {   
     int i, j;
     const Deck* dealt_card;
+    int result = SUCCESS;
     
-    for (i = 0; i < DEAL_CARDS_NUM; i++)
-    {
-        for (j = 0; j < PLAYERS_NUM; j++)
-        {
+    for (i = 0; i < DEAL_CARDS_NUM; i++) {
+        for (j = 0; j < PLAYERS_NUM; j++) {
             dealt_card = get_card_from_remaining_pile();
-            players[j].cards_on_hand = malloc(sizeof(Deck));
-            if (players[j].cards_on_hand == NULL) {
-                printf("Fail to malloc memory when insert the card.\n");
-                return MALLOC_FAIL;
-            }
-
-            memcpy(&players[j].cards_on_hand->card, &dealt_card->card, sizeof(Card));
-            players[j].cards_on_hand->next = NULL;
+            result += add_card_on_hand(dealt_card->card, (PlayerType)j);
             players[j].length++;
         }
     }
+
+    return result;
+}
+
+/**
+ * @brief Adds one card to the specific player's on hand cards list
+ * 
+ * @param card structure type varialble, includes card name and card color information 
+ * @param player enum type varialble, which indicates the specific palyer type
+ * @return int   0 - Successful;
+ *               1 - Failed, since malloc memory fails.
+ */
+int add_card_on_hand(const Card card, PlayerType player) 
+{
+    Deck* cards_link = (Deck*)malloc(sizeof(Deck));
+    if (cards_link == NULL) {
+        printf("Fail to malloc memory when insert the card.\n");
+        return MALLOC_FAIL;
+    }
+
+    memcpy(&cards_link->card, &card, sizeof(Card));
+
+    cards_link->next = players[player].cards_on_hand;
+    players[player].cards_on_hand = cards_link;
 
     return SUCCESS;
 }
@@ -193,8 +230,8 @@ int deal_cards(void)
  *        placing all the playable card on the top of the player's deck.
  * 
  * @param sort_player emum type variable: The specific player needs to sort his/her on hand cards 
- * @return int SUCCESS - Initialization is successful
- *             MALLOC_FAIL - Initialization is failed because of memory malloc fails 
+ * @return int SUCCESS - Successful;
+ *             MALLOC_FAIL - Failed because of memory malloc fails 
  */
 int sort_cards_on_hand(PlayerType sort_player)
 {
@@ -226,8 +263,7 @@ int sort_cards_on_hand(PlayerType sort_player)
 
     /* Place all the playable cards on the top of the player's deck*/
     for (i = 0; i < length; i++) {
-        if (is_playable_card(sorted_cards[i])) 
-        {
+        if (is_playable_card(sorted_cards[i])) {
             swap_cards(&sorted_cards[i], &sorted_cards[index]);
             index++;
         }
@@ -257,4 +293,56 @@ void swap_cards(Card* a, Card* b)
     Card temp = *a;
     *a = *b;
     *b = temp;
+}
+
+
+/*#################################### Test Functions ####################################*/
+int test_initialize_cards(void)
+{
+    int result = initialize_cards();
+    int length = get_remaining_pile_length();
+    if ((0 == result) && (length == MAX_CARDS_NUM)) {
+        printf("initialize_cards......successful!\n");
+    }
+
+    return result;
+}
+
+int test_deal_cards(void)
+{
+    initialize_players();
+    int result = deal_cards();
+    int length = get_remaining_pile_length();
+    if ((0 == result) 
+        && (length == (MAX_CARDS_NUM - DEAL_CARDS_NUM * PLAYERS_NUM))
+        && (players[0].length == DEAL_CARDS_NUM) 
+        && (players[1].length == DEAL_CARDS_NUM)) {
+        printf("deal_cards......successful!\n");
+    }
+
+    printf(" Human Player Cards List: ");
+    display_cards_list(players[HUMAN_PLAYER].cards_on_hand);
+    printf("\n Computer Player Cards List:");
+    display_cards_list(players[COMPUTER_PLAYER].cards_on_hand);
+
+    return result;
+}
+
+int test_sort_cards_on_hand(void)
+{   
+    int result;
+    current_card.color = RED;
+    current_card.name = FIVE;
+
+    result = sort_cards_on_hand(HUMAN_PLAYER);
+    result += sort_cards_on_hand(COMPUTER_PLAYER);
+
+    printf("\n\n-------After sorting on hand cards-------");
+    printf("\n The last card on the table: (%d, %d) ", current_card.color, current_card.name);
+    printf("\n Human Player Cards List: ");
+    display_cards_list(players[HUMAN_PLAYER].cards_on_hand);
+    printf("\n Computer Player Cards List: ");
+    display_cards_list(players[COMPUTER_PLAYER].cards_on_hand);
+
+    return result;
 }

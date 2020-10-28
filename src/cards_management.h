@@ -19,6 +19,7 @@ typedef enum direction { CLOCKWISE, COUNTER_CLOCKWISE } Direction;
 typedef enum color { RED, BLUE, GREEN, YELLOW } Color;
 typedef enum card_name { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE } CardName;
 
+
 /* Card struct */
 typedef struct card {
     Color color;               /* Color code for card */
@@ -38,7 +39,6 @@ typedef struct player {
     Deck* cards_on_hand;        /* Pointer to the player's deck on hand */
 } Player;
 
-
 /**
  * @brief Initialize all the cards status and put them in remaining_pile iteratively.
  *        Memeory will be allocated to store all the cards informations.
@@ -50,13 +50,13 @@ int initialize_cards(void);
 
 /**
  * @brief All the cards are managed in a linked list. 
- *        This function is used to insert a new card to the head of the link. 
+ *        This function is used to add a new card to the head of the link. 
  * 
  * @param card The specific card which is inserted.
- * @return int   0 - Inserting is successful;
- *               1 - Inserting card is failed, since malloc memory fails.
+ * @return int   0 - Successful;
+ *               1 - Failed, since malloc memory fails.
  */
-int insert_card(const Card card);
+int add_card_remaining_pile(const Card card);
 
 /**
  * @brief  Deletes the first card from the linked list, and make the next to first link as first.
@@ -64,6 +64,13 @@ int insert_card(const Card card);
  * @return struct Deck* pointer which points to the deleted card
  */
 const Deck *get_card_from_remaining_pile(void);
+
+/**
+ * @brief Displays the detailed card infomation from the card list 
+ * 
+ * @param list_ptr The pointer which points to the beginning of the cards list
+ */
+void display_cards_list(const Deck *list_ptr);
 
 /**
  * @brief Checks the if there is still have available cads in the remianing pile.
@@ -99,18 +106,28 @@ void initialize_players(void);
 /**
  * @brief Deals each player 5 cards at the start of the game setup
  * 
- * @return int   0 - Inserting is successful;
- *               1 - Inserting card is failed, since malloc memory fails.
+ * @return int   0 - Successful;
+ *               1 - Failed, since malloc memory fails.
  */
 int deal_cards(void);
+
+/**
+ * @brief Adds one card to the specific player's on hand cards list
+ * 
+ * @param card structure type varialble, includes card name and card color information 
+ * @param player enum type varialble, which indicates the specific palyer type
+ * @return int   0 - Successful;
+ *               1 - Failed, since malloc memory fails.
+ */
+int add_card_on_hand(const Card card, PlayerType player);
 
 /**
  * @brief Sorts the on hand cards for the specific player by
  *        placing all the playable card on the top of the player's deck.
  * 
  * @param sort_player emum type variable: The specific player needs to sort his/her on hand cards 
- * @return int SUCCESS - Initialization is successful
- *             MALLOC_FAIL - Initialization is failed because of memory malloc fails 
+ * @return int SUCCESS - Successful;
+ *             MALLOC_FAIL - Failed because of memory malloc fails 
  */
 int sort_cards_on_hand(PlayerType sort_player);
 
@@ -122,4 +139,8 @@ int sort_cards_on_hand(PlayerType sort_player);
  */
 void swap_cards(Card* a, Card* b);
 
+
+int test_initialize_cards(void);
+int test_deal_cards(void);
+int test_sort_cards_on_hand(void);
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once
