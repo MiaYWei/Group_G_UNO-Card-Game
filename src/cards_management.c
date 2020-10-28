@@ -66,3 +66,26 @@ int insert_card(const Card card)
 
     return SUCCESS;
 }
+
+/**
+ * @brief  Deletes the first card from the linked list, and make the next to first link as first.
+ * 
+ * @return const Deck* pointer which points to the deleted card
+ */
+const Deck *delete_card(void)
+{
+    Deck* temp_deck = remaining_cards;
+    remaining_cards = remaining_cards->next; 
+    return temp_deck;  
+}
+
+/**
+ * @brief Checks the if there is still have available cads in the remianing pile.
+ * 
+ * @return true  remaining pile is empty
+ * @return false remaining pile is not empty
+ */
+bool is_remaining_pile_empty() 
+{
+    return remaining_cards == NULL;
+}

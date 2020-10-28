@@ -58,4 +58,20 @@ int initialize_cards(void);
  */
 int insert_card(const Card card);
 
+/**
+ * @brief  Deletes the first card from the linked list, and make the next to first link as first.
+ * 
+ * @return struct Deck* pointer which points to the deleted card
+ */
+const Deck *delete_card(void);
+
+/**
+ * @brief Checks the if there is still have available cads in the remianing pile.
+ * 
+ * @return true  remaining pile is empty
+ * @return false remaining pile is not empty
+ */
+bool is_remaining_pile_empty();
+
+
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once
