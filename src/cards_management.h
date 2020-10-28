@@ -59,11 +59,49 @@ int initialize_cards(void);
 int add_card_remaining_pile(const Card card);
 
 /**
+ * @brief All the cards are managed in a linked list. 
+ *        This function is used to add a new card to the discard cards pile. 
+ * 
+ * @param card The specific card which is added.
+ * @return int   0 - Successful;
+ *               1 - Failed, since malloc memory fails.
+ */
+int add_card_discard_pile(const Card card);
+
+/**
  * @brief  Deletes the first card from the linked list, and make the next to first link as first.
+ *         The card will be cut from the card list
  * 
  * @return struct Deck* pointer which points to the deleted card
  */
 const Deck *get_card_from_remaining_pile(void);
+
+/**
+ * @brief  Gets the first card from the discard cards list, and make the next to first link as first.
+ *         The card will be cut from the card list
+ * 
+ * @return const Deck* pointer which points to the deleted card
+ */
+const Deck *get_card_from_discard_pile(void);
+
+/**
+ * @brief Gets the first card from the player's on hand cards list, and make the next to first link as first.
+ *        The card will be cut from the card list
+ * 
+ * @param player enum type variable which indicates the player type
+ * @return const Deck* pointer which points to the deleted card
+ */
+const Deck *get_card_from_player_on_hand(PlayerType player);
+
+/**
+ * @brief Finds a playable cards from player on hand card list, 
+ *        which should be has the same color or same name comparing with the on tabe card 
+ * 
+ * @param on_table_card structure type variable, the current on table card 
+ * @param player        enum type variable which indicates the player type
+ * @return const Deck*  pointer type variable, which points to the playable card.
+ */
+const Deck* find_playable_card(Card on_table_card, PlayerType player);
 
 /**
  * @brief Displays the detailed card infomation from the card list 
@@ -139,8 +177,21 @@ int sort_cards_on_hand(PlayerType sort_player);
  */
 void swap_cards(Card* a, Card* b);
 
+/**
+ * @brief When the player is discarding the card, cut current card out of player's deck 
+ *        then place the discarded card into diacard pile, and ,
+ *        update player's deck length, 
+ *        setup winner if the last card is discarded from the player
+ * 
+ * @param player emum type variable: The specific playe who discards his/her on hand card  
+ * @return int   0 - Successful;
+ *               1 - Failed, since malloc memory fails.
+ */
+int discard_card(PlayerType player);
+
 
 int test_initialize_cards(void);
 int test_deal_cards(void);
 int test_sort_cards_on_hand(void);
+int test_discard_card(void);
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once
