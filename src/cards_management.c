@@ -308,7 +308,7 @@ int add_card_on_hand(const Card card, PlayerType player)
 
 /**
  * @brief Sorts the on hand cards for the specific player by
- *        placing all the playable card on the top of the player's deck.
+ *        placing the playable card on the top of the player's deck.
  * 
  * @param sort_player emum type variable: The specific player needs to sort his/her on hand cards 
  * @return int SUCCESS - Successful;
@@ -516,10 +516,11 @@ int test_draw_cards(void)
     current_card.name = NINE;
 
     int result;
-    printf("\n------- Draw Card-------\n");
+    printf("\n------- Draw Cards-------\n");
     printf("Before......");
     display_cards_list(players[HUMAN_PLAYER].cards_on_hand);
-    result = draw_cards(1, HUMAN_PLAYER);
+    result = draw_cards(2, HUMAN_PLAYER);
+
     printf("After.......");
     display_cards_list(players[HUMAN_PLAYER].cards_on_hand);
     printf("\nThe last card on the table: (%d, %d) \n", current_card.color, current_card.name);

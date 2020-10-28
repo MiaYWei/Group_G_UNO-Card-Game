@@ -161,7 +161,7 @@ int add_card_on_hand(const Card card, PlayerType player);
 
 /**
  * @brief Sorts the on hand cards for the specific player by
- *        placing all the playable card on the top of the player's deck.
+ *        placing the playable card on the top of the player's deck.
  * 
  * @param sort_player emum type variable: The specific player needs to sort his/her on hand cards 
  * @return int SUCCESS - Successful;
