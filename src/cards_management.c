@@ -4,7 +4,7 @@
 #include "cards_management.h"
 
 /* Global variables */
-struct DECK* remaining_pile = NULL;                /* remaining cards to draw */
+struct DECK* draw_pile = NULL;                     /* remaining cards to draw */
 struct DECK* discard_pile = NULL;                  /* discarded cards */
 struct CARD card_on_table;                         /* last played card on the table */
 struct Player players[PLAYERS_NUM];                /* array of players */
@@ -42,6 +42,21 @@ int initialize_game(void)
 }
 
 /**
+ * @brief Initializes players global variables
+ *
+ */
+void initialize_players(void)
+{
+    for (int i = 0; i < PLAYERS_NUM; i++) {
+        players[i].type = (enum PlayerType)i;
+        players[i].length = 0;
+        players[i].cards_on_hand = NULL;
+    }
+
+    return;
+}
+
+/**
  * @brief Initializes all the cards status and put them in remaining deck iteratively.
  *        Memeory will be allocated to store all the cards informations.
  *        If it can't malloc at any point, we will free the deck and return FAIL.
@@ -55,9 +70,9 @@ int initialize_cards(void)
     struct CARD card;
     int result = 0;
     
-    remaining_pile = (struct DECK*)malloc(sizeof(struct DECK));
-    if (remaining_pile == NULL) {      
-        printf("Unable to allocate memory to initizlize remaining_pile.");
+    draw_pile = (struct DECK*)malloc(sizeof(struct DECK));
+    if (draw_pile == NULL) {      
+        printf("Unable to allocate memory to initizlize draw_pile.");
         return -1;
     }
 
@@ -65,7 +80,7 @@ int initialize_cards(void)
         for (j = ZERO; j <= NINE; j++) {
             card.color = i;
             card.name = j;
-            result += add_card_at_beginning(&remaining_pile, card);
+            result += add_card_at_beginning(&draw_pile, card);
         }
     }
 
@@ -73,6 +88,29 @@ int initialize_cards(void)
     if (discard_pile == NULL) {      
         printf("Unable to allocate memory to initizlize discard pile.");
         return -1;
+    }
+
+    return result;
+}
+
+/**
+ * @brief Deals each player 5 cards at the start of the game setup
+ *
+ * @return int   0 - Successful;
+ *               1 - Failed, since malloc memory fails.
+ */
+int deal_cards(void)
+{
+    int i, j;
+    struct DECK* dealt_card;
+    int result = SUCCESS;
+
+    for (i = 0; i < DEAL_CARDS_NUM; i++) {
+        for (j = 0; j < PLAYERS_NUM; j++) {
+            dealt_card = remove_first_card_at_beginning(&draw_pile);
+            result += add_card_at_beginning(&players[(enum PlayerType)j].cards_on_hand, dealt_card->card);
+            players[j].length++;
+        }
     }
 
     return result;
@@ -130,6 +168,12 @@ int add_card_at_end(struct DECK* head, struct CARD card)
     return 0;
 }
 
+/**
+ * @brief remove the first card st the beginning of the card list
+ * 
+ * @param head :poinetr which points to the address of head of card list
+ * @return struct DECK* ointer type variable, which points to the removed card 
+ */
 struct DECK* remove_first_card_at_beginning(struct DECK** head)
 {
     struct DECK* to_delete;
@@ -192,17 +236,6 @@ void display_cards_list(struct DECK* list_ptr)
 }
 
 /**
- * @brief Checks the if there is still have available cads in the remianing DECK.
- *
- * @return true  remaining DECK is empty
- * @return false remaining DECK is not empty
- */
-bool is_remaining_pile_empty(void)
-{
-    return remaining_pile == NULL;
-}
-
-/**
  * @brief Gets the listed cards pile length
  *
  * @return int the length of the listed cards pile,
@@ -222,6 +255,39 @@ int get_pile_length(struct DECK* deck_ptr)
 }
 
 /**
+ * @brief Checks the if there is still have available cads in the specific pile.
+ * 
+ * @param pile the specific type of pile
+ * @return true the pile is empty
+ * @return false  the pile is not empty
+ */
+bool is_pile_empty(enum CardPile pile)
+{
+    bool is_empty = false;
+    
+    switch (pile)
+    {
+        case(DRAW):
+            is_empty = draw_pile == NULL? true: false;
+            break;
+        case(DISCARD):
+            is_empty = discard_pile == NULL? true: false;
+            break;
+        case(HUMAN_PLAYER):
+            is_empty = players[0].cards_on_hand == NULL? true: false;
+            break;
+        case(COMPUTER_PLAYER):
+            is_empty = players[1].cards_on_hand == NULL? true: false;
+            break;
+        default:
+            printf("Invalid pile number.\n");
+            break;
+    }
+
+    return is_empty;
+}
+    
+/**
  * @brief Determins the card is playable or not by comparing the card with current card.
  *        If the color or the name is same, then it's playable
  *
@@ -236,44 +302,6 @@ bool is_playable_card(struct CARD card)
     }
 
     return false;
-}
-
-/**
- * @brief Initializes players global variables
- *
- */
-void initialize_players(void)
-{
-    for (int i = 0; i < PLAYERS_NUM; i++) {
-        players[i].type = (enum PlayerType)i;
-        players[i].length = 0;
-        players[i].cards_on_hand = NULL;
-    }
-
-    return;
-}
-
-/**
- * @brief Deals each player 5 cards at the start of the game setup
- *
- * @return int   0 - Successful;
- *               1 - Failed, since malloc memory fails.
- */
-int deal_cards(void)
-{
-    int i, j;
-    struct DECK* dealt_card;
-    int result = SUCCESS;
-
-    for (i = 0; i < DEAL_CARDS_NUM; i++) {
-        for (j = 0; j < PLAYERS_NUM; j++) {
-            dealt_card = remove_first_card_at_beginning(&remaining_pile);
-            result += add_card_at_beginning(&players[(enum PlayerType)j].cards_on_hand, dealt_card->card);
-            players[j].length++;
-        }
-    }
-
-    return result;
 }
 
 /**
@@ -346,10 +374,17 @@ void swap_cards(struct CARD* a, struct CARD* b)
     *b = temp;
 }
 
-struct DECK *remove_first_playable_card(struct DECK** head, struct CARD card)
+/**
+ * @brief remove the fist playable card in the card list
+ * 
+ * @param head : pointer which points to the head of the list
+ * @return struct DECK* pointer which points to the removed the card
+ */
+struct DECK *remove_first_playable_card(struct DECK** head)
 {
     struct DECK* prev = NULL;
     struct DECK* cur = *head;
+    struct CARD removed_card;
 
     if (*head == NULL) {
         printf("List is already empty.\n");
@@ -358,18 +393,20 @@ struct DECK *remove_first_playable_card(struct DECK** head, struct CARD card)
 
     /* Check if head node contains key */
     while ((*head != NULL) 
-           && (((*head)->card.color == card.color) 
-               || ((*head)->card.name == card.name))) {
+           && (((*head)->card.color == card_on_table.color) 
+               || ((*head)->card.name == card_on_table.name))) {
+        removed_card.color = (*head)->card.color;
+        removed_card.name = (*head)->card.name;
         prev = *head;          // Get reference of head node
         *head = (*head)->next; // Adjust head node link        
         //free(prev);            // Delete prev since it contains reference to head node
-        printf("Successfully deleted the first palyable card (%d, %d) at beginning. \n", card.color, card.name);
+        printf("Successfully deleted the first palyable card (%d, %d) at beginning. \n", removed_card.color, removed_card.name);
         return prev;              // No need to delete further
     }
 
     /* For each node in the list */
     while (cur != NULL) {
-        if ((cur->card.color == card.color) || (cur->card.name == card.name)) {         // Current node contains key
+        if ((cur->card.color == card_on_table.color) || (cur->card.name == card_on_table.name)) {         // Current node contains key
             if (prev != NULL) {
                 prev->next = cur->next; // Adjust links for previous node
             }
@@ -429,7 +466,7 @@ int discard_card(enum PlayerType player, int* ptr_post_condition)
             post_condition = 2;
         }
     } else { /*If there is playable card, then remove the first playable card from on hand cards list*/
-        struct DECK* discard_card = remove_first_playable_card(&players[player].cards_on_hand, card_on_table);
+        struct DECK* discard_card = remove_first_playable_card(&players[player].cards_on_hand);
         memcpy(&card_on_table, &discard_card->card, sizeof(struct CARD));
         printf("discard card on table is (%d, %d)\n", discard_card->card.color, discard_card->card.name);
         result = add_card_at_end(discard_pile, card_on_table);
@@ -465,15 +502,15 @@ int draw_cards(int num_draw_cards, enum PlayerType player)
 
     for (i = 0; i < num_draw_cards; i++)
     {
-        if (remaining_pile == NULL)
+        if (draw_pile == NULL)
         {
             while (discard_pile != NULL) {
                 temp_deck = remove_first_card_at_beginning(&discard_pile);
-                result += add_card_at_end(remaining_pile, temp_deck->card);
+                result += add_card_at_end(draw_pile, temp_deck->card);
             }
         }
 
-        draw_card = remove_first_card_at_beginning(&remaining_pile);
+        draw_card = remove_first_card_at_beginning(&draw_pile);
         result = add_card_at_beginning(&players[player].cards_on_hand, draw_card->card);
     }
 
@@ -494,15 +531,15 @@ struct CARD draw_one_card(enum PlayerType player)
     const struct DECK* temp_deck;
     int result = 1;
 
-    if (remaining_pile == NULL)
+    if (draw_pile == NULL)
     {
         while (discard_pile != NULL) {
             temp_deck = remove_first_card_at_beginning(&discard_pile);
-            result += add_card_at_end(remaining_pile, temp_deck->card);
+            result += add_card_at_end(draw_pile, temp_deck->card);
         }
     }
 
-    draw_deck = remove_first_card_at_beginning(&remaining_pile);
+    draw_deck = remove_first_card_at_beginning(&draw_pile);
     return draw_deck->card;
 }
 
@@ -520,7 +557,7 @@ enum PlayerType get_game_winner(void)
 int test_initialize_cards(void)
 {
     int result = initialize_cards();
-    int length = get_pile_length(remaining_pile);
+    int length = get_pile_length(draw_pile);
     if ((0 == result) && (length == MAX_CARDS_NUM)) {
         printf("initialize_cards......successful!\n");
     }
@@ -532,7 +569,7 @@ int test_deal_cards(void)
 {
     initialize_players();
     int result = deal_cards();
-    int length = get_pile_length(remaining_pile);
+    int length = get_pile_length(draw_pile);
     if ((0 == result)
         && (length == (MAX_CARDS_NUM - DEAL_CARDS_NUM * PLAYERS_NUM))
         && (players[0].length == DEAL_CARDS_NUM)

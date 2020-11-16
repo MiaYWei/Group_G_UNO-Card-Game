@@ -18,6 +18,7 @@ enum PlayerType { HUMAN, COMPUTER};
 enum Direction { CLOCKWISE, COUNTER_CLOCKWISE };
 enum CardColor { RED, BLUE, GREEN, YELLOW };
 enum CardName { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE };
+enum CardPile { DRAW, DISCARD, HUMAN_PLAYER, COMPUTER_PLAYER };
 
 /* Card struct */
 struct CARD {
@@ -47,6 +48,12 @@ struct Player {
 int initialize_game(void);
 
 /**
+ * @brief Initializes players global variables
+ * 
+ */
+void initialize_players(void);
+
+/**
  * @brief Initializes all the cards status and put them in remaining deck iteratively.
  *        Memeory will be allocated to store all the cards informations.
  *        If it can't malloc at any point, we will free the deck and return FAIL.
@@ -54,6 +61,14 @@ int initialize_game(void);
  *             != 0 - Initialization is failed, since malloc memory fails
  */
 int initialize_cards(void);
+
+/**
+ * @brief Deals each player 5 cards at the start of the game setup
+ * 
+ * @return int   0 - Successful;
+ *               1 - Failed, since malloc memory fails.
+ */
+int deal_cards(void);
 
 /**
  * @brief All the cards are managed in a linked list. 
@@ -65,7 +80,20 @@ int initialize_cards(void);
  */
 int add_card_at_beginning(struct DECK** head, struct CARD card);
 
+/**
+ * @brief Creates a new node and adds it at the end of the linked list.
+ *
+ * @param[in/out] head: pointer which points to the head of the linked list.
+ * @param[in] data: int type variable which the data of the new node
+ */
 int add_card_at_end(struct DECK* head, struct CARD card);
+
+/**
+ * @brief remove the first card st the beginning of the card list
+ * 
+ * @param head :poinetr which points to the address of head of card list
+ * @return struct DECK* ointer type variable, which points to the removed card 
+ */
 struct DECK* remove_first_card_at_beginning(struct DECK** head);
 
 /**
@@ -85,20 +113,21 @@ struct DECK* find_playable_card(enum PlayerType player);
 void display_cards_list(struct DECK *list_ptr);
 
 /**
- * @brief Checks the if there is still have available cads in the remianing deck.
- * 
- * @return true  remaining deck is empty
- * @return false remaining deck is not empty
- */
-bool is_remaining_pile_empty(void);
-
-/**
  * @brief Gets the listed cards pile length 
  * 
  * @return int the length of the listed cards pile, 
  *         which means how many cards are available in the specific pile.
  */
 int get_pile_length(struct DECK* deck_ptr);
+
+/**
+ * @brief Checks the if there is still have available cads in the specific pile.
+ * 
+ * @param pile the specific type of pile
+ * @return true the pile is empty
+ * @return false  the pile is not empty
+ */
+bool is_pile_empty(enum CardPile pile);
 
 /**
  * @brief Determins the card is playable or not by comparing the card with current card.
@@ -109,20 +138,6 @@ int get_pile_length(struct DECK* deck_ptr);
  * @return false The card is not playable
  */
 bool is_playable_card(struct CARD card);
-
-/**
- * @brief Initializes players global variables
- * 
- */
-void initialize_players(void);
-
-/**
- * @brief Deals each player 5 cards at the start of the game setup
- * 
- * @return int   0 - Successful;
- *               1 - Failed, since malloc memory fails.
- */
-int deal_cards(void);
 
 /**
  * @brief Sorts the on hand cards for the specific player by
@@ -141,6 +156,15 @@ int sort_cards_on_hand(enum PlayerType sort_player);
  * @param b pointer to card b;
  */
 void swap_cards(struct CARD* a, struct CARD* b);
+
+/**
+ * @brief remove the fist playable card in the card list
+ * 
+ * @param head : pointer which points to the head of the list
+ * @param card : the latest discard card on table
+ * @return struct DECK* pointer which points to the removed the card
+ */
+struct DECK *remove_first_playable_card(struct DECK** head);
 
 /**
  * @brief The player discards a card, 
