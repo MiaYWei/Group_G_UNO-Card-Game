@@ -3,27 +3,6 @@
 #include <string.h>
 #include "cards_management.h"
 
-/* Global variables */
-struct DECK* draw_pile = NULL;                     /* remaining cards to draw */
-struct DECK* discard_pile = NULL;                  /* discarded cards */
-struct CARD card_on_table;                         /* last played card on the table */
-struct Player players[PLAYERS_NUM];                /* array of players */
-enum PlayerType player_on_turn = HUMAN;            /* The current player on turn */
-enum PlayerType game_winner = HUMAN;               /* game winner*/
-
-int main(void)
-{
-    int result = 0;
-
-    printf("--------------- Start the Test ---------------\n");
-    //result = test_initialize_cards();
-    //result += test_deal_cards();
-    //result += test_sort_cards_on_hand();
-    result += test_discard_card();
-    //result += test_draw_cards();
-    return result;
-}
-
 /**
  * @brief Initializes game which includes initialize cards and initialize players
  *
@@ -49,7 +28,7 @@ void initialize_players(void)
 {
     for (int i = 0; i < PLAYERS_NUM; i++) {
         players[i].type = (enum PlayerType)i;
-        players[i].length = 0;
+        players[i].count = 0;
         players[i].cards_on_hand = NULL;
     }
 
@@ -109,7 +88,7 @@ int deal_cards(void)
         for (j = 0; j < PLAYERS_NUM; j++) {
             dealt_card = remove_first_card_at_beginning(&draw_pile);
             result += add_card_at_beginning(&players[(enum PlayerType)j].cards_on_hand, dealt_card->card);
-            players[j].length++;
+            players[j].count++;
         }
     }
 
@@ -315,7 +294,7 @@ bool is_playable_card(struct CARD card)
 int sort_cards_on_hand(enum PlayerType sort_player)
 {
     int i;
-    int length = players[sort_player].length;
+    int length = players[sort_player].count;
     int index = 0;
 
     /*Copy the cards from the current player's hand into array*/
@@ -470,11 +449,11 @@ int discard_card(enum PlayerType player, int* ptr_post_condition)
         memcpy(&card_on_table, &discard_card->card, sizeof(struct CARD));
         printf("discard card on table is (%d, %d)\n", discard_card->card.color, discard_card->card.name);
         result = add_card_at_end(discard_pile, card_on_table);
-        players[player].length--;
+        players[player].count--;
         post_condition = 0;
     }
 
-    if (players[player].length == 0) {
+    if (players[player].count == 0) {
         game_winner = player;
         post_condition = 1;
     }
@@ -572,8 +551,8 @@ int test_deal_cards(void)
     int length = get_pile_length(draw_pile);
     if ((0 == result)
         && (length == (MAX_CARDS_NUM - DEAL_CARDS_NUM * PLAYERS_NUM))
-        && (players[0].length == DEAL_CARDS_NUM)
-        && (players[1].length == DEAL_CARDS_NUM)) {
+        && (players[0].count == DEAL_CARDS_NUM)
+        && (players[1].count == DEAL_CARDS_NUM)) {
         printf("deal_cards......successful!\n");
     }
 
@@ -604,21 +583,42 @@ int test_sort_cards_on_hand(void)
     return result;
 }
 
-int test_discard_card(void)
+void no_card_discarded(void)
+{
+    card_on_table.color = RED;
+    card_on_table.name = EIGHT;
+    player_on_turn = HUMAN;
+}
+
+void card_discarded_from_one_hand_list(void)
+{
+    card_on_table.color = RED;
+    card_on_table.name = NINE;
+    player_on_turn = HUMAN;
+}
+
+int test_discard_card(int test_case)
 {
     int result;
     int discard_post_condition = -1;
 
-    /*Precondition*/
     if (initialize_game()) {
         printf(" Initialize game failed! \n");
     }
     
-    card_on_table.color = RED;
-    card_on_table.name = EIGHT;
-    player_on_turn = HUMAN;
-
-    printf("\n************* Discard Card Test *************\n");
+    switch (test_case)
+    {
+        case (1):
+            no_card_discarded();
+            break;
+        case (2):
+            card_discarded_from_one_hand_list();
+            break;
+        default:
+            break;
+    }
+    
+    printf("\n************* Discard Card Test %d*************\n", test_case);
     printf("Before Discarding Card: \n");
     printf(" Player on turn is %d. (HUMAN_PLAYER = 0; COMPUTER_PLAYER = 1)\n", player_on_turn);
     printf(" The card on table: (%d, %d) \n", card_on_table.color, card_on_table.name);
@@ -665,5 +665,22 @@ int test_draw_cards(void)
     result += sort_cards_on_hand(HUMAN);
     display_cards_list(players[HUMAN].cards_on_hand);
 
+    return result;
+}
+
+
+int main(void)
+{
+    int result = 0;
+
+    printf("--------------- Start the Test ---------------\n");
+    //result = test_initialize_cards();
+    //result += test_deal_cards();
+    //result += test_sort_cards_on_hand();
+    for (int i = 0; i< 2; i++)
+    {
+        result += test_discard_card(i);
+    }
+    //result += test_draw_cards();
     return result;
 }

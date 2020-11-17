@@ -24,20 +24,29 @@ enum CardPile { DRAW, DISCARD, HUMAN_PLAYER, COMPUTER_PLAYER };
 struct CARD {
     enum CardColor color;               /* Color code for card */
     enum CardName name;                 /* Name code for card */
+                                        /* Release2: action*/
 };
 
 /* Deck struct, which is a Linked-list */
 struct DECK {
     struct CARD card;                  /* The current card this deck holds */
-    struct DECK* next;          /* Pointer to the next deck item */
+    struct DECK* next;                 /* Pointer to the next deck item */
 };
 
 /* Player struct */
 struct Player {
     enum PlayerType type;            /* The player type*/
-    int length;                 /* The length of the deck on the player's hand */
-    struct DECK* cards_on_hand;        /* Pointer to the player's deck on hand */
+    int count;                      /* The length of the deck on the player's hand */  
+    struct DECK* cards_on_hand;      /* Pointer to the player's deck on hand */
 };
+
+/* Global variables */
+struct DECK* draw_pile = NULL;                     /* remaining cards to draw */
+struct DECK* discard_pile = NULL;                  /* discarded cards */
+struct Player players[PLAYERS_NUM];                /* array of players */
+struct CARD card_on_table;                         /* last played card on the table */
+enum PlayerType player_on_turn = HUMAN;            /* The current player on turn */
+enum PlayerType game_winner = HUMAN;               /* game winner*/
 
 /**
  * @brief Initializes game which includes initialize cards and initialize players
@@ -216,6 +225,6 @@ enum PlayerType get_game_winner(void);
 int test_initialize_cards(void);
 int test_deal_cards(void);
 int test_sort_cards_on_hand(void);
-int test_discard_card(void);
+int test_discard_card(int test_case);
 int test_draw_cards(void);
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once
