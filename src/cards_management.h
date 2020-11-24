@@ -24,7 +24,6 @@ typedef enum CardPile { DRAW, DISCARD, HUMAN_PLAYER, COMPUTER_PLAYER } CardPile_
 typedef struct CARD {
     CardColor_e color;               /* Color code for card */
     CardName_e name;                 /* Name code for card */
-                                        /* Release2: action*/
 } Card_t;
 
 /* Deck struct, which is a Linked-list */
@@ -80,35 +79,6 @@ int initialize_cards(void);
 int deal_cards(void);
 
 /**
- * @brief All the cards are managed in a linked list.
- *        This function is used to add a new card to the specific cards list.
- * 
- * @param pp_head pointer to the pointer of the list head
- * @param card The specific card which is added.
- * @return int 0 - Successful;
- *             1 - Failed, since malloc memory fails.
- */
-int add_card_at_beginning(Deck_t** pp_head, Card_t card);
-
-/**
- * @brief Adds a new card at the end of the linked list.
- * 
- * @param p_head pointer to the list head
- * @param card  The specific card which is added. 
- * @return int 0 - Successful;
- *             1 - Failed, since malloc memory fails.
- */
-int add_card_at_end(Deck_t* p_head, Card_t card);
-
-/**
- * @brief remove the first card at the beginning of the card list
- * 
- * @param pp_head :poinetr which points to the address of head of card list
- * @return const Deck_t* pointer type variable, which points to the removed card 
- */
-const Deck_t* remove_first_card_at_beginning(Deck_t** pp_head);
-
-/**
  * @brief Finds a playable cards from player on hand card list,
  *        which should be has the same color or same name comparing with the on tabe card
  *
@@ -151,14 +121,6 @@ bool is_playable_card(Card_t card);
  *             MALLOC_FAIL - Failed because of memory malloc fails 
  */
 int sort_cards_on_hand(PlayerType_e sort_player);
-
-/**
- * @brief Swaps the position of card a and card b
- *
- * @param p_a pointer to card a;
- * @param p_b pointer to card b;
- */
-void swap_cards(Card_t* p_a, Card_t* p_b);
 
 /**
  * @brief remove the fist playable card from the card list
@@ -216,9 +178,4 @@ Card_t draw_one_card(PlayerType_e player);
  */
 PlayerType_e get_game_winner(void);
 
-int test_initialize_cards(void);
-int test_deal_cards(void);
-int test_sort_cards_on_hand(void);
-int test_discard_card(int test_case);
-int test_draw_cards(void);
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once

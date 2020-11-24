@@ -3,6 +3,25 @@
 #include <string.h>
 #include "cards_management.h"
 
+int initialize_game(void);
+void initialize_players(void);
+int initialize_cards(void);
+int deal_cards(void);
+int add_card_at_beginning(Deck_t** pp_head, Card_t card);
+int add_card_at_end(Deck_t* p_head, Card_t card);
+const Deck_t* remove_first_card_at_beginning(Deck_t** pp_head);
+const Deck_t* find_playable_card(PlayerType_e player);
+void display_cards_list(const Deck_t *p_list);
+int get_pile_length(Deck_t* p_pile);
+bool is_playable_card(Card_t card);
+int sort_cards_on_hand(PlayerType_e sort_player);
+void swap_cards(Card_t* p_a, Card_t* p_b);
+Deck_t *remove_first_playable_card(Deck_t** pp_head);
+int discard_card(PlayerType_e player, int* p_post_condition);
+int draw_cards(int num_draw_cards, PlayerType_e player);
+Card_t draw_one_card(PlayerType_e player);
+PlayerType_e get_game_winner(void);
+
 /**
  * @brief Initializes game which includes initialize cards and initialize players
  *
@@ -503,6 +522,12 @@ PlayerType_e get_game_winner(void)
 }
 
 /*#################################### Test Functions ####################################*/
+int test_initialize_cards(void);
+int test_deal_cards(void);
+int test_sort_cards_on_hand(void);
+int test_discard_card(int test_case);
+int test_draw_cards(void);
+
 int test_initialize_cards(void)
 {
     int result = initialize_cards();
