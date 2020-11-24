@@ -80,37 +80,40 @@ int initialize_cards(void);
 int deal_cards(void);
 
 /**
- * @brief All the cards are managed in a linked list. 
- *        This function is used to add a new card to the remaining cards deck list. 
+ * @brief All the cards are managed in a linked list.
+ *        This function is used to add a new card to the specific cards list.
  * 
+ * @param pp_head pointer to the pointer of the list head
  * @param card The specific card which is added.
- * @return int   0 - Successful;
- *               1 - Failed, since malloc memory fails.
+ * @return int 0 - Successful;
+ *             1 - Failed, since malloc memory fails.
  */
 int add_card_at_beginning(Deck_t** pp_head, Card_t card);
 
 /**
- * @brief Creates a new node and adds it at the end of the linked list.
- *
- * @param[in/out] head: pointer which points to the head of the linked list.
- * @param[in] data: int type variable which the data of the new node
+ * @brief Adds a new card at the end of the linked list.
+ * 
+ * @param p_head pointer to the list head
+ * @param card  The specific card which is added. 
+ * @return int 0 - Successful;
+ *             1 - Failed, since malloc memory fails.
  */
 int add_card_at_end(Deck_t* p_head, Card_t card);
 
 /**
  * @brief remove the first card at the beginning of the card list
  * 
- * @param head :poinetr which points to the address of head of card list
- * @return struct DECK* pointer type variable, which points to the removed card 
+ * @param pp_head :poinetr which points to the address of head of card list
+ * @return const Deck_t* pointer type variable, which points to the removed card 
  */
 const Deck_t* remove_first_card_at_beginning(Deck_t** pp_head);
 
 /**
- * @brief Finds a playable cards from player on hand card list, 
- *        which should be has the same color or same name comparing with the on tabe card 
- * 
+ * @brief Finds a playable cards from player on hand card list,
+ *        which should be has the same color or same name comparing with the on tabe card
+ *
  * @param player        enum type variable which indicates the player type
- * @return const Deck*  pointer type variable, which points to the playable card.
+ * @return const Deck_t*  pointer type variable, which points to the playable card.
  */
 const Deck_t* find_playable_card(PlayerType_e player);
 
@@ -122,17 +125,17 @@ const Deck_t* find_playable_card(PlayerType_e player);
 void display_cards_list(const Deck_t *p_list);
 
 /**
- * @brief Gets the listed cards pile length 
+ * @brief Gets the listed cards pile length
  * 
- * @return int the length of the listed cards pile, 
- *         which means how many cards are available in the specific pile.
+ * @param p_pile  pointer which points to the specific pile
+ * @return int the length of the card list
  */
-int get_pile_length(Deck_t* p_deck);
+int get_pile_length(Deck_t* p_pile);
 
 /**
- * @brief Determins the card is playable or not by comparing the card with current card.
- *        If the color or the name is same, then it's playable
- * 
+ * @brief Determins the card is playable or not by comparing the card with current card on tables.
+ *        If either the color or the name is same, then it's playable
+ *
  * @param card The card which needs to be checked is playable or not
  * @return true The card is playable
  * @return false The card is not playable
@@ -152,33 +155,33 @@ int sort_cards_on_hand(PlayerType_e sort_player);
 /**
  * @brief Swaps the position of card a and card b
  *
- * @param a pointer to card a;
- * @param b pointer to card b;
+ * @param p_a pointer to card a;
+ * @param p_b pointer to card b;
  */
 void swap_cards(Card_t* p_a, Card_t* p_b);
 
 /**
- * @brief remove the fist playable card in the card list
+ * @brief remove the fist playable card from the card list
  * 
- * @param head : pointer which points to the head of the list
- * @param card : the latest discard card on table
- * @return struct DECK* pointer which points to the removed the card
+ * @param pp_head : pointer which points to pointer of the list head of
+ * @return Deck_t* pointer which points to the removed the card
  */
 Deck_t *remove_first_playable_card(Deck_t** pp_head);
 
 /**
- * @brief The player discards a card, 
+ * @brief The player discards a card,
  *        Firstly to search a playable card in the on hand cards list.
- *        If there is playable card, then cut the first playable card out of player's deck 
- *        then place the discarded card into diacard deck, and update player's deck length, 
+ *        If there is playable card, then cut the first playable card out of player's deck,
+ *        update card_on_table globle variable
+ *        then place the discarded card into discard deck, and update player's deck length,
  *        setup winner if the last card is discarded from the player
- * 
- * @param player enum type variable: The specific player who discards his/her on hand card
- * @param ptr_post_condition pointer which points to int   
- *               0 - Discarding card is successful, end of turn, game continues. 
+ *
+ * @param[in] player enum type variable: The specific player who discards his/her on hand card
+ * @param[out] p_post_condition pointer which points to int type variables
+ *               0 - Discarding card is successful, end of turn, game continues.
  *               1 - Discarding card is successful, end of game, the current player wins the game.
  *               2 - No playable card to discard, end of turn, game continues.
- *               3 - Invalid player type.
+ *               3 - Invalid player.
  * @return int   0 - Successful;
  *               1 - Failed
  */
