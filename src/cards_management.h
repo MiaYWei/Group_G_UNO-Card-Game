@@ -14,39 +14,39 @@
 #define PLAYERS_NUM     2
 #define DEAL_CARDS_NUM  5
 
-enum PlayerType { HUMAN, COMPUTER};
-enum Direction { CLOCKWISE, COUNTER_CLOCKWISE };
-enum CardColor { RED, BLUE, GREEN, YELLOW };
-enum CardName { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE };
-enum CardPile { DRAW, DISCARD, HUMAN_PLAYER, COMPUTER_PLAYER };
+typedef enum PlayerType { HUMAN, COMPUTER} PlayerType_e;
+typedef enum Direction { CLOCKWISE, COUNTER_CLOCKWISE } Direction_e;
+typedef enum CardColor { RED, BLUE, GREEN, YELLOW } CardColor_e;
+typedef enum CardName { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE } CardName_e;
+typedef enum CardPile { DRAW, DISCARD, HUMAN_PLAYER, COMPUTER_PLAYER } CardPile_e;
 
 /* Card struct */
-struct CARD {
-    enum CardColor color;               /* Color code for card */
-    enum CardName name;                 /* Name code for card */
+typedef struct CARD {
+    CardColor_e color;               /* Color code for card */
+    CardName_e name;                 /* Name code for card */
                                         /* Release2: action*/
-};
+} Card_t;
 
 /* Deck struct, which is a Linked-list */
-struct DECK {
-    struct CARD card;                  /* The current card this deck holds */
+typedef struct DECK {
+    Card_t card;                  /* The current card this deck holds */
     struct DECK* next;                 /* Pointer to the next deck item */
-};
+} Deck_t;
 
 /* Player struct */
-struct Player {
-    enum PlayerType type;            /* The player type*/
+typedef struct Player {
+    PlayerType_e type;            /* The player type*/
     int count;                      /* The length of the deck on the player's hand */  
-    struct DECK* cards_on_hand;      /* Pointer to the player's deck on hand */
-};
+    Deck_t* cards_on_hand;      /* Pointer to the player's deck on hand */
+} Player_t;
 
 /* Global variables */
-struct DECK* draw_pile = NULL;                     /* remaining cards to draw */
-struct DECK* discard_pile = NULL;                  /* discarded cards */
-struct Player players[PLAYERS_NUM];                /* array of players */
-struct CARD card_on_table;                         /* last played card on the table */
-enum PlayerType player_on_turn = HUMAN;            /* The current player on turn */
-enum PlayerType game_winner = HUMAN;               /* game winner*/
+Deck_t* g_draw_pile = NULL;                     /* remaining cards to draw */
+Deck_t* g_discard_pile = NULL;                  /* discarded cards */
+Player_t g_players[PLAYERS_NUM];                /* array of players */
+Card_t g_card_on_table;                         /* last played card on the table */
+PlayerType_e g_player_on_turn = HUMAN;            /* The current player on turn */
+PlayerType_e g_game_winner = HUMAN;               /* game winner*/
 
 /**
  * @brief Initializes game which includes initialize cards and initialize players
@@ -87,7 +87,7 @@ int deal_cards(void);
  * @return int   0 - Successful;
  *               1 - Failed, since malloc memory fails.
  */
-int add_card_at_beginning(struct DECK** head, struct CARD card);
+int add_card_at_beginning(Deck_t** pp_head, Card_t card);
 
 /**
  * @brief Creates a new node and adds it at the end of the linked list.
@@ -95,15 +95,15 @@ int add_card_at_beginning(struct DECK** head, struct CARD card);
  * @param[in/out] head: pointer which points to the head of the linked list.
  * @param[in] data: int type variable which the data of the new node
  */
-int add_card_at_end(struct DECK* head, struct CARD card);
+int add_card_at_end(Deck_t* p_head, Card_t card);
 
 /**
- * @brief remove the first card st the beginning of the card list
+ * @brief remove the first card at the beginning of the card list
  * 
  * @param head :poinetr which points to the address of head of card list
- * @return struct DECK* ointer type variable, which points to the removed card 
+ * @return struct DECK* pointer type variable, which points to the removed card 
  */
-struct DECK* remove_first_card_at_beginning(struct DECK** head);
+const Deck_t* remove_first_card_at_beginning(Deck_t** pp_head);
 
 /**
  * @brief Finds a playable cards from player on hand card list, 
@@ -112,14 +112,14 @@ struct DECK* remove_first_card_at_beginning(struct DECK** head);
  * @param player        enum type variable which indicates the player type
  * @return const Deck*  pointer type variable, which points to the playable card.
  */
-struct DECK* find_playable_card(enum PlayerType player);
+const Deck_t* find_playable_card(PlayerType_e player);
 
 /**
  * @brief Displays the detailed card infomation from the card list 
  * 
- * @param list_ptr The pointer which points to the beginning of the cards list
+ * @param p_list The pointer which points to the beginning of the cards list
  */
-void display_cards_list(struct DECK *list_ptr);
+void display_cards_list(const Deck_t *p_list);
 
 /**
  * @brief Gets the listed cards pile length 
@@ -127,16 +127,7 @@ void display_cards_list(struct DECK *list_ptr);
  * @return int the length of the listed cards pile, 
  *         which means how many cards are available in the specific pile.
  */
-int get_pile_length(struct DECK* deck_ptr);
-
-/**
- * @brief Checks the if there is still have available cads in the specific pile.
- * 
- * @param pile the specific type of pile
- * @return true the pile is empty
- * @return false  the pile is not empty
- */
-bool is_pile_empty(enum CardPile pile);
+int get_pile_length(Deck_t* p_deck);
 
 /**
  * @brief Determins the card is playable or not by comparing the card with current card.
@@ -146,7 +137,7 @@ bool is_pile_empty(enum CardPile pile);
  * @return true The card is playable
  * @return false The card is not playable
  */
-bool is_playable_card(struct CARD card);
+bool is_playable_card(Card_t card);
 
 /**
  * @brief Sorts the on hand cards for the specific player by
@@ -156,7 +147,7 @@ bool is_playable_card(struct CARD card);
  * @return int SUCCESS - Successful;
  *             MALLOC_FAIL - Failed because of memory malloc fails 
  */
-int sort_cards_on_hand(enum PlayerType sort_player);
+int sort_cards_on_hand(PlayerType_e sort_player);
 
 /**
  * @brief Swaps the position of card a and card b
@@ -164,7 +155,7 @@ int sort_cards_on_hand(enum PlayerType sort_player);
  * @param a pointer to card a;
  * @param b pointer to card b;
  */
-void swap_cards(struct CARD* a, struct CARD* b);
+void swap_cards(Card_t* p_a, Card_t* p_b);
 
 /**
  * @brief remove the fist playable card in the card list
@@ -173,7 +164,7 @@ void swap_cards(struct CARD* a, struct CARD* b);
  * @param card : the latest discard card on table
  * @return struct DECK* pointer which points to the removed the card
  */
-struct DECK *remove_first_playable_card(struct DECK** head);
+Deck_t *remove_first_playable_card(Deck_t** pp_head);
 
 /**
  * @brief The player discards a card, 
@@ -191,7 +182,7 @@ struct DECK *remove_first_playable_card(struct DECK** head);
  * @return int   0 - Successful;
  *               1 - Failed
  */
-int discard_card(enum PlayerType player, int* ptr_post_condition);
+int discard_card(PlayerType_e player, int* p_post_condition);
 
 /**
  * @brief Draws the requested number of cards from the remaining deck for the current player
@@ -203,7 +194,7 @@ int discard_card(enum PlayerType player, int* ptr_post_condition);
  * @return int   0 - Successful;
  *               1 - Failed.
  */
-int draw_cards(int num_draw_cards, enum PlayerType player);
+int draw_cards(int num_draw_cards, PlayerType_e player);
 
 /**
  * @brief Draws one cards from the remaining deck for the current player
@@ -213,14 +204,14 @@ int draw_cards(int num_draw_cards, enum PlayerType player);
  * @param player enum type variable: The specific player who draws the card
  * @return Card  the drew card
  */
-struct CARD draw_one_card(enum PlayerType player);
+Card_t draw_one_card(PlayerType_e player);
 
-/**
+/*
  * @brief Gets the game winner
  * 
  * @return PlayerType The winner of the game
  */
-enum PlayerType get_game_winner(void);
+PlayerType_e get_game_winner(void);
 
 int test_initialize_cards(void);
 int test_deal_cards(void);
