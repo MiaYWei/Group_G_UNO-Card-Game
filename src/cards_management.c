@@ -3,6 +3,14 @@
 #include <string.h>
 #include "cards_management.h"
 
+/* Global variables */
+Deck_t* g_draw_pile = NULL;                     /* remaining cards to draw */
+Deck_t* g_discard_pile = NULL;                  /* discarded cards */
+Player_t g_players[PLAYERS_NUM];                /* array of players */
+Card_t g_card_on_table;                         /* last played card on the table */
+PlayerType_e g_player_on_turn = HUMAN;          /* The current player on turn */
+PlayerType_e g_game_winner = HUMAN;             /* game winner*/
+
 int initialize_game(void);
 void initialize_players(void);
 int initialize_cards(void);
@@ -525,7 +533,7 @@ PlayerType_e get_game_winner(void)
 int test_initialize_cards(void);
 int test_deal_cards(void);
 int test_sort_cards_on_hand(void);
-int test_discard_card(int test_case);
+void test_discard_card(int test_case);
 int test_draw_cards(void);
 
 int test_initialize_cards(void)
@@ -592,9 +600,8 @@ void card_discarded_from_one_hand_list(void)
     g_player_on_turn = HUMAN;
 }
 
-int test_discard_card(int test_case)
+void test_discard_card(int test_case)
 {
-    int result;
     int discard_post_condition = -1;
 
     if (initialize_game()) {
@@ -638,8 +645,6 @@ int test_discard_card(int test_case)
     }
     printf("  COMPUTER_PLAYER Cards List: ");
     display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
-
-    return result;
 }
 
 int test_draw_cards(void)
@@ -663,7 +668,7 @@ int test_draw_cards(void)
     return result;
 }
 
-
+#if 0
 int main(void)
 {
     int result = 0;
@@ -674,8 +679,9 @@ int main(void)
     //result += test_sort_cards_on_hand();
     for (int i = 0; i< 2; i++)
     {
-        result += test_discard_card(i);
+        test_discard_card(i);
     }
     //result += test_draw_cards();
     return result;
 }
+#endif
