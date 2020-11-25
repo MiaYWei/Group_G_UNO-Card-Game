@@ -40,12 +40,12 @@ typedef struct Player {
 } Player_t;
 
 /* Global variables */
-Deck_t* g_draw_pile = NULL;                     /* remaining cards to draw */
-Deck_t* g_discard_pile = NULL;                  /* discarded cards */
-Player_t g_players[PLAYERS_NUM];                /* array of players */
-Card_t g_card_on_table;                         /* last played card on the table */
-PlayerType_e g_player_on_turn = HUMAN;            /* The current player on turn */
-PlayerType_e g_game_winner = HUMAN;               /* game winner*/
+extern Deck_t* g_draw_pile;                     /* remaining cards to draw */
+extern Deck_t* g_discard_pile;                  /* discarded cards */
+extern Player_t g_players[PLAYERS_NUM];         /* array of players */
+extern Card_t g_card_on_table;                  /* last played card on the table */
+extern PlayerType_e g_player_on_turn;           /* The current player on turn */
+extern PlayerType_e g_game_winner;              /* game winner*/
 
 /**
  * @brief Initializes game which includes initialize cards and initialize players
