@@ -1,7 +1,7 @@
 #include "cards_management.h"
 #include "game.h"
 
-void startScreen()
+void start_screen(void)
 {
     printf("***************************************************************\n");
     printf("*                                                             *\n");
@@ -10,6 +10,14 @@ void startScreen()
     printf("*                       Group G                               *\n");
     printf("*                                                             *\n");
     printf("***************************************************************\n");
+
+    printf("\n");
+    printf("Main Menu: \n\n");
+    printf("1. Start New Game\n");
+    printf("2. Game Rules\n");
+    printf("3. Exit Game\n\n");
+    //printf("4. Score Board \n");  - Release 2
+    printf("Enter your choice\n");
 }
 
 void rules(void)
@@ -54,14 +62,7 @@ void main_menu(void)
 
     while(1){    
         system("cls"); //clear screen
-        startScreen();
-        printf("\n");
-        printf("Main Menu: \n\n");
-        printf("1. Start New Game\n");
-        printf("2. Game Rules\n");
-        printf("3. Exit Game\n\n");
-        //printf("4. Score Board \n");  - Release 2
-        printf("Enter your choice\n");
+        start_screen();
         scanf_s("%d", &int_choice);
         switch (int_choice) {
             case 1:
