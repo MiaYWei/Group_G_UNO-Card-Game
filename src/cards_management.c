@@ -1,6 +1,7 @@
 #include <stddef.h>  
 #include <stdlib.h>   
 #include <string.h>
+#include <time.h>
 #include "cards_management.h"
 
 /* Global variables */
@@ -666,6 +667,73 @@ int test_draw_cards(void)
     display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
 
     return result;
+}
+
+/**
+ * @brief Added by Aditi
+ *
+ * @param d
+ */
+void free_deck(Deck_t* d) {
+    // Recursively free the deck
+    if (d != NULL) {
+        free_deck(d->next);
+        free(d);
+    }
+}
+
+/**
+ * @brief Added by Aditi
+ * 
+ * @param a 
+ * @param b 
+ */
+void swap(Card_t* a, Card_t* b) {
+    Card_t temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+/**
+ * @brief Added by Aditi
+ * 
+ * @param length 
+ * @return int 
+ */
+int shuffle(int length) {
+    // reset seed
+    srand(time(NULL));
+    // copy the cards in remaining pile into a Card array
+    Deck_t* current = g_draw_pile;
+    Card_t* array = malloc(sizeof(Card_t) * length);
+    if (array == NULL) {
+        free_deck(g_draw_pile);
+        return 1;
+    }
+    for (int i = 0; i < length; i++) {
+        array[i] = current->card;
+        current = current->next;
+    }
+
+    // loop through the cards array and swap them randomly, using Fisher-Yates shuffle
+    for (int i = 0; i < length; i++) {
+        // find a random index to swap with the current one
+        int random_index = rand() % (length - i) + i;
+        swap(&array[random_index], &array[i]);
+    }
+
+    // Put cards in array back to the remaining pile in the shuffled order
+    current = g_draw_pile;
+    for (int i = 0; i < length - 1; i++) {
+        current->card = array[i];
+        current = current->next;
+    }
+    //To make sure that there is no memory spaces assigned to the next deck of the last element of the whole cards
+    // Set the last elements's next deck to null
+    current->card = array[length - 1];
+    current->next = NULL;
+    free(array);
+    return 0;
 }
 
 #if 0
