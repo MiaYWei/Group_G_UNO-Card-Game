@@ -685,18 +685,6 @@ void free_deck(Deck_t* d) {
 /**
  * @brief Added by Aditi
  * 
- * @param a 
- * @param b 
- */
-void swap(Card_t* a, Card_t* b) {
-    Card_t temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-/**
- * @brief Added by Aditi
- * 
  * @param length 
  * @return int 
  */
@@ -719,7 +707,7 @@ int shuffle(int length) {
     for (int i = 0; i < length; i++) {
         // find a random index to swap with the current one
         int random_index = rand() % (length - i) + i;
-        swap(&array[random_index], &array[i]);
+        swap_cards(&array[random_index], &array[i]);
     }
 
     // Put cards in array back to the remaining pile in the shuffled order
