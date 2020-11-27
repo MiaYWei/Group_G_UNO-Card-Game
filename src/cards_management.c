@@ -31,23 +31,6 @@ Card_t draw_one_card(PlayerType_e player);
 PlayerType_e get_game_winner(void);
 
 /**
- * @brief Initializes game which includes initialize cards and initialize players
- *
- * @return int 0 - Initialization is successful;
- *             1 - Initialization is failed, since malloc memory fails
- */
-int initialize_game(void)
-{
-    int result;
-
-    result = initialize_cards();
-    initialize_players();
-    result += deal_cards();
-
-    return result;
-}
-
-/**
  * @brief Initializes players global variables
  *
  */
