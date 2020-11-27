@@ -17,7 +17,7 @@ void rules(void)
     char choice[5] = { 0 };
 
     printf("UNO EXPRESS RULES: \n\n");
-    printf("Object of the Game \n");
+    printf("Objective of the Game \n");
     printf("************************\n");
     printf("Be the first player to get rid of all of your cards in each round.\n\n");
     printf("Play the Game\n");
