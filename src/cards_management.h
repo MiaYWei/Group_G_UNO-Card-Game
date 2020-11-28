@@ -20,6 +20,10 @@ typedef enum CardColor { RED, BLUE, GREEN, YELLOW } CardColor_e;
 typedef enum CardName { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE } CardName_e;
 typedef enum CardPile { DRAW, DISCARD, HUMAN_PLAYER, COMPUTER_PLAYER } CardPile_e;
 
+static const char* PLAYER_TYPE_STRING[] = { "HUMAN", "COMPUTER"};
+static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char* CARD_COLOR_STRING[] = { "RED", "BLUE", "GREEN", "YELLOW" };
+
 /* Card struct */
 typedef struct CARD {
     CardColor_e color;               /* Color code for card */
@@ -166,10 +170,9 @@ int draw_cards(int num_draw_cards, PlayerType_e player);
  *        If there is no cards left in the remaining deck, then place all the cards from discard deck
  *        into the remaining deck, then get it.
  * 
- * @param player enum type variable: The specific player who draws the card
  * @return Card  the drew card
  */
-Card_t draw_one_card(PlayerType_e player);
+Card_t draw_one_card(void);
 
 /*
  * @brief Gets the game winner
@@ -177,5 +180,12 @@ Card_t draw_one_card(PlayerType_e player);
  * @return PlayerType The winner of the game
  */
 PlayerType_e get_game_winner(void);
+
+/**
+ * @brief initialize the global varibale g_card_on_table, which indicates the latest discard card on table.
+ *        This function is called when start a new game.
+ *
+ */
+void initialize_card_on_table(void);
 
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once

@@ -27,7 +27,7 @@ void swap_cards(Card_t* p_a, Card_t* p_b);
 Deck_t *remove_first_playable_card(Deck_t** pp_head);
 int discard_card(PlayerType_e player, int* p_post_condition);
 int draw_cards(int num_draw_cards, PlayerType_e player);
-Card_t draw_one_card(PlayerType_e player);
+Card_t draw_one_card(void);
 PlayerType_e get_game_winner(void);
 
 /**
@@ -220,7 +220,7 @@ void display_cards_list(const Deck_t *p_list)
     printf("[ ");
 
     while (temp_list_ptr != NULL) {
-        printf("(%d,%d) ", temp_list_ptr->card.color, temp_list_ptr->card.name);
+        printf("(%s,%s) ", CARD_COLOR_STRING[temp_list_ptr->card.color], CARD_NAME_STRING[temp_list_ptr->card.name]);
         temp_list_ptr = temp_list_ptr->next;
     }
 
@@ -359,7 +359,7 @@ Deck_t *remove_first_playable_card(Deck_t** pp_head)
         prev = *pp_head;          // Get reference of head node
         *pp_head = (*pp_head)->next; // Adjust head node link        
         //free(prev);            // Delete prev since it contains reference to head node
-        printf("Successfully deleted the first palyable card (%d, %d) at beginning. \n", removed_card.color, removed_card.name);
+        printf("Successfully deleted the first palyable card (%s, %s) at beginning. \n", CARD_COLOR_STRING[removed_card.color], CARD_NAME_STRING[removed_card.name]);
         return prev;              // No need to delete further
     }
 
@@ -370,7 +370,7 @@ Deck_t *remove_first_playable_card(Deck_t** pp_head)
                 prev->next = cur->next; // Adjust links for previous node
             }
             //free(cur);                  // Delete current node
-            printf("Successfully deleted the first palyable card (%d, %d) in the middile. \n", cur->card.color, cur->card.name);
+            printf("Successfully deleted the first palyable card (%s, %s) in the middile. \n", CARD_COLOR_STRING[cur->card.color], CARD_NAME_STRING[cur->card.name]);
             return cur;
         }
 
@@ -414,8 +414,8 @@ int discard_card(PlayerType_e player, int* p_post_condition)
     playable_card = find_playable_card(player);
     
     if (NULL == playable_card) { /* If no playable card on hand */
-        draw_card = draw_one_card(player);
-        printf("No playable card on hand, draw a new card (%d,%d).\n", draw_card.color, draw_card.name);
+        draw_card = draw_one_card();
+        printf("No playable card on hand, draw a new card (%s,%s).\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);
         if (is_playable_card(draw_card)) {
             memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
             result = add_card_at_end(g_discard_pile, g_card_on_table);
@@ -427,7 +427,7 @@ int discard_card(PlayerType_e player, int* p_post_condition)
     } else { /*If there is playable card, then remove the first playable card from on hand cards list*/
         Deck_t* discard_card = remove_first_playable_card(&g_players[player].cards_on_hand);
         memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
-        printf("discard card on table is (%d, %d)\n", discard_card->card.color, discard_card->card.name);
+        printf("discard card on table is (%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
         result = add_card_at_end(g_discard_pile, g_card_on_table);
         g_players[player].count--;
         post_condition = 0;
@@ -481,10 +481,9 @@ int draw_cards(int num_draw_cards, PlayerType_e player)
  *        If there is no cards left in the remaining deck, then place all the cards from discard deck
  *        into the remaining deck, then get it.
  *
- * @param player enum type variable: The specific player who draws the card
  * @return Card  the drew card
  */
-Card_t draw_one_card(PlayerType_e player)
+Card_t draw_one_card(void)
 {
     const Deck_t* draw_deck;
     const Deck_t* temp_deck;
@@ -510,4 +509,15 @@ Card_t draw_one_card(PlayerType_e player)
 PlayerType_e get_game_winner(void)
 {
     return g_game_winner;
+}
+
+/**
+ * @brief initialize the global varibale g_card_on_table, which indicates the latest discard card on table. 
+ *        This function is called when start a new game.
+ * 
+ */
+void initialize_card_on_table(void)
+{
+    Card_t draw_card = draw_one_card();
+    memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
 }
