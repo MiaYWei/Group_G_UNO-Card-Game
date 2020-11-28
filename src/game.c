@@ -14,13 +14,13 @@ void start_new_game(void)
 {
     bool is_confirmed = false;
     initialize_game();
-    printf("Latest Discard Card is: (%d, %d).\n", g_card_on_table.color, g_card_on_table.name);
+    printf("Latest Discard Card is: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
     printf("Human Player on hand card list: ");
     display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
     printf("Computer Player on hand card list: ");
     display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
 
-    printf("Current Player is: %d (0: Human; 1: Computer).\n", g_player_on_turn);
+    printf("Current Player is: %s.\n", PLAY_TYPE_STRING[g_player_on_turn]);
     printf("Game is running.... You can enter 'q' or 'Q' to request quit the current game.\n");
 
     if (g_player_on_turn == HUMAN) {

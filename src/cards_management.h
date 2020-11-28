@@ -20,6 +20,10 @@ typedef enum CardColor { RED, BLUE, GREEN, YELLOW } CardColor_e;
 typedef enum CardName { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE } CardName_e;
 typedef enum CardPile { DRAW, DISCARD, HUMAN_PLAYER, COMPUTER_PLAYER } CardPile_e;
 
+static const char* PLAY_TYPE_STRING[] = { "HUMAN", "COMPUTER"};
+static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char* CARD_COLOR_STRING[] = { "RED", "BLUE", "GREEN", "YELLOW" };
+
 /* Card struct */
 typedef struct CARD {
     CardColor_e color;               /* Color code for card */
