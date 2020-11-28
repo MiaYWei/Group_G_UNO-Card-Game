@@ -27,7 +27,7 @@ void swap_cards(Card_t* p_a, Card_t* p_b);
 Deck_t *remove_first_playable_card(Deck_t** pp_head);
 int discard_card(PlayerType_e player, int* p_post_condition);
 int draw_cards(int num_draw_cards, PlayerType_e player);
-Card_t draw_one_card(PlayerType_e player);
+Card_t draw_one_card(void);
 PlayerType_e get_game_winner(void);
 
 /**
@@ -414,7 +414,7 @@ int discard_card(PlayerType_e player, int* p_post_condition)
     playable_card = find_playable_card(player);
     
     if (NULL == playable_card) { /* If no playable card on hand */
-        draw_card = draw_one_card(player);
+        draw_card = draw_one_card();
         printf("No playable card on hand, draw a new card (%s,%s).\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);
         if (is_playable_card(draw_card)) {
             memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
@@ -481,10 +481,9 @@ int draw_cards(int num_draw_cards, PlayerType_e player)
  *        If there is no cards left in the remaining deck, then place all the cards from discard deck
  *        into the remaining deck, then get it.
  *
- * @param player enum type variable: The specific player who draws the card
  * @return Card  the drew card
  */
-Card_t draw_one_card(PlayerType_e player)
+Card_t draw_one_card(void)
 {
     const Deck_t* draw_deck;
     const Deck_t* temp_deck;
@@ -510,4 +509,14 @@ Card_t draw_one_card(PlayerType_e player)
 PlayerType_e get_game_winner(void)
 {
     return g_game_winner;
+}
+
+/**
+ * @brief initialize the latest discard card on table. This function is called when start a new game.
+ * 
+ */
+void initialize_card_on_table(void)
+{
+    Card_t draw_card = draw_one_card();
+    memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
 }

@@ -72,5 +72,6 @@ int initialize_game(void)
     initialize_players();
     result += deal_cards();
 
+    initialize_card_on_table();
     return result;
 }

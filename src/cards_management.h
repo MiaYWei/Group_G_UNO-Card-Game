@@ -170,10 +170,9 @@ int draw_cards(int num_draw_cards, PlayerType_e player);
  *        If there is no cards left in the remaining deck, then place all the cards from discard deck
  *        into the remaining deck, then get it.
  * 
- * @param player enum type variable: The specific player who draws the card
  * @return Card  the drew card
  */
-Card_t draw_one_card(PlayerType_e player);
+Card_t draw_one_card(void);
 
 /*
  * @brief Gets the game winner
@@ -181,5 +180,11 @@ Card_t draw_one_card(PlayerType_e player);
  * @return PlayerType The winner of the game
  */
 PlayerType_e get_game_winner(void);
+
+/**
+ * @brief initialize the latest discard card on table. This function is called when start a new game.
+ *
+ */
+void initialize_card_on_table(void);
 
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once
