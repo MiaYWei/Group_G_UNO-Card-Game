@@ -20,7 +20,7 @@ void start_new_game(void)
     printf("Computer Player on hand card list: ");
     display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
 
-    printf("Current Player is: %s.\n", PLAY_TYPE_STRING[g_player_on_turn]);
+    printf("Current Player is: %s.\n", PLAYER_TYPE_STRING[g_player_on_turn]);
     printf("Game is running.... You can enter 'q' or 'Q' to request quit the current game.\n");
 
     if (g_player_on_turn == HUMAN) {

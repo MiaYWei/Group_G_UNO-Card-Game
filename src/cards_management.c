@@ -512,7 +512,8 @@ PlayerType_e get_game_winner(void)
 }
 
 /**
- * @brief initialize the latest discard card on table. This function is called when start a new game.
+ * @brief initialize the global varibale g_card_on_table, which indicates the latest discard card on table. 
+ *        This function is called when start a new game.
  * 
  */
 void initialize_card_on_table(void)
