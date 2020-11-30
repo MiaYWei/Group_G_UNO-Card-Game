@@ -9,24 +9,24 @@
 /* Global variables */
 bool g_card_requested = false;
 bool is_action_card = false;
-static Player_t *human_player=&g_players[HUMAN];
+static Player_t *human_player = &g_players[HUMAN]; //TODO use g_player directly
 
 int request_card(PlayerType_e PlayerType, int no_of_cards);
-void invalid_turn_warning();
+void invalid_turn_warning(void);
 const Deck_t *show_recent_card(Deck_t **pp_head);
 PlayerType_e determine_next_player(struct CARD *previous_card, PlayerType_e current_player);
 bool validate_card(char *entered_value);
 Card_t *map_user_input(char *input);
-Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched); //Can be included in Card management
+Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched);      //Can be included in Card management
 ret_type_e remove_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_removed); //Can be included in Card management
-ret_type_e record_human_input();
-void show_cards_assigned(Card_t assigned_card); 
-bool check_is_valid_turn(Card_t *previous_card, Card_t *current_card);
+ret_type_e record_human_input(void);
+void show_cards_assigned(Card_t assigned_card);
+bool check_is_valid_turn(Card_t *current_card);
 void display_player_deck(Player_t *player);
 void display_player_turn(PlayerType_e next_player);
 void end_turn(PlayerType_e type);
-int quit_game();
-ret_type_e handle_human_turn();
+int quit_game(void);
+ret_type_e handle_human_turn(void);
 
 //Write for computer as well?
 /**
@@ -52,7 +52,7 @@ int request_card(PlayerType_e PlayerType, int no_of_cards)
  * @brief Throws a warning message if the card dropped by the user is invalid
  * 
  */
- 
+
 void invalid_turn_warning(void)
 {
     printf("!!Warning!! Invalid card - Please choose a valid card \n");
@@ -70,15 +70,19 @@ void invalid_turn_warning(void)
 bool validate_card(char *entered_value)
 {
     int size = sizeof CARD_VALUES / sizeof *CARD_VALUES;
-
-    for (int i = 0; i < size; ++i)
+    int i = 0;
+    while (i < size)
     {
         if (!strcmp(CARD_VALUES[i], entered_value))
         {
-            return false;
+            i++;
+        }
+        else
+        {
+            return true;
         }
     }
-    return true;
+    return false;
 }
 
 /**
@@ -91,9 +95,9 @@ bool validate_card(char *entered_value)
  *        Other- Map to appropriate Card Info
  */
 
-ret_type_e record_human_input()
+ret_type_e record_human_input(void)
 {
-    char user_input[2];
+    char user_input[10];//TODO Modify the array size later
     printf("Please enter your choice \n");
     scanf("%s", user_input);
 
@@ -125,17 +129,11 @@ ret_type_e record_human_input()
             //To be added if the format of user input is different
             Card_t *human_card_choice = map_user_input(user_input);
             //If valid add the card to the discard_pile
-            if (check_is_valid_turn(&g_card_on_table, human_card_choice))
+            if (check_is_valid_turn(human_card_choice))
             {
                 Deck_t **pp_head = &(human_player->cards_on_hand);
-
-                Card_t *to_remove_card = pick_card_from_deck(pp_head, human_card_choice);
-
-                if (to_remove_card != NULL)
-                {
-                    RET_TYPE(remove_card_from_deck(pp_head, human_card_choice));
-                    add_card_at_end(g_discard_pile, *to_remove_card);
-                }
+                RET_TYPE(remove_card_from_deck(pp_head, human_card_choice));
+                add_card_at_end(g_discard_pile, *human_card_choice);
             }
         }
         else
@@ -188,13 +186,17 @@ ret_type_e remove_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_removed)
  * @param input Value entered by the human during his turn
  * 
  * @return Card_t* Contains the mapped card name and color values
- * If Card_t is NULL it means the input is an invalid one
+ *         NULL If the input is invalid
  */
 Card_t *map_user_input(char *input)
 {
 
     Card_t *temp_card = (Card_t *)malloc(sizeof(Card_t));
-    temp_card = NULL;
+    if (temp_card == NULL)
+    {
+        printf("Memory allocation failed during mapping user input"); //TODO Map it with valid return type
+        return NULL;
+    }
 
     if (input[0] == 'R')
     {
@@ -215,12 +217,16 @@ Card_t *map_user_input(char *input)
     }
     else
     {
-        return temp_card;
+        free(temp_card);
+        return NULL;
     }
     //To map the number part of the User input to the card name field
     temp_card->name = input[1] - '0';
     return temp_card;
 }
+
+
+//TODO Remove this function if unused
 /**
  * @brief Function picks a particular card from the current human deck of cards
  * Called when a particular card has to be selected for removing from a deck
@@ -244,7 +250,7 @@ Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched)
         }
         temp = temp->next;
     }
-    free(card_to_be_matched); //Check if it can be freed here
+    //free(card_to_be_matched); //Check if it can be freed here
     return NULL;
 }
 
@@ -263,17 +269,16 @@ void show_cards_assigned(Card_t assigned_card)
 
 /**
  * @brief Checks if the card dropped by human player during his turn is valid
- *
- * @param previous_card - Card that was dropped previously in the pile
+ * 
  * @param current_card - Current card dropped by the human player
  * 
  * @return- True if the card is invaid
  *          False if the card is valid
  */
-bool check_is_valid_turn(Card_t *previous_card, Card_t *current_card)
+bool check_is_valid_turn(Card_t *current_card)
 {
-    bool is_valid = false;    
-    if ((previous_card->color == current_card->color) || (previous_card->name == current_card->name))
+    bool is_valid = false;
+    if ((g_card_on_table.color == current_card->color) || (g_card_on_table.name == current_card->name))
     {
         is_valid = true;
     }
@@ -356,7 +361,7 @@ void end_turn(PlayerType_e type)
  * @param PlayerType - Indicates whether user requested is Human or Computer Player
 * ~
  */
-int quit_game()
+int quit_game(void)
 {
     printf("Exiting the game..");
     exit(0);
