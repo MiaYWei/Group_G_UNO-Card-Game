@@ -99,7 +99,7 @@ ret_type_e record_human_input(void)
 {
     char user_input[10];//TODO Modify the array size later
     printf("Please enter your choice \n");
-    scanf("%s", user_input);
+    scanf_s("%s", user_input, 10);
 
     if (user_input[0] == 'q' || user_input[0] == 'Q')
     {
