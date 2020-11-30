@@ -26,15 +26,15 @@
 #define hand_MAX 20
 #define plarCardNumber 10
 
-/* (not used for now) */
-struct CARD record_array[MAX]; // array for recording all the cards
-int record_size = 0, handcard_size = 0;
-
-void record(struct CARD card)
-{
-    record_size++;
-    record_array[record_size - 1] = card;
-}
+///* (not used for now) */
+//struct CARD record_array[MAX]; // array for recording all the cards
+//int record_size = 0, handcard_size = 0;
+//
+//void record(struct CARD card)
+//{
+//    record_size++;
+//    record_array[record_size - 1] = card;
+//}
 
 /* 
 * @brief: function that find the most occurrence with the color 
