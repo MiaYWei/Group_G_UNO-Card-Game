@@ -23,6 +23,10 @@ typedef enum CardPile { DRAW, DISCARD, HUMAN_PLAYER, COMPUTER_PLAYER } CardPile_
 static const char* PLAYER_TYPE_STRING[] = { "HUMAN", "COMPUTER"};
 static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 static const char* CARD_COLOR_STRING[] = { "RED", "BLUE", "GREEN", "YELLOW" };
+static const char* CARD_VALUES [] = {   "0R", "1R", "2R","3R", "4R", "5R","6R", "7R", "8R","9R",
+                                        "0Y", "1Y", "2Y","3Y", "4Y", "5Y","6Y", "7Y", "8Y","9Y",
+                                        "0B", "1B", "2B","3B", "4B", "5B","6B", "7B", "8B","9B",
+                                        "0G", "1G", "2G","3G", "4G", "5G","6G", "7G", "8G","9G" };
 
 /* Card struct */
 typedef struct CARD {
@@ -186,6 +190,16 @@ PlayerType_e get_game_winner(void);
  *        This function is called when start a new game.
  *
  */
+
 void initialize_card_on_table(void);
+/**
+ * @brief Adds a new card at the end of the linked list.
+ * 
+ * @param p_head pointer to the list head
+ * @param card  The specific card which is added. 
+ * @return int 0 - Successful;
+ *             1 - Failed, since malloc memory fails.
+ */
+int add_card_at_end(Deck_t *p_head, Card_t card);
 
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once

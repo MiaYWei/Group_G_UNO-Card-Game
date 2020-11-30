@@ -7,7 +7,7 @@
 Deck_t* g_draw_pile = NULL;                     /* remaining cards to draw */
 Deck_t* g_discard_pile = NULL;                  /* discarded cards */
 Player_t g_players[PLAYERS_NUM];                /* array of players */
-Card_t g_card_on_table;                         /* last played card on the table */
+Card_t g_card_on_table;                         /* last played card on the table-discard pile */
 PlayerType_e g_player_on_turn = HUMAN;          /* The current player on turn */
 PlayerType_e g_game_winner = HUMAN;             /* game winner*/
 
@@ -163,7 +163,7 @@ int add_card_at_end(Deck_t* p_head, Card_t card)
 /**
  * @brief remove the first card at the beginning of the card list
  * 
- * @param pp_head :poinetr which points to the address of head of card list
+ * @param pp_head :pointer which points to the address of head of card list
  * @return const Deck_t* pointer type variable, which points to the removed card 
  */
 const Deck_t* remove_first_card_at_beginning(Deck_t** pp_head)
@@ -477,11 +477,12 @@ int draw_cards(int num_draw_cards, PlayerType_e player)
 }
 
 /**
- * @brief Draws one cards from the remaining deck for the current player
- *        If there is no cards left in the remaining deck, then place all the cards from discard deck
- *        into the remaining deck, then get it.
+ * @brief Returns the top card from the draw pile. Can be called by both Human
+ * as well as computer player 
+ * If there are no cards left in the draw pile, then it shuffles all the card from the discard pile and 
+ * makes it as the new draw pile. 
  *
- * @return Card  the drew card
+ * @return The drawn card
  */
 Card_t draw_one_card(void)
 {
@@ -502,7 +503,7 @@ Card_t draw_one_card(void)
 }
 
 /**
- * @brief Gets the game winner
+ * @brief Gets the winner of the game
  *
  * @return PlayerType_e The winner of the game
  */
