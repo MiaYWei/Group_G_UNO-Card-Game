@@ -21,7 +21,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "cards_management.h"
-
+ 
 #define MAX 40
 #define hand_MAX 20
 #define plarCardNumber 10
