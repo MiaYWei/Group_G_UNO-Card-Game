@@ -13,7 +13,12 @@ struct player_details {
 struct player_details *head = NULL;
 struct player_details *current = NULL;
 
-void insertPlayerDetails(int player_id, int curr_score, char name[15]) {
+void insert_player_details(int player_id, int curr_score, char name[15]);
+void print_player_details(void);
+void get_player_name(int player_id);
+
+void insert_player_details(int player_id, int curr_score, char name[15]) 
+{
    //create a link
    struct player_details *link = (struct player_details*) malloc(sizeof(struct player_details));
 	
@@ -28,7 +33,8 @@ void insertPlayerDetails(int player_id, int curr_score, char name[15]) {
    head = link;
 }
 
-void printPlayerDetails() {
+void print_player_details(void) 
+{
    struct player_details *ptr = head;
    printf("\n[ ");
 	
@@ -41,7 +47,8 @@ void printPlayerDetails() {
    printf(" ]");
 }
 
-void getPLayerName(int player_id) {
+void get_player_name(int player_id) 
+{
    struct player_details* current = head;
 
    //if list is empty
@@ -60,8 +67,8 @@ void getPLayerName(int player_id) {
    }
 }
 
-void updatePlayerDetails(int player_id, int curr_score) {
-
+void update_player_details(int player_id, int curr_score) 
+{
    //start from the first link
    struct player_details* current = head;
 
@@ -79,19 +86,20 @@ void updatePlayerDetails(int player_id, int curr_score) {
       current = current->next;
       
    }      
-	
+   
+   return;
 }
 
-#if 1
+#if 0
 void main(){
 
-  insertPlayerDetails(1,10,"Abhinav");
-  updatePlayerDetails(1,20);
+  insert_player_details(1,10,"Abhinav");
+  update_player_details(1,20);
   //insertPlayerDetails(2,10);
   //insertPlayerDetails(3,130);
   //updatePlayerDetails(3,60);
-  printPlayerDetails();
-  getPLayerName(1);
+  print_player_details();
+  get_player_name(1);
 
 }
 #endif
