@@ -5,7 +5,7 @@ void start_screen(void)
 {
     printf("***************************************************************\n");
     printf("*                                                             *\n");
-    printf("*           WELCOME to UNO EXPRESS CARD GAME                  *\n");
+    printf("*           WELCOME To UNO EXPRESS CARD GAME                  *\n");
     printf("*                                                             *\n");
     printf("*               SYSC5709 Project Group G                      *\n");
     printf("*                                                             *\n");
@@ -16,8 +16,8 @@ void start_screen(void)
     printf("1. Start New Game\n");
     printf("2. Game Rules\n");
     printf("3. Exit Game\n\n");
-    //printf("4. Score Board \n");  - Release 2
-    printf("Enter your choice\n");
+    printf("4. Score Board (Release 2)\n"); 
+    printf("Enter your choice:\n");
 }
 
 void display_rules(void)
@@ -30,14 +30,19 @@ void display_rules(void)
     printf(" 10 Blue cards - 0 to 9\n");
     printf(" 10 Green cards - 0 to 9\n");
     printf(" 10 Red cards - 0 to 9\n");
-    printf(" 10 Yellow cards - 0 to 9\n\n");    
+    printf(" 10 Yellow cards - 0 to 9\n\n");  
+
+    printf("Action Cards (Release 2): \n\n");
+    printf(" 4 Draw One cards - 1 each in blue, green, red and yellow.\n");
+    printf("   Draw One card - When you play this card, the next player must draw 1 card and miss their turn. This card may only be played on a matching color. \n");
+    printf(" 4 Skip cards - 1 each in blue, green, red and yellow.\n");
+    printf("   Skip card - When you play this card, the next player is skipped (loses their turn). This card may only be played on a matching color. \n"); 
+    printf(" 2 Wild cards.\n");
+    printf("   Wild card - When you play this card, you get to choose the color that continues play (any color including the color in play before the Wild card was laid down).\n");
+    printf(" 2 Wild Draw Two cards.\n");
+    printf("   Wild Draw TWO card - When you play this card, you get to choose the color that continues play PLUS the next player must draw 2 cards from the DRAW pile and lose their turn.\n\n");
     printf("************************************************************************\n");
-    /*printf("Action Cards (Release 2)\n");
-    printf("************************\n");
-    printf("Draw One card - When you play this card, the next player must draw 1 card and miss their turn. This card may only be played on a matching color or on another Draw One card. \n");
-    printf("Wild card - When you play this card, you get to choose the color that continues play (any color including the color in play before the Wild card was laid down).\n");
-    printf("Wild Draw 2 card - When you play this card, you get to choose the color that continues play PLUS the next player must draw 2 cards from the DRAW pile and lose their turn.\n");
-    printf("Skip card - When you play this card, the next player is skipped (loses their turn). This card may only be played on a matching color or on another Skip card. \n\n");*/
+    
     printf("Objective of the Game \n");
     printf(" Be the first player to get rid of all of your cards in each turn.\n\n");
     printf("************************************************************************\n");
@@ -55,13 +60,13 @@ void display_rules(void)
     scanf_s("%s", choice, 1);
 }
 
-//void score_board()
-//{
-//    char choice[5] = { 0 };
-//    printf("this is score board\n");
-//    printf("press any key to go back to menu...");
-//    scanf_s("%s", choice, 1);
-//}
+void display_score_board(void)
+{
+    char choice[5] = { 0 };
+    printf("Will release in Release 2\n");
+    printf("Press any key to go back to menu...");
+    scanf_s("%s", choice, 1);
+}
 
 void main_menu(void)
 {   
