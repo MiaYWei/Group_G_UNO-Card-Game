@@ -20,12 +20,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include "cards_management.h"
  
-#define MAX 40
 #define hand_MAX 20
 #define plarCardNumber 10
 
+enum casenumber {CASE1, CASE2, CASE3, CASE4} casenumber_e;
 ///* (not used for now) */
 //struct CARD record_array[MAX]; // array for recording all the cards
 //int record_size = 0, handcard_size = 0;
@@ -36,9 +37,34 @@
 //    record_array[record_size - 1] = card;
 //}
 
+/*
+* @brief: variadic function that returns the max of given numbers
+*
+* @param: number of args 
+* @return int the max value
+*/
+
+int get_max(int n, ...) {
+    int max_value = INT_MIN;
+    int temp;
+    va_list list;
+    va_start(list, n);
+
+    for (int i = 0; i < n; i++) {
+        temp = va_arg(list, int);
+        if (max_value < temp) {
+            max_value = temp;
+        }
+
+    }
+    va_end(list);
+    return max_value;
+    }
+
 /* 
 * @brief: function that find the most occurrence with the color 
 * 
+* @param: pointer to the head of handcard list
 * @return CardColor the color with moset occurrence
 */
 enum CardColor  find_most_color(struct DECK *cards_on_hand)
@@ -66,25 +92,25 @@ enum CardColor  find_most_color(struct DECK *cards_on_hand)
         {
             G_count++;
         }
-        else
+        else if (temp->card.color == YELLOW)
         {
             Y_count++;
         }
         temp = temp->next;
     }
-    if (R_count > B_count && R_count > G_count && R_count > Y_count)
+    if (get_max(4, R_count, G_count, B_count, Y_count) == R_count)
     {
         return RED;
     }
-    else if (B_count > R_count && B_count > G_count && B_count > Y_count)
+    else if (get_max(4, R_count, G_count, B_count, Y_count) == B_count)
     {
         return BLUE;
     }
-    else if (G_count > R_count && G_count > B_count && G_count > Y_count)
+    else if (get_max(4, R_count, G_count, B_count, Y_count) == G_count)
     {
         return GREEN;
     }
-    else if (Y_count > R_count && Y_count > B_count && Y_count > G_count)
+    else if (get_max(4, R_count, G_count, B_count, Y_count) == Y_count)
     {
         return YELLOW;
     }
@@ -116,13 +142,14 @@ enum CardColor  find_most_color(struct DECK *cards_on_hand)
 *            - use action card if possibile
 *            - avoid play the last color that the player played
 *
+* @param Card that will be evaluated, pointer to the head of handcard list
 * @return int the case number
 */
 
 
-int pick_case(struct CARD card, struct DECK *hand_card)
+enum casenumber pick_case(struct CARD card, struct DECK *hand_card)
 {
-    struct DECK *ptr1 = hand_card, *ptr2 = hand_card;
+    struct DECK *ptr1 = hand_card;
     int commonColor = 0, commonName = 0;
     while (ptr1 != NULL) {
         if (card.color == ptr1->card.color) {
@@ -130,23 +157,24 @@ int pick_case(struct CARD card, struct DECK *hand_card)
         }
         ptr1 = ptr1->next;
     }
-    while (ptr2 != NULL) {
-        if (card.name == ptr2->card.name) {
+    *ptr1 = *hand_card; //reset pointer
+    while (ptr1 != NULL) {
+        if (card.name == ptr1->card.name) {
             commonName = 1;
         }
-        ptr2 = ptr2->next;
+        ptr1 = ptr1->next;
     }
     if (commonColor && commonName) {
-        return 4;
+        return CASE4;
     }
     else if (!commonColor && commonName) {
-        return 3;
+        return CASE3;
     }
     else if (commonColor && !commonName) {
-        return 2;
+        return CASE2;
     }
     else if (!commonColor && !commonName) {
-        return 1;
+        return CASE1;
     }
     return 0;
 }
@@ -154,9 +182,10 @@ int pick_case(struct CARD card, struct DECK *hand_card)
 /*
 * @brief: function that play card from handcard list
 *
-* @return void
+* @param card that will be played, pointer to the pointer to the head of handcard list
+* @return 1 for successed, 0 for failed
 */
-void play_card(struct CARD card, struct DECK **head)
+int play_card(struct CARD card, struct DECK **head)
 {
     struct DECK *prev = *head;
     struct DECK *temp = *head;
@@ -165,7 +194,7 @@ void play_card(struct CARD card, struct DECK **head)
     {
         *head = temp->next;
         free(temp);
-        return;
+        return 1;
     }
 
     while (temp != NULL && temp->card.name == card.name && temp->card.color == card.color)
@@ -175,20 +204,23 @@ void play_card(struct CARD card, struct DECK **head)
     }
     // if not present
     if (temp == NULL)
-        return;
+        return 0;
 
     // delete
     prev->next = temp->next;
 
     free(temp);
+    return 1;
 }
 /*
 * @brief: function that check if a card exist in the handcard deck
-*
+* 
+* 
+* @param: pointer to the pointer to the head of handcard list, card that needs to be checked
 * @return 1 exist, 0 not exist
 */
 
-int ifexists(struct DECK **handcard, enum CardName inputCardName, enum CardColor inputCardColor)
+int ifexists(struct DECK **handcard, enum CardNumber inputCardName, enum CardColor inputCardColor)
 {
     struct DECK *ptr = *handcard;
     while (ptr->next != NULL)
@@ -205,7 +237,9 @@ int ifexists(struct DECK **handcard, enum CardName inputCardName, enum CardColor
 
 /*
 * @brief: function that find the largest number of given color
-*
+* 
+* 
+* @param pointer to the pointer to the head of handcard list, color that need to be checked 
 * @return CardName the largest number
 */
 
@@ -235,6 +269,7 @@ enum CardName find_largest_number(struct DECK **handcard, enum CardColor inputCa
 /*
 * @brief: function that find the occruence of a number
 *
+* @param pointer to the pointer to the head of handcard list, number that needs to be checked
 * @return int number count for occruence
 */
 
@@ -250,13 +285,14 @@ int find_occurence_of_number(struct DECK **handcard, enum CardName inputCardNumb
         }
         temp = temp->next;
     }
-    free(temp);
     return count;
 }
 
 /*
 * @brief: function that find the most color occruence of a given number
 *
+* 
+* @param pointer to the pointer to the head of handcard list, name that need to be checked
 * @return CardColor  most color occruence of a given number
 *
 */
@@ -265,6 +301,7 @@ enum CardColor find_color_with_most_occurence(struct DECK **handcard, enum CardN
 {
     struct DECK *temp = *handcard;
     int R_count=0, B_count=0, Y_count=0, G_count=0;
+
     while (temp != NULL)
     {
         if (temp->card.name == inputCardNumber)
@@ -289,47 +326,24 @@ enum CardColor find_color_with_most_occurence(struct DECK **handcard, enum CardN
         temp = temp->next;
 
     }
-    if (R_count > B_count && R_count > G_count && R_count > Y_count)
+    if (get_max(4, R_count, G_count, B_count, Y_count) == R_count)
     {
         return RED;
     }
-    else if (B_count > R_count && B_count > G_count && B_count > Y_count)
+    else if (get_max(4, R_count, G_count, B_count, Y_count) == B_count)
     {
         return BLUE;
     }
-    else if (G_count > R_count && G_count > B_count && G_count > Y_count)
+    else if (get_max(4, R_count, G_count, B_count, Y_count) == G_count)
     {
         return GREEN;
     }
-    else if (Y_count > R_count && Y_count > B_count && Y_count > G_count)
+    else if (get_max(4, R_count, G_count, B_count, Y_count) == Y_count)
     {
         return YELLOW;
     }
     return 0;
  }
-
-
-/*
-* @brief: function that add one card at the end of the handcard list 
-*
-* @return void
-*
-*/
-void push(struct DECK** head, struct CARD card) {
-    struct DECK* newNode = (struct DECK*)malloc(sizeof(struct DECK));
-    struct DECK* last = *head;
-
-    newNode->card = card;
-    newNode->next = NULL;
-    if (*head == NULL) {
-        *head = newNode;
-        return;
-    }
-    while (last->next != NULL)
-        last = last->next;
-    last->next = newNode;
-    return;
-}
 
 
 /** @brief Pick the best card to discard from hand cards based on
@@ -365,15 +379,14 @@ void push(struct DECK** head, struct CARD card) {
 void pick_action(struct CARD inputCard, struct DECK *hand_card)
 {
     int wildCount= 0, colorCount=0, numberCount=0;
-    char most_color;
-    char choosed_color;
+    enum CardColor most_color;
     struct CARD playCard, DrawCard;
     struct DECK *temp = hand_card;
-    int caseNum = pick_case(inputCard, hand_card);
+    enum casenumber caseNum = pick_case(inputCard, hand_card);
     most_color = find_most_color(hand_card);
     switch (caseNum)
     {
-    case 1:
+    case CASE1:
         /* no matched color or number, check if wild is > */
         while (temp->next != NULL)
         {
@@ -386,9 +399,9 @@ void pick_action(struct CARD inputCard, struct DECK *hand_card)
         /* if wild card >1, play the WILD with color with the most occurence */
         if (wildCount > 1)
         {
-            choosed_color = most_color;
+            
             playCard.name = WILD;
-            playCard.color = choosed_color;
+            playCard.color = most_color;
             play_card(playCard, &hand_card);
         }
         else
@@ -404,11 +417,11 @@ void pick_action(struct CARD inputCard, struct DECK *hand_card)
             else
             {
                 DrawCard = draw_one_card();
-                push(&hand_card, DrawCard);
+                add_card_at_end(hand_card, DrawCard);
             }
         }
         break;
-    case 2:
+    case CASE2:
         /* check if occurence of the color > 2, play DRAW/DRAW2 if true*/
         colorCount = 0;
         while (temp->next != NULL)
@@ -439,7 +452,7 @@ void pick_action(struct CARD inputCard, struct DECK *hand_card)
             play_card(playCard, &hand_card);
         }
         break;
-    case 3:
+    case CASE3:
         /* no matched color, but have matched number */
         numberCount = find_occurence_of_number(&hand_card, inputCard.name);
         if (numberCount == 1)
@@ -455,7 +468,7 @@ void pick_action(struct CARD inputCard, struct DECK *hand_card)
             play_card(playCard, &hand_card);
         }
         break;
-    case 4:
+    case CASE4:
         /* have matched color, and have matched number */
         
         if(inputCard.color == find_most_color(hand_card)){
@@ -472,6 +485,7 @@ void pick_action(struct CARD inputCard, struct DECK *hand_card)
         printf("entered default!\n");
         break;
     }
+    return;
 }
 
 
@@ -543,13 +557,13 @@ int main()
     struct CARD testCard1 = { BLUE, SIX }, testCard2 = { GREEN , SEVEN }, testCard3 = { BLUE, FIVE }, testCard4 = { RED,FOUR };
     /* define hand card list */
     struct DECK * hand_card_list = NULL;
-    push(&hand_card_list, card1);
-    push(&hand_card_list, card2);
-    push(&hand_card_list, card3);
-    push(&hand_card_list, card4);
-    push(&hand_card_list, card5);
-    push(&hand_card_list, card6);
-    push(&hand_card_list, card7);
+    add_card_at_end(&hand_card_list, card1);
+    add_card_at_end(&hand_card_list, card2);
+    add_card_at_end(&hand_card_list, card3);
+    add_card_at_end(&hand_card_list, card4);
+    add_card_at_end(&hand_card_list, card5);
+    add_card_at_end(&hand_card_list, card6);
+    add_card_at_end(&hand_card_list, card7);
     display_cards_list(hand_card_list);
 
     printf("\n\n");

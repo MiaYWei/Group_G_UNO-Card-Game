@@ -17,11 +17,11 @@
 typedef enum PlayerType { HUMAN, COMPUTER } PlayerType_e;
 typedef enum Direction { CLOCKWISE, COUNTER_CLOCKWISE } Direction_e;
 typedef enum CardColor { RED, BLUE, GREEN, YELLOW, BLACK } CardColor_e;
-typedef enum CardName { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, FDRAW, FDRAW2, WILD } CardName_e;
+typedef enum CardName { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, FDRAW, FDRAW2, WILD, SKIP } CardName_e;
 typedef enum CardPile { DRAW, DISCARD, HUMAN_PLAYER, COMPUTER_PLAYER } CardPile_e;
 
 static const char* PLAYER_TYPE_STRING[] = { "HUMAN", "COMPUTER" };
-static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "FDRAW", "FDRAW2", "WILD" };
+static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "FDRAW", "FDRAW2", "WILD" ,"SKIP"};
 static const char* CARD_COLOR_STRING[] = { "RED", "BLUE", "GREEN", "YELLOW", "BLACK" };
 
 static const char* CARD_VALUES [] = {   "0R", "1R", "2R","3R", "4R", "5R","6R", "7R", "8R","9R",
