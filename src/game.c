@@ -39,7 +39,8 @@ void start_new_game(void)
     {
         printf("Latest Discard Card is: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
         printf("Current player is %s.\n\n", PLAYER_TYPE_STRING[g_player_on_turn]); 
-        if (g_player_on_turn == HUMAN) {
+        if (g_player_on_turn == HUMAN) 
+        {
             
             handle_human_turn();
         }
@@ -74,10 +75,13 @@ bool confirm_exit(void)
     scanf_s("%s", char_choice, 4);
     printf("Entered string is %s \n", char_choice);
 
-    if (0 == strcmp(char_choice, exit_string)) {
+    if (0 == strcmp(char_choice, exit_string)) 
+    {
         printf("Exit the game...\n");
         exit(0);
-    } else {
+    } 
+    else 
+    {
         return false;
     }
 }
@@ -107,10 +111,13 @@ void end_turn(PlayerType_e player)
     PlayerType_e next_turn_type = (player + 1) %2;
     printf("%s Turn ended...\n\n", PLAYER_TYPE_STRING[player]);
 
-    if (update_game_winner(player)) {
+    if (update_game_winner(player)) 
+    {
         g_end_game = true;
         g_game_winner = player;
-    } else {
+    } 
+    else 
+    {
         g_player_on_turn = next_turn_type;
     }
     
@@ -127,7 +134,8 @@ void end_turn(PlayerType_e player)
 bool update_game_winner(PlayerType_e player)
 {
     bool ret = false;
-    if (0 == get_pile_length(g_players[player].cards_on_hand)) {
+    if (0 == get_pile_length(g_players[player].cards_on_hand)) 
+    {
         g_game_winner = player;
         ret = true;
     }
