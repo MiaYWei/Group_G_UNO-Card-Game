@@ -146,8 +146,9 @@ int add_card_at_beginning(Deck_t **pp_head, Card_t card)
  * @return int 0 - Successful;
  *             1 - Failed, since malloc memory fails.
  */
-int add_card_at_end(Deck_t *p_head, Card_t card)
+int add_card_at_end(Deck_t **p_head, Card_t card)
 {
+    Deck_t* last = *p_head;
     Deck_t *new_card = (Deck_t *)malloc(sizeof(Deck_t));
     if (new_card == NULL)
     {
@@ -158,13 +159,17 @@ int add_card_at_end(Deck_t *p_head, Card_t card)
     new_card->card.color = card.color;
     new_card->card.name = card.name;
     new_card->next = NULL;
-
-    while (p_head != NULL && p_head->next != NULL)
-    {
-        p_head = p_head->next;
+    if (*p_head == NULL) {
+        *p_head = new_card;
+        return 0;
     }
 
-    p_head->next = new_card; /* Add the new node at end */
+    while (last->next != NULL )
+    {
+        last = last->next;
+    }
+
+    last->next = new_card; /* Add the new node at end */
 
     //printf("Card (%d, %d) added at end of list successfully.\n", card.color, card.name);
     return 0;
