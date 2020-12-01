@@ -2,9 +2,17 @@
 #include <stdlib.h>   
 #include <string.h>
 #include "cards_management.h"
+#include "human_player_module.h"
 #include "game.h"
 
+bool g_end_game = false;
+
+void start_new_game(void);
+bool confirm_exit(void);
 int initialize_game(void);
+void end_turn(PlayerType_e player);
+bool update_game_winner(PlayerType_e player);
+void handle_computer_turn(void);
 
 /**
  * @brief Starts a new game
@@ -13,28 +21,41 @@ int initialize_game(void);
 void start_new_game(void)
 {
     bool is_confirmed = false;
-    initialize_game();
-    printf("Latest Discard Card is: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
+    if (0 != initialize_game())
+    {
+        printf("Initialize game failed.\n ");
+        return;
+    }
+    printf("\nLatest Discard Card is: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
     printf("Human Player on hand card list: ");
     display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
     printf("Computer Player on hand card list: ");
     display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
 
-    printf("Current Player is: %s.\n", PLAYER_TYPE_STRING[g_player_on_turn]);
-    printf("Game is running.... You can enter 'q' or 'Q' to request quit the current game.\n");
+    printf("%s player starts the game.\n\n", PLAYER_TYPE_STRING[g_player_on_turn]);
+    printf("Game is running....\n");
 
-    if (g_player_on_turn == HUMAN) {
-        int key_Q = 81;  //ASCII code for "Q"                                   
-        int key_q = 113;  //ASCII code for "q"    
-        while (1) {
-            if ((key_Q == _getch()) || (key_q == _getch())) {                 
-                printf("Human Player request to quit the game.\n");
-                if (!confirm_exit()) {
-                    printf("Game is continuing...\n");
-                }
-            }
+    while (1)
+    {
+        printf("Latest Discard Card is: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
+        printf("Current player is %s.\n\n", PLAYER_TYPE_STRING[g_player_on_turn]); 
+        if (g_player_on_turn == HUMAN) {
+            
+            handle_human_turn();
+        }
+        else
+        {
+            handle_computer_turn();
+        }
+
+        if (g_end_game)
+        {
+            printf("Game is End. The winner is %s\n", PLAYER_TYPE_STRING[g_game_winner]);
+            return;
         }
     }
+
+    return;
 }
 
 /**
@@ -73,5 +94,110 @@ int initialize_game(void)
     result += deal_cards();
 
     initialize_card_on_table();
+    return result;
+}
+
+/**
+ * @brief Ends the player turn 
+ *
+ * @param player - Indicates whether user requested is Human or Computer Player
+ */
+void end_turn(PlayerType_e player)
+{
+    PlayerType_e next_turn_type = (player + 1) %2;
+    printf("%s Turn ended...\n\n", PLAYER_TYPE_STRING[player]);
+
+    if (update_game_winner(player)) {
+        g_end_game = true;
+        g_game_winner = player;
+    } else {
+        g_player_on_turn = next_turn_type;
+    }
+    
+    return;
+}
+
+/**
+ * @brief Update the winner of the game
+ * 
+ * @param player Player who is going to be updated as a game player.
+ * @return true set the specific player as winner successsful
+ * @return false set the specific player as winner failed
+ */
+bool update_game_winner(PlayerType_e player)
+{
+    bool ret = false;
+    if (0 == get_pile_length(g_players[player].cards_on_hand)) {
+        g_game_winner = player;
+        ret = true;
+    }
+    return ret;
+}
+
+/**
+ * @brief his function handles the functionality to support computer player's turn 
+ * 
+ */
+void handle_computer_turn(void)
+{
+    if (0 == computer_discard_card(COMPUTER))
+    {
+        display_player_deck(COMPUTER);
+        end_turn(COMPUTER);
+    }
+}
+
+/**
+ * @brief The computer player discards a card,
+ *        Firstly to search a playable card in the on hand cards list.
+ *        If there is playable card, then cut the first playable card out of player's deck,
+ *        update card_on_table globle variable
+ *        then place the discarded card into discard deck, and update player's deck length,
+ *        setup winner if the last card is discarded from the player
+ *
+ * @return int   0 - Discarding card is successful, end of turn, game continues.
+ *               1 - No playable card to discard, end of turn, game continues.
+ *               2 - Invalid player.
+ */
+int computer_discard_card(void)
+{
+    int result = 0;
+    Card_t draw_card;
+    const Deck_t* playable_card;
+
+    if (g_player_on_turn != COMPUTER)
+    {
+        return 2;
+    }
+
+    playable_card = find_playable_card(COMPUTER);
+
+    if (NULL == playable_card)
+    { /* If no playable card on hand */
+        draw_card = draw_one_card();
+        printf("No playable card on hand, draw a new card (%s,%s).\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);
+        if (is_playable_card(draw_card))
+        {
+            memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
+            add_card_at_end(g_discard_pile, g_card_on_table);
+            result = 0;
+        }
+        else
+        {
+            add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card);
+            result = 1;
+        }
+    }
+    else
+    { /*If there is playable card, then remove the first playable card from on hand cards list*/
+        Deck_t* discard_card = remove_first_playable_card(&g_players[COMPUTER].cards_on_hand);
+        memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
+        printf("discard card on table is (%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
+        add_card_at_end(g_discard_pile, g_card_on_table);
+        result = 0;
+    }
+
+    update_game_winner(COMPUTER);
+    end_turn(COMPUTER);
     return result;
 }
