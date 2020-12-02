@@ -14,6 +14,7 @@ PlayerType_e g_game_winner = PlayerTypeNum;    /* game winner*/
 void initialize_players(void);
 int initialize_cards(void);
 int deal_cards(void);
+int add_card_at_beginning(Deck_t** pp_head, Card_t card);
 int add_card_at_end(Deck_t *p_head, Card_t card);
 const Deck_t *remove_first_card_at_beginning(Deck_t **pp_head);
 const Deck_t *find_playable_card(PlayerType_e player);
