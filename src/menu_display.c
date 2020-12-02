@@ -57,6 +57,14 @@ void display_rules(void)
     printf("  If no player is out of cards by the time the DRAW pile is depleted, the DISCARD pile is reshuffled and set as the draw pile. \n\n");
     printf("************************************************************************\n\n");
 
+     printf(" Inputs to play the game\n");
+    printf("  To request a card from the Draw pile, Press N or n. \n");
+    printf("  To end turn, Press e or E. \n");
+    printf("  To discard a card - Say you want discard(RED,3), Press r3 or R3.\n");
+    printf("  To quit the game, Press Q or q.\n\n");
+    printf("************************************************************************\n\n");
+
+
     printf("  Functions of Action Cards (Release 2)\n");
     printf("  Draw One card - When you play this card, the next player must draw 1 card and miss their turn. This card may only be played on a matching color. \n");
     printf("  Skip card - When you play this card, the next player is skipped (loses their turn). This card may only be played on a matching color. \n");
