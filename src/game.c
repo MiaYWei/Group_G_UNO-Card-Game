@@ -26,14 +26,14 @@ void start_new_game(void)
         printf("Initialize game failed.\n ");
         return;
     }
-    printf("\nLatest Discard Card is: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
+    printf("\nCard on the table now: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
     printf("Human Player on hand card list: ");
     display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
     printf("Computer Player on hand card list: ");
     display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
 
     printf("%s player starts the game.\n\n", PLAYER_TYPE_STRING[g_player_on_turn]);
-    printf("Game is running....\n");
+    printf("Game begins now...\n");
 
     while (1)
     {
