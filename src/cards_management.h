@@ -14,7 +14,7 @@
 #define PLAYERS_NUM     2
 #define DEAL_CARDS_NUM  5
 
-typedef enum PlayerType { HUMAN, COMPUTER} PlayerType_e;
+typedef enum PlayerType { HUMAN, COMPUTER, PlayerTypeNum} PlayerType_e;
 typedef enum Direction { CLOCKWISE, COUNTER_CLOCKWISE } Direction_e;
 typedef enum CardColor { RED, BLUE, GREEN, YELLOW } CardColor_e;
 typedef enum CardName { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE } CardName_e;
@@ -27,7 +27,6 @@ static const char* CARD_VALUES [] = {   "0R", "1R", "2R","3R", "4R", "5R","6R", 
                                         "0Y", "1Y", "2Y","3Y", "4Y", "5Y","6Y", "7Y", "8Y","9Y",
                                         "0B", "1B", "2B","3B", "4B", "5B","6B", "7B", "8B","9B",
                                         "0G", "1G", "2G","3G", "4G", "5G","6G", "7G", "8G","9G" };
-
 
 /* Card struct */
 typedef struct CARD {
@@ -44,7 +43,6 @@ typedef struct DECK {
 /* Player struct */
 typedef struct Player {
     PlayerType_e type;            /* The player type*/
-    int count;                      /* The length of the deck on the player's hand */  
     Deck_t* cards_on_hand;      /* Pointer to the player's deck on hand */
 } Player_t;
 
@@ -122,41 +120,12 @@ int get_pile_length(Deck_t* p_pile);
 bool is_playable_card(Card_t card);
 
 /**
- * @brief Sorts the on hand cards for the specific player by
- *        placing the playable card on the top of the player's deck.
- * 
- * @param sort_player emum type variable: The specific player needs to sort his/her on hand cards 
- * @return int SUCCESS - Successful;
- *             MALLOC_FAIL - Failed because of memory malloc fails 
- */
-int sort_cards_on_hand(PlayerType_e sort_player);
-
-/**
  * @brief remove the fist playable card from the card list
  * 
  * @param pp_head : pointer which points to pointer of the list head of
  * @return Deck_t* pointer which points to the removed the card
  */
 Deck_t *remove_first_playable_card(Deck_t** pp_head);
-
-/**
- * @brief The player discards a card,
- *        Firstly to search a playable card in the on hand cards list.
- *        If there is playable card, then cut the first playable card out of player's deck,
- *        update card_on_table globle variable
- *        then place the discarded card into discard deck, and update player's deck length,
- *        setup winner if the last card is discarded from the player
- *
- * @param[in] player enum type variable: The specific player who discards his/her on hand card
- * @param[out] p_post_condition pointer which points to int type variables
- *               0 - Discarding card is successful, end of turn, game continues.
- *               1 - Discarding card is successful, end of game, the current player wins the game.
- *               2 - No playable card to discard, end of turn, game continues.
- *               3 - Invalid player.
- * @return int   0 - Successful;
- *               1 - Failed
- */
-int discard_card(PlayerType_e player, int* p_post_condition);
 
 /**
  * @brief Draws the requested number of cards from the remaining deck for the current player
@@ -179,13 +148,6 @@ int draw_cards(int num_draw_cards, PlayerType_e player);
  */
 Card_t draw_one_card(void);
 
-/*
- * @brief Gets the game winner
- * 
- * @return PlayerType The winner of the game
- */
-PlayerType_e get_game_winner(void);
-
 /**
  * @brief initialize the global varibale g_card_on_table, which indicates the latest discard card on table.
  *        This function is called when start a new game.
@@ -194,7 +156,19 @@ PlayerType_e get_game_winner(void);
 void initialize_card_on_table(void);
 
 /**
+* @brief All the cards are managed in a linked list.
+*        This function is used to add a new card to the specific cards list.
+*
+* @param pp_head pointer to the pointer of the list head
+* @param card The specific card which is added.
+* @return int 0 - Successful;
+*             1 - Failed, since malloc memory fails.
+*/
+int add_card_at_beginning(Deck_t** pp_head, Card_t card);
+
+/**
  * @brief Adds a new card at the end of the linked list.
+ * 
  * 
  * @param p_head pointer to the list head
  * @param card  The specific card which is added. 
@@ -202,5 +176,34 @@ void initialize_card_on_table(void);
  *             1 - Failed, since malloc memory fails.
  */
 int add_card_at_end(Deck_t *p_head, Card_t card);
+
+/**
+ * @brief Remove a particular card from the given deck
+ * Can be used to discard a particular card - during each turn
+ * Works for both the computer as well as human deck of cards
+ *
+ * @param pp_head Pointer to the head of the deck from which card has to be removed
+ * @param card Card to be removed
+ * @return true If the card is been removed successfully
+ * @return false If the removing of card fails
+ */
+bool remove_card_from_deck(Deck_t** ptr_head, const Card_t card);
+
+/**
+ * @brief Checks if the specific card exist in the list or not
+ *
+ * @param list the head of the list
+ * @param card  the specific card to be checked
+ * @return true  The card is in the list
+ * @return false The card is not in the list
+ */
+bool is_card_exist_in_list(const Deck_t* p_list, Card_t card);
+
+/**
+ * @brief Displays player's current list of cards
+ *
+ * @param player Player whose card list has to be displayed
+ */
+void display_player_deck(PlayerType_e player);
 
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once
