@@ -60,6 +60,7 @@ int initialize_cards(void)
         printf("Unable to allocate memory to initialize draw_pile.");
         return -1;
     }
+    g_draw_pile->next = NULL;
 
     for (i = RED; i <= YELLOW; i++)
     {
@@ -329,7 +330,7 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
                 prev->next = cur->next; // Adjust links for previous node
             }
             //free(cur);                  // Delete current node
-            printf("Successfully deleted the first palyable card (%s, %s) in the middile. \n", CARD_COLOR_STRING[cur->card.color], CARD_NAME_STRING[cur->card.name]);
+            printf("Successfully deleted the first palyable card (%s, %s) in the middle. \n", CARD_COLOR_STRING[cur->card.color], CARD_NAME_STRING[cur->card.name]);
             return cur;
         }
 
