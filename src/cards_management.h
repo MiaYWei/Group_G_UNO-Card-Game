@@ -156,6 +156,17 @@ Card_t draw_one_card(void);
 void initialize_card_on_table(void);
 
 /**
+* @brief All the cards are managed in a linked list.
+*        This function is used to add a new card to the specific cards list.
+*
+* @param pp_head pointer to the pointer of the list head
+* @param card The specific card which is added.
+* @return int 0 - Successful;
+*             1 - Failed, since malloc memory fails.
+*/
+int add_card_at_beginning(Deck_t** pp_head, Card_t card);
+
+/**
  * @brief Adds a new card at the end of the linked list.
  * 
  * 

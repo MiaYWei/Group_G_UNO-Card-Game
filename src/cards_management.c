@@ -67,7 +67,7 @@ int initialize_cards(void)
         {
             card.color = i;
             card.name = j;
-            result += add_card_at_end(g_draw_pile, card);
+            result += add_card_at_beginning(&g_draw_pile, card);
         }
     }
 
@@ -79,10 +79,7 @@ int initialize_cards(void)
         printf("Unable to allocate memory to initizlize discard pile.");
         return -1;
     } 
-    else 
-    {
-        g_discard_pile->next = NULL;
-    }
+    g_discard_pile->next = NULL;
 
     return result;
 }
@@ -104,11 +101,37 @@ int deal_cards(void)
         for (j = 0; j < PLAYERS_NUM; j++)
         {
             dealt_card = remove_first_card_at_beginning(&g_draw_pile);
-            result += add_card_at_end(g_players[(PlayerType_e)j].cards_on_hand, dealt_card->card);
+            result += add_card_at_beginning(&g_players[(PlayerType_e)j].cards_on_hand, dealt_card->card);
         }
     }
 
     return result;
+}
+
+/**
+* @brief All the cards are managed in a linked list.
+*        This function is used to add a new card to the specific cards list.
+*
+* @param pp_head pointer to the pointer of the list head
+* @param card The specific card which is added.
+* @return int 0 - Successful;
+*             1 - Failed, since malloc memory fails.
+*/
+int add_card_at_beginning(Deck_t **pp_head, Card_t card)
+{
+    Deck_t* new_card = (Deck_t*)malloc(sizeof(Deck_t));
+    if (new_card == NULL)
+    {
+        printf("Fail to malloc memory when insert the card.\n");
+        return MALLOC_FAIL;
+    }
+
+    memcpy(&new_card->card, &card, sizeof(Card_t));
+
+    new_card->next = *pp_head;
+    *pp_head = new_card;
+
+    return 0;
 }
 
 /**
@@ -202,8 +225,7 @@ const Deck_t *find_playable_card(PlayerType_e player)
  */
 void display_cards_list(const Deck_t *p_list)
 {
-    const Deck_t *temp_list_ptr;
-    temp_list_ptr = p_list;
+    const Deck_t *temp_list_ptr = p_list;
 
     printf("[ ");
 
