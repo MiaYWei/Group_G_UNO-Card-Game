@@ -9,9 +9,8 @@ Deck_t *g_discard_pile = NULL;         /* discarded cards */
 Player_t g_players[PLAYERS_NUM];       /* array of players */
 Card_t g_card_on_table;                /* last played card on the table-discard pile */
 PlayerType_e g_player_on_turn = HUMAN; /* The current player on turn */
-PlayerType_e g_game_winner = HUMAN;    /* game winner*/
+PlayerType_e g_game_winner = PlayerTypeNum;    /* game winner*/
 
-int initialize_game(void);
 void initialize_players(void);
 int initialize_cards(void);
 int deal_cards(void);
@@ -22,13 +21,10 @@ const Deck_t *find_playable_card(PlayerType_e player);
 void display_cards_list(const Deck_t *p_list);
 int get_pile_length(Deck_t *p_pile);
 bool is_playable_card(Card_t card);
-int sort_cards_on_hand(PlayerType_e sort_player);
 void swap_cards(Card_t *p_a, Card_t *p_b);
 Deck_t *remove_first_playable_card(Deck_t **pp_head);
-int discard_card(PlayerType_e player, int *p_post_condition);
 int draw_cards(int num_draw_cards, PlayerType_e player);
 Card_t draw_one_card(void);
-PlayerType_e get_game_winner(void);
 
 /**
  * @brief Initializes players global variables
@@ -39,7 +35,6 @@ void initialize_players(void)
     for (int i = 0; i < PLAYERS_NUM; i++)
     {
         g_players[i].type = (PlayerType_e)i;
-        g_players[i].count = 0;
         g_players[i].cards_on_hand = NULL;
     }
 
@@ -63,9 +58,10 @@ int initialize_cards(void)
     g_draw_pile = (Deck_t *)malloc(sizeof(Deck_t));
     if (g_draw_pile == NULL)
     {
-        printf("Unable to allocate memory to initizlize draw_pile.");
+        printf("Unable to allocate memory to initialize draw_pile.");
         return -1;
     }
+    g_draw_pile->next = NULL;
 
     for (i = RED; i <= YELLOW; i++)
     {
@@ -77,12 +73,15 @@ int initialize_cards(void)
         }
     }
 
+    //shuffle_cards();
+
     g_discard_pile = (Deck_t *)malloc(sizeof(Deck_t));
     if (g_discard_pile == NULL)
     {
-        printf("Unable to allocate memory to initizlize discard pile.");
+        printf("Unable to allocate memory to initialize discard pile.");
         return -1;
-    }
+    } 
+    g_discard_pile->next = NULL;
 
     return result;
 }
@@ -105,7 +104,6 @@ int deal_cards(void)
         {
             dealt_card = remove_first_card_at_beginning(&g_draw_pile);
             result += add_card_at_beginning(&g_players[(PlayerType_e)j].cards_on_hand, dealt_card->card);
-            g_players[j].count++;
         }
     }
 
@@ -113,17 +111,17 @@ int deal_cards(void)
 }
 
 /**
- * @brief All the cards are managed in a linked list.
- *        This function is used to add a new card to the specific cards list.
- * 
- * @param pp_head pointer to the pointer of the list head
- * @param card The specific card which is added.
- * @return int 0 - Successful;
- *             1 - Failed, since malloc memory fails.
- */
+* @brief All the cards are managed in a linked list.
+*        This function is used to add a new card to the specific cards list.
+*
+* @param pp_head pointer to the pointer of the list head
+* @param card The specific card which is added.
+* @return int 0 - Successful;
+*             1 - Failed, since malloc memory fails.
+*/
 int add_card_at_beginning(Deck_t **pp_head, Card_t card)
 {
-    Deck_t *new_card = (Deck_t *)malloc(sizeof(Deck_t));
+    Deck_t* new_card = (Deck_t*)malloc(sizeof(Deck_t));
     if (new_card == NULL)
     {
         printf("Fail to malloc memory when insert the card.\n");
@@ -229,8 +227,7 @@ const Deck_t *find_playable_card(PlayerType_e player)
  */
 void display_cards_list(const Deck_t *p_list)
 {
-    const Deck_t *temp_list_ptr;
-    temp_list_ptr = p_list;
+    const Deck_t *temp_list_ptr = p_list;
 
     printf("[ ");
 
@@ -282,68 +279,6 @@ bool is_playable_card(Card_t card)
 }
 
 /**
- * @brief Sorts the on hand cards for the specific player by
- *        placing the playable card on the top of the player's deck.
- *
- * @param sort_player enum type variable: The specific player needs to sort his/her on hand cards
- * @return int SUCCESS - Successful;
- *             MALLOC_FAIL - Failed because of memory malloc fails
- */
-int sort_cards_on_hand(PlayerType_e sort_player)
-{
-    int i;
-    int length = g_players[sort_player].count;
-    int index = 0;
-
-    /*Copy the cards from the current player's hand into array*/
-    Deck_t *current = malloc(sizeof(Deck_t));
-    if (current == NULL)
-    {
-        printf("Fail to malloc memory when sort the on hand cards.\n");
-        return MALLOC_FAIL;
-    }
-    current = g_players[sort_player].cards_on_hand;
-
-    Card_t *sorted_cards = malloc(sizeof(Card_t) * length);
-    if (sorted_cards == NULL)
-    {
-        printf("Fail to malloc memory when sort the on hand cards.\n");
-        free(current);
-        return MALLOC_FAIL;
-    }
-
-    for (i = 0; i < length; i++)
-    {
-        sorted_cards[i].color = current->card.color;
-        sorted_cards[i].name = current->card.name;
-        current = current->next;
-    }
-
-    /* Place all the playable cards on the top of the player's deck*/
-    for (i = 0; i < length; i++)
-    {
-        if (is_playable_card(sorted_cards[i]))
-        {
-            swap_cards(&sorted_cards[i], &sorted_cards[index]);
-            index++;
-        }
-    }
-
-    /*Copy the sorted cards to player's on hand deck*/
-    current = g_players[sort_player].cards_on_hand;
-
-    for (i = 0; i < length; i++)
-    {
-        current->card = sorted_cards[i];
-        current = current->next;
-    }
-
-    free(current);
-    free(sorted_cards);
-    return SUCCESS;
-}
-
-/**
  * @brief Swaps the position of card a and card b
  *
  * @param p_a pointer to card a;
@@ -382,7 +317,7 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
         prev = *pp_head;             // Get reference of head node
         *pp_head = (*pp_head)->next; // Adjust head node link
         //free(prev);            // Delete prev since it contains reference to head node
-        printf("Successfully deleted the first palyable card (%s, %s) at beginning. \n", CARD_COLOR_STRING[removed_card.color], CARD_NAME_STRING[removed_card.name]);
+        //printf("Successfully deleted the first palyable card (%s, %s) at beginning. \n", CARD_COLOR_STRING[removed_card.color], CARD_NAME_STRING[removed_card.name]);
         return prev; // No need to delete further
     }
 
@@ -396,7 +331,7 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
                 prev->next = cur->next; // Adjust links for previous node
             }
             //free(cur);                  // Delete current node
-            printf("Successfully deleted the first palyable card (%s, %s) in the middile. \n", CARD_COLOR_STRING[cur->card.color], CARD_NAME_STRING[cur->card.name]);
+            printf("Successfully deleted the first palyable card (%s, %s) in the middle. \n", CARD_COLOR_STRING[cur->card.color], CARD_NAME_STRING[cur->card.name]);
             return cur;
         }
 
@@ -405,75 +340,6 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
     }
 
     return NULL;
-}
-
-/**
- * @brief The player discards a card,
- *        Firstly to search a playable card in the on hand cards list.
- *        If there is playable card, then cut the first playable card out of player's deck,
- *        update card_on_table globle variable
- *        then place the discarded card into discard deck, and update player's deck length,
- *        setup winner if the last card is discarded from the player
- *
- * @param[in] player enum type variable: The specific player who discards his/her on hand card
- * @param[out] p_post_condition pointer which points to int type variables
- *               0 - Discarding card is successful, end of turn, game continues.
- *               1 - Discarding card is successful, end of game, the current player wins the game.
- *               2 - No playable card to discard, end of turn, game continues.
- *               3 - Invalid player.
- * @return int   0 - Successful;
- *               1 - Failed
- */
-int discard_card(PlayerType_e player, int *p_post_condition)
-{
-    int result = 1;
-    Card_t draw_card;
-    const Deck_t *playable_card;
-    int post_condition;
-
-    if (g_player_on_turn != player)
-    {
-        post_condition = 3;
-        *p_post_condition = post_condition;
-        return 1;
-    }
-
-    playable_card = find_playable_card(player);
-
-    if (NULL == playable_card)
-    { /* If no playable card on hand */
-        draw_card = draw_one_card();
-        printf("No playable card on hand, draw a new card (%s,%s).\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);
-        if (is_playable_card(draw_card))
-        {
-            memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
-            result = add_card_at_end(g_discard_pile, g_card_on_table);
-            post_condition = 0;
-        }
-        else
-        {
-            result += add_card_at_end(g_players[player].cards_on_hand, draw_card);
-            post_condition = 2;
-        }
-    }
-    else
-    { /*If there is playable card, then remove the first playable card from on hand cards list*/
-        Deck_t *discard_card = remove_first_playable_card(&g_players[player].cards_on_hand);
-        memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
-        printf("discard card on table is (%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
-        result = add_card_at_end(g_discard_pile, g_card_on_table);
-        g_players[player].count--;
-        post_condition = 0;
-    }
-
-    if (g_players[player].count == 0)
-    {
-        g_game_winner = player;
-        post_condition = 1;
-    }
-
-    *p_post_condition = post_condition;
-    return result;
 }
 
 /**
@@ -505,7 +371,7 @@ int draw_cards(int num_draw_cards, PlayerType_e player)
         }
 
         draw_card = remove_first_card_at_beginning(&g_draw_pile);
-        result = add_card_at_beginning(&g_players[player].cards_on_hand, draw_card->card);
+        result = add_card_at_end(g_players[player].cards_on_hand, draw_card->card);
     }
 
     return result;
@@ -539,16 +405,6 @@ Card_t draw_one_card(void)
 }
 
 /**
- * @brief Gets the winner of the game
- *
- * @return PlayerType_e The winner of the game
- */
-PlayerType_e get_game_winner(void)
-{
-    return g_game_winner;
-}
-
-/**
  * @brief initialize the global varibale g_card_on_table, which indicates the latest card in the discard pile 
  *        This function is called when start a new game.
  * 
@@ -557,4 +413,95 @@ void initialize_card_on_table(void)
 {
     Card_t draw_card = draw_one_card();
     memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
+}
+
+/**
+ * @brief Remove a particular card from the given deck
+ * Can be used to discard a particular card - during each turn
+ * Works for both the computer as well as human deck of cards 
+ * 
+ * @param pp_head Pointer to the head of the deck from which card has to be removed
+ * @param card Card to be removed
+ * @return true If the card is been removed successfully
+ * @return false If the removing of card fails
+ */
+bool remove_card_from_deck(Deck_t** pp_head, const Card_t card)
+{
+    Deck_t* temp = *pp_head;
+    Deck_t* prev = *pp_head;
+
+    // If head node itself holds the key or multiple occurrences of key
+    while ((temp != NULL) && (temp->card.name == card.name) && (temp->card.color == card.color))
+    {
+        *pp_head = temp->next; // Changed head
+        free(temp);             // free old head
+        return true;
+    }
+
+    // Delete occurrences other than head
+    while (temp != NULL)
+    {
+        // Search for the key to be deleted, keep track of the previous node as we need to change 'prev->next'
+        while (temp != NULL && ((temp->card.name != card.name) || (temp->card.color =! card.color))) {
+            prev = temp;
+            temp = temp->next;
+        }
+
+        // If key was not present in linked list
+        if (temp == NULL) 
+        { 
+            return false; 
+        }
+
+        // Unlink the node from linked list
+        prev->next = temp->next;
+
+        free(temp); // Free memory
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * @brief Checks if the specific card exist in the list or not
+ * 
+ * @param list the head of the list
+ * @param card  the specific card to be checked
+ * @return true  The card is in the list
+ * @return false The card is not in the list
+ */
+bool is_card_exist_in_list(const Deck_t* p_list, Card_t card)
+{
+    int index = 0;
+    const Deck_t* cur_element = p_list;
+    if (p_list == NULL) {
+        printf("List is empty.\n");
+        return false;
+    }
+
+    /* Iterate till last element until key is not found*/
+    while (cur_element != NULL)
+    {
+        if ((cur_element->card.color == card.color) && (cur_element->card.name == card.name))
+        {
+            return true;
+        }
+
+        index++;
+        cur_element = cur_element->next;
+    }
+
+    return false;
+}
+
+/**
+ * @brief Displays player's current list of cards
+ *
+ * @param player Player whose card list has to be displayed
+ */
+void display_player_deck(PlayerType_e player)
+{
+    printf("%s", PLAYER_TYPE_STRING[player]);
+    display_cards_list(g_players[player].cards_on_hand);
 }
