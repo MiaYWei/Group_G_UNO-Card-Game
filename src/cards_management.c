@@ -57,7 +57,7 @@ int initialize_cards(void)
     g_draw_pile = (Deck_t *)malloc(sizeof(Deck_t));
     if (g_draw_pile == NULL)
     {
-        printf("Unable to allocate memory to initizlize draw_pile.");
+        printf("Unable to allocate memory to initialize draw_pile.");
         return -1;
     }
 
@@ -76,7 +76,7 @@ int initialize_cards(void)
     g_discard_pile = (Deck_t *)malloc(sizeof(Deck_t));
     if (g_discard_pile == NULL)
     {
-        printf("Unable to allocate memory to initizlize discard pile.");
+        printf("Unable to allocate memory to initialize discard pile.");
         return -1;
     } 
     g_discard_pile->next = NULL;
