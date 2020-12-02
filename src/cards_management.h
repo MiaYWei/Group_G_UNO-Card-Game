@@ -14,11 +14,11 @@
 #define PLAYERS_NUM     2
 #define DEAL_CARDS_NUM  5
 
-typedef enum PlayerType { HUMAN, COMPUTER, PlayerTypeNum} PlayerType_e;
-typedef enum Direction { CLOCKWISE, COUNTER_CLOCKWISE } Direction_e;
-typedef enum CardColor { RED, BLUE, GREEN, YELLOW } CardColor_e;
-typedef enum CardName { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE } CardName_e;
-typedef enum CardPile { DRAW, DISCARD, HUMAN_PLAYER, COMPUTER_PLAYER } CardPile_e;
+typedef enum { HUMAN, COMPUTER, PlayerTypeNum} PlayerType_e;
+typedef enum { CLOCKWISE, COUNTER_CLOCKWISE } Direction_e;
+typedef enum { RED, BLUE, GREEN, YELLOW } CardColor_e;
+typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE } CardName_e;
+typedef enum { DRAW, DISCARD, HUMAN_PLAYER, COMPUTER_PLAYER } CardPile_e;
 
 static const char* PLAYER_TYPE_STRING[] = { "HUMAN", "COMPUTER"};
 static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };

@@ -14,7 +14,6 @@ static Player_t *human_player = &g_players[HUMAN]; //TODO use g_player directly
 
 int request_card(PlayerType_e PlayerType, int no_of_cards);
 void invalid_turn_warning(void);
-const Deck_t *show_recent_card(Deck_t **pp_head);
 PlayerType_e determine_next_player(struct CARD *previous_card, PlayerType_e current_player);
 bool validate_card(char *entered_value);
 Card_t *map_user_input(char *input);

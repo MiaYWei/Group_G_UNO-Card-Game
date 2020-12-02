@@ -148,7 +148,7 @@ bool update_game_winner(PlayerType_e player)
  */
 void handle_computer_turn(void)
 {
-    if (0 == computer_discard_card(COMPUTER))
+    if (0 == computer_discard_card())
     {
         display_player_deck(COMPUTER);
         end_turn(COMPUTER);
