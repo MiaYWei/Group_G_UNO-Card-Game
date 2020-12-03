@@ -223,7 +223,7 @@ Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched)
  */
 void show_cards_assigned(Card_t assigned_card)
 {
-    printf("The card from the draw pile is %s%s \n", CARD_COLOR_STRING[assigned_card.color], CARD_NAME_STRING[assigned_card.name]);
+    printf("The card from the draw pile is (%s,%s) \n", CARD_COLOR_STRING[assigned_card.color], CARD_NAME_STRING[assigned_card.name]);
     display_player_deck(HUMAN);
     return;
 }
