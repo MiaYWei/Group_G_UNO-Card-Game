@@ -408,6 +408,69 @@ Card_t draw_one_card(void)
     return draw_deck->card;
 }
 
+/*----shuffle cards---------*/   
+/**
+ * @brief Recursively free the given deck
+ * @param d deck to be freed
+ */
+ 
+
+void free_deck(Deck_t* d) {
+    // Recursively free the deck
+    if (d != NULL) {
+        free_deck(d->next);
+        free(d);
+    }
+}
+
+
+
+
+/**
+ * @brief shuffle_cards the cards in remaining_pile
+ * @param length current length of remaining_pile
+ * @return the shuffled deck
+ */
+
+int shuffle(int length) {
+    // reset seed
+    srand(time(NULL));
+    // copy the cards in remaining pile into a Card array
+    Deck_t* current = g_draw_pile;
+    Card_t* array = malloc(sizeof(Card_t) * length);
+    if (array == NULL) {
+        free_deck(g_draw_pile);
+        return 1;
+    }
+    for (int i = 0; i < length; i++) {
+        array[i] = current->card;
+        current = current->next;
+    }
+
+    // loop through the cards array and swap them randomly, using Fisher-Yates shuffle
+    for (i = 0; i < length; i++) {
+        // find a random index to swap with the current one
+        int random_index = rand() % (length - i) + i;
+        swap_cards(&array[random_index], &array[i]);
+    }
+
+    // Put cards in array back to the remaining pile in the shuffled order
+    current = g_draw_pile;
+    for ( i = 0; i < length - 1; i++) {
+        current->card = array[i];
+        current = current->next;
+    }
+    //To make sure that there is no memory spaces assigned to the next deck of the last element of the whole cards
+    // Set the last elements's next deck to null
+    current->card = array[length - 1];
+    current->next = NULL;
+    free(array);
+    return 0;
+}
+
+
+/*------------------------------------------------------*/
+
 /**
  * @brief initialize the global varibale g_card_on_table, which indicates the latest card in the discard pile 
  *        This function is called when we start a new game.
