@@ -87,7 +87,7 @@ bool validate_card(char *entered_value)
  * Called each time when it's the human player's turn 
  * Keyboard Input from Human 
  *        Q/q - Exit game
- *        R/r - Requests card 
+ *        n/N - Requests card 
  *        E/e - End Turn
  *        Other- Map to appropriate Card Info
  */
@@ -102,7 +102,7 @@ ret_type_e record_human_input(void)
     {
         quit_game();
     }
-    else if (user_input[0] == 'r' || user_input[0] == 'R')
+    else if (user_input[0] == 'n' || user_input[0] == 'N')
     {
         if (g_card_requested)
         {
