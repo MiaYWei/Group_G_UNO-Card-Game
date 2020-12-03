@@ -26,21 +26,20 @@ void start_new_game(void)
         printf("Initialize game failed.\n ");
         return;
     }
-    printf("\nCard on the table now: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
+
+    printf("\nGame begins now...\n");
     printf("Human Player Deck: ");
     display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
     printf("Computer Player Deck: ");
     display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
-    printf("%s player starts the game.\n\n", PLAYER_TYPE_STRING[g_player_on_turn]);
-    printf("Game begins now...\n");
+    printf("\n\n");
 
     while (1)
     {
         printf("Card on the table now: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
-        printf("Current player is %s.\n\n", PLAYER_TYPE_STRING[g_player_on_turn]); 
+        printf("Current player is %s.\n", PLAYER_TYPE_STRING[g_player_on_turn]);
         if (g_player_on_turn == HUMAN) 
         {
-            
             handle_human_turn();
         }
         else
@@ -107,7 +106,7 @@ int initialize_game(void)
  */
 void end_turn(PlayerType_e player)
 {
-    PlayerType_e next_turn_type = (player + 1) % 2;
+    PlayerType_e next_turn_type = (player + 1) % PLAYERS_NUM;
     printf("%s Turn ended...\n\n", PLAYER_TYPE_STRING[player]);
 
     if (if_end_game(player))
@@ -150,7 +149,6 @@ void handle_computer_turn(void)
     if ((0 == ret) || (1 == ret))
     {
         end_turn(COMPUTER);
-        display_player_deck(COMPUTER);
     }
     else
     {
@@ -203,10 +201,10 @@ int computer_take_turn(void)
         }
     }
     else
-    { /*If there is playable card, then remove the first playable card from on hand cards list*/
+    {   /*If there is playable card, then remove the first playable card from on hand cards list*/
         Deck_t* discard_card = remove_first_playable_card(&g_players[COMPUTER].cards_on_hand);
         memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
-        printf("Card on table now: (%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
+        //printf("Card on the table now: (%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
         add_card_at_end(g_discard_pile, g_card_on_table);
         result = 0;
     }
