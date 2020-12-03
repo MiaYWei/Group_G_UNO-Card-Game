@@ -14,10 +14,10 @@ static Player_t *human_player = &g_players[HUMAN]; //TODO use g_player directly
 
 int request_card(PlayerType_e PlayerType, int no_of_cards);
 void invalid_turn_warning(void);
-PlayerType_e determine_next_player(struct CARD *previous_card, PlayerType_e current_player);
+PlayerType_e determine_next_player(struct CARD *previous_card, PlayerType_e current_player); //Release 2
 bool validate_card(char *entered_value);
 Card_t *map_user_input(char *input);
-Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched);      //Can be included in Card management
+Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched); //Can be included in Card management
 ret_type_e record_human_input(void);
 void show_cards_assigned(Card_t assigned_card);
 bool check_is_valid_turn(Card_t *current_card);
@@ -87,14 +87,14 @@ bool validate_card(char *entered_value)
  * Called each time when it's the human player's turn 
  * Keyboard Input from Human 
  *        Q/q - Exit game
- *        R/r - Requests card 
+ *        n/N - Requests card 
  *        E/e - End Turn
  *        Other- Map to appropriate Card Info
  */
 
 ret_type_e record_human_input(void)
 {
-    char user_input[10];//TODO Modify the array size later
+    char user_input[10]; //TODO Modify the array size later
     printf("Please enter your choice \n");
     scanf_s("%s", user_input, 10);
 
@@ -102,9 +102,16 @@ ret_type_e record_human_input(void)
     {
         quit_game();
     }
-    else if (user_input[0] == 'r' || user_input[0] == 'R')
+    else if (user_input[0] == 'n' || user_input[0] == 'N')
     {
-        request_card(HUMAN, 1);
+        if (g_card_requested)
+        {
+            printf("You've already drawn a card from the pile. Please discard card or end turn now \n");
+        }
+        else
+        {
+            request_card(HUMAN, 1);
+        }
     }
 
     else if (user_input[0] == 'e' || user_input[0] == 'E')
@@ -112,10 +119,11 @@ ret_type_e record_human_input(void)
         if (g_card_requested)
         {
             end_turn(g_player_on_turn);
+            g_card_requested = false;
         }
         else
         {
-            printf("Please draw a card before you can end your turn");
+            printf("Please draw a card before you can end your turn \n");
             display_player_deck(HUMAN);
         }
     }
@@ -189,7 +197,6 @@ Card_t *map_user_input(char *input)
     temp_card->name = input[1] - '0';
     return temp_card;
 }
-
 
 //TODO Remove this function if unused
 /**

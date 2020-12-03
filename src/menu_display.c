@@ -43,35 +43,43 @@ void display_rules(void)
     printf("  2 Wild Draw Two cards.\n\n");
     printf("************************************************************************\n\n");
     printf(" Objective of the Game \n");
-    printf("  Be the first player to get rid of all of your cards in each turn.\n\n");
+    printf("  Be the first player to get rid of all of your cards.\n\n");
     printf("************************************************************************\n\n");
     printf(" Let's Play\n");
     printf("  1. Human player starts the game. \n");
-    printf("  2. The program deals each player 5 cards when start a new game.\n");
+    printf("  2. The program deals each player 5 cards while starting a new game.\n");
     printf("  3. On your turn, you must match a card from your hand to the card on the top of the DISCARD pile, either by number, color or symbol.\n");
-    printf("    EXAMPLE: If the card on the top of the DISCARD pile is a blue 7, the player must put down a blue card OR any color 7.\n\n");
+    printf("    EXAMPLE: If the card on the top of the DISCARD pile is a blue 7, the player must put down a blue card OR 7 in any color.\n\n");
     //printf(" Alternatively, the player can put down a Wild card(See FUNCTIONS OF ACTION CARDS");
     printf("************************************************************************\n\n");
-    printf(" Win the Game\n");
-    printf("  Once a player has no cards left, the game is over. The specific player is the winner of the game.\n");
-    printf("  If no player is out of cards by the time the DRAW pile is depleted, the DISCARD pile is reshuffled and play continues.\n\n");
+   // printf(" Win the Game\n");
+    printf("  Once a player has no cards left, the game is over. The player who exhausts all of his cards quickly is the winner of the game.\n");
+    printf("  If no player is out of cards by the time the DRAW pile is depleted, the DISCARD pile is reshuffled and set as the draw pile. \n\n");
     printf("************************************************************************\n\n");
 
-    printf(" Functions of Action Cards (Release 2)\n");
+     printf(" Inputs to play the game\n");
+    printf("  To request a card from the Draw pile, Press N or n. \n");
+    printf("  To end turn, Press e or E. \n");
+    printf("  To discard a card - Say you want discard(RED,3), Press r3 or R3.\n");
+    printf("  To quit the game, Press Q or q.\n\n");
+    printf("************************************************************************\n\n");
+
+
+    printf("  Functions of Action Cards (Release 2)\n");
     printf("  Draw One card - When you play this card, the next player must draw 1 card and miss their turn. This card may only be played on a matching color. \n");
     printf("  Skip card - When you play this card, the next player is skipped (loses their turn). This card may only be played on a matching color. \n");
     printf("  Wild card - When you play this card, you get to choose the color that continues play (any color including the color in play before the Wild card was laid down).\n");
     printf("  Wild Draw TWO card - When you play this card, you get to choose the color that continues play PLUS the next player must draw 2 cards from the DRAW pile and lose their turn.\n\n");
     printf("************************************************************************\n\n");
 
-    printf("\npress any key to go back to menu...");
-    scanf_s("%s", choice, 1);
+    printf("\nPress any key to go back to menu...");
+    scanf_s("%s", choice, 1);    
 }
 
 void display_score_board(void)
 {
     char choice[5] = { 0 };
-    printf("Will release in Release 2\n");
+    printf("Will be available in Release 2\n");
     printf("Press any key to go back to menu...");
     scanf_s("%s", choice, 1);
 }
@@ -81,7 +89,7 @@ void main_menu(void)
     int int_choice;
 
     while(1){    
-        system("cls"); //clear screen
+        system("cls"); //clear screen      
         start_screen();
         scanf_s("%d", &int_choice);
         switch (int_choice) {
@@ -98,7 +106,7 @@ void main_menu(void)
                 display_score_board();
                 break;
             default:
-                printf("Wrong choice. Enter Again");
+                printf("Wrong choice. Enter a valid number");
                 break;
         }
     }

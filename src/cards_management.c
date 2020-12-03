@@ -4,7 +4,7 @@
 #include "cards_management.h"
 
 /* Global variables */
-Deck_t *g_draw_pile = NULL;            /* remaining cards to draw */
+Deck_t *g_draw_pile = NULL;            /* Draw cards pile */
 Deck_t *g_discard_pile = NULL;         /* discarded cards */
 Player_t g_players[PLAYERS_NUM];       /* array of players */
 Card_t g_card_on_table;                /* last played card on the table-discard pile */
@@ -17,6 +17,7 @@ int deal_cards(void);
 int add_card_at_beginning(Deck_t **pp_head, Card_t card);
 int add_card_at_end(Deck_t *p_head, Card_t card);
 const Deck_t *remove_first_card_at_beginning(Deck_t **pp_head);
+bool remove_card_from_deck(Deck_t** pp_head, const Card_t card);
 const Deck_t *find_playable_card(PlayerType_e player);
 void display_cards_list(const Deck_t *p_list);
 int get_pile_length(Deck_t *p_pile);
@@ -46,7 +47,7 @@ void initialize_players(void)
  *        Memeory will be allocated to store all the cards informations.
  *        If it can't malloc at any point, we will free the deck and return FAIL.
  *        initialize discard_cards pointor to be NULL, which indicates no discard cards.
- * @return int  0 - Initialization is successful;
+ * @return int    0 - Initialization is successful;
  *             != 0 - Initialization is failed, since malloc memory fails
  */
 int initialize_cards(void)
@@ -87,10 +88,10 @@ int initialize_cards(void)
 }
 
 /**
- * @brief Deals each player 5 cards at the start of the game setup
+ * @brief Deals each player 5 cards during the game initialization
  *
  * @return int   0 - Successful;
- *               1 - Failed, since malloc memory fails.
+ *               1 - Failed due to error in malloc;
  */
 int deal_cards(void)
 {
@@ -112,12 +113,12 @@ int deal_cards(void)
 
 /**
 * @brief All the cards are managed in a linked list.
-*        This function is used to add a new card to the specific cards list.
+*        This function is used to add a new card at the beginning to the specific cards list.
 *
 * @param pp_head pointer to the pointer of the list head
-* @param card The specific card which is added.
+* @param card The specific card which is to be added.
 * @return int 0 - Successful;
-*             1 - Failed, since malloc memory fails.
+*             1 - Failed due to error in malloc;
 */
 int add_card_at_beginning(Deck_t **pp_head, Card_t card)
 {
@@ -140,9 +141,9 @@ int add_card_at_beginning(Deck_t **pp_head, Card_t card)
  * @brief Adds a new card at the end of the linked list.
  * 
  * @param p_head pointer to the list head
- * @param card  The specific card which is added. 
+ * @param card  The specific card which is to be added. 
  * @return int 0 - Successful;
- *             1 - Failed, since malloc memory fails.
+ *             1 - Failed due to error in malloc;
  */
 int add_card_at_end(Deck_t *p_head, Card_t card)
 {
@@ -192,7 +193,7 @@ const Deck_t *remove_first_card_at_beginning(Deck_t **pp_head)
 
 /**
  * @brief Finds a playable cards from player on hand card list,
- *        which should be has the same color or same name comparing with the on tabe card
+ *        which should be has the same color or same name as the on table card
  *
  * @param player        enum type variable which indicates the player type
  * @return const Deck_t*  pointer type variable, which points to the playable card.
@@ -241,7 +242,7 @@ void display_cards_list(const Deck_t *p_list)
 }
 
 /**
- * @brief Gets the listed cards pile length
+ * @brief Gets the length of a specific deck of cards
  * 
  * @param p_pile  pointer which points to the specific pile
  * @return int the length of the card list
@@ -261,10 +262,10 @@ int get_pile_length(Deck_t *p_pile)
 }
 
 /**
- * @brief Determins the card is playable or not by comparing the card with current card on tables.
+ * @brief Determines the card is playable or not by comparing the card with current card on table.
  *        If either the color or the name is same, then it's playable
  *
- * @param card The card which needs to be checked is playable or not
+ * @param card The card which needs to be checked if it is playable or not
  * @return true The card is playable
  * @return false The card is not playable
  */
@@ -343,11 +344,11 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
 }
 
 /**
- * @brief Draws the requested number of cards from the remaining deck for the current player
- *        If there is no cards left in the remaining deck, then place all the cards from discard deck
- *        into the remaining deck.
+ * @brief Draws the requested number of cards from the draw pile for the current player
+ *        If there is no cards left in the draw pile, then place all the cards from discard pile
+ *        into the draw pile.
  *
- * @param num_draw_cards number of draw cards
+ * @param num_draw_cards number of cards to be drawn
  * @param player enum type variable: The specific player who draws the cards
  * @return int   0 - Successful;
  *               1 - Failed.
@@ -406,7 +407,7 @@ Card_t draw_one_card(void)
 
 /**
  * @brief initialize the global varibale g_card_on_table, which indicates the latest card in the discard pile 
- *        This function is called when start a new game.
+ *        This function is called when we start a new game.
  * 
  */
 void initialize_card_on_table(void)
@@ -422,7 +423,7 @@ void initialize_card_on_table(void)
  * 
  * @param pp_head Pointer to the head of the deck from which card has to be removed
  * @param card Card to be removed
- * @return true If the card is been removed successfully
+ * @return true If the card has been removed successfully
  * @return false If the removing of card fails
  */
 bool remove_card_from_deck(Deck_t** pp_head, const Card_t card)
@@ -438,7 +439,7 @@ bool remove_card_from_deck(Deck_t** pp_head, const Card_t card)
         return true;
     }
 
-    // Delete occurrences other than head
+    // To delete key if it's not present in head 
     while (temp != NULL)
     {
         // Search for the key to be deleted, keep track of the previous node as we need to change 'prev->next'
