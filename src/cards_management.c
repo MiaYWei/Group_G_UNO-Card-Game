@@ -424,17 +424,6 @@ void free_deck(Deck_t* d) {
 }
 
 
-/**
- * @brief Swapping two Cards
- * @param *a address of the first card.
- * @param *b address of the sencond card.
- */
-
-void swap(Card_t *a, Card_t *b) {
-    Card_t temp = *a;
-    *a = *b;
-    *b = temp;
-}
 
 
 /**
