@@ -136,7 +136,6 @@ bool update_game_winner(PlayerType_e player)
     bool ret = false;
     if (0 == get_pile_length(g_players[player].cards_on_hand)) 
     {
-        g_game_winner = player;
         ret = true;
     }
     return ret;
