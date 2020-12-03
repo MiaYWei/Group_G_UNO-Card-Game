@@ -11,7 +11,7 @@ void start_new_game(void);
 bool confirm_exit(void);
 int initialize_game(void);
 void end_turn(PlayerType_e player);
-bool update_game_winner(PlayerType_e player);
+bool if_end_game(PlayerType_e player);
 void handle_computer_turn(void);
 
 /**
@@ -26,22 +26,20 @@ void start_new_game(void)
         printf("Initialize game failed.\n ");
         return;
     }
-    printf("\nCard on the table now: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
+
+    printf("\nGame begins now...\n");
     printf("Human Player Deck: ");
     display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
     printf("Computer Player Deck: ");
     display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
-
-    printf("%s player starts the game.\n\n", PLAYER_TYPE_STRING[g_player_on_turn]);
-    printf("Game begins now...\n");
+    printf("\n\n");
 
     while (1)
     {
-        printf("Latest card on the table  is: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
-        printf("Current player is %s.\n\n", PLAYER_TYPE_STRING[g_player_on_turn]); 
+        printf("Card on the table now: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
+        printf("Current player is %s.\n", PLAYER_TYPE_STRING[g_player_on_turn]);
         if (g_player_on_turn == HUMAN) 
         {
-            
             handle_human_turn();
         }
         else
@@ -108,10 +106,10 @@ int initialize_game(void)
  */
 void end_turn(PlayerType_e player)
 {
-    PlayerType_e next_turn_type = (player + 1) %2;
+    PlayerType_e next_turn_type = (player + 1) % PLAYERS_NUM;
     printf("%s Turn ended...\n\n", PLAYER_TYPE_STRING[player]);
 
-    if (update_game_winner(player)) 
+    if (if_end_game(player))
     {
         g_end_game = true;
         g_game_winner = player;
@@ -125,18 +123,17 @@ void end_turn(PlayerType_e player)
 }
 
 /**
- * @brief Update the winner of the game
+ * @brief check if meet the condition to end the game
  * 
- * @param player Player who is going to be updated as the game winner.
- * @return true set the specific player as winner successsful
- * @return false set the specific player as winner failed
+ * @param player Player who is going to be updated as a game player.
+ * @return true game ends
+ * @return false game doesn't end
  */
-bool update_game_winner(PlayerType_e player)
+bool if_end_game(PlayerType_e player)
 {
     bool ret = false;
     if (0 == get_pile_length(g_players[player].cards_on_hand)) 
     {
-        g_game_winner = player;
         ret = true;
     }
     return ret;
@@ -148,10 +145,14 @@ bool update_game_winner(PlayerType_e player)
  */
 void handle_computer_turn(void)
 {
-    if (0 == computer_discard_card())
+    int ret = computer_take_turn();
+    if ((0 == ret) || (1 == ret))
     {
-        display_player_deck(COMPUTER);
         end_turn(COMPUTER);
+    }
+    else
+    {
+        printf("Error: Not Computer's turn now.\n");
     }
 }
 
@@ -169,7 +170,7 @@ void handle_computer_turn(void)
  *               1 - No playable card to discard, end of turn, game continues.
  *               2 - Invalid player.
  */
-int computer_discard_card(void)
+int computer_take_turn(void)
 {
     int result = 0;
     Card_t draw_card;
@@ -200,15 +201,13 @@ int computer_discard_card(void)
         }
     }
     else
-    { /*If there is playable card, then remove the first playable card from on hand cards list*/
+    {   /*If there is playable card, then remove the first playable card from on hand cards list*/
         Deck_t* discard_card = remove_first_playable_card(&g_players[COMPUTER].cards_on_hand);
         memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
-        printf("discard card on table is (%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
+        //printf("Card on the table now: (%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
         add_card_at_end(g_discard_pile, g_card_on_table);
         result = 0;
     }
 
-    update_game_winner(COMPUTER);
-    end_turn(COMPUTER);
     return result;
 }
