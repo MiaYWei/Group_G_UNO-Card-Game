@@ -78,10 +78,10 @@ void initialize_players(void);
 int initialize_cards(void);
 
 /**
- * @brief Deals each player 5 cards at the start of the game setup
- * 
+ * @brief Deals each player 5 cards during the game initialization
+ *
  * @return int   0 - Successful;
- *               1 - Failed, since malloc memory fails.
+ *               1 - Failed due to error in malloc;
  */
 int deal_cards(void);
 
