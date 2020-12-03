@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include "cards_management.h"
 #include "human_player_module.h"
+#include "game.h"
 
 /* Global variables */
 bool g_card_requested = false;
@@ -13,18 +14,14 @@ static Player_t *human_player = &g_players[HUMAN]; //TODO use g_player directly
 
 int request_card(PlayerType_e PlayerType, int no_of_cards);
 void invalid_turn_warning(void);
-const Deck_t *show_recent_card(Deck_t **pp_head);
 PlayerType_e determine_next_player(struct CARD *previous_card, PlayerType_e current_player);
 bool validate_card(char *entered_value);
 Card_t *map_user_input(char *input);
 Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched);      //Can be included in Card management
-ret_type_e remove_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_removed); //Can be included in Card management
 ret_type_e record_human_input(void);
 void show_cards_assigned(Card_t assigned_card);
 bool check_is_valid_turn(Card_t *current_card);
-void display_player_deck(Player_t *player);
 void display_player_turn(PlayerType_e next_player);
-void end_turn(PlayerType_e type);
 int quit_game(void);
 ret_type_e handle_human_turn(void);
 
@@ -56,7 +53,7 @@ int request_card(PlayerType_e PlayerType, int no_of_cards)
 void invalid_turn_warning(void)
 {
     printf("!!Warning!! Invalid card - Please choose a valid card \n");
-    display_player_deck(human_player);
+    display_player_deck(HUMAN);
 }
 
 /**
@@ -98,6 +95,7 @@ bool validate_card(char *entered_value)
 ret_type_e record_human_input(void)
 {
     char user_input[10];//TODO Modify the array size later
+    ret_type_e ret = RET_FAILURE;
     printf("Please enter your choice \n");
     scanf_s("%s", user_input, 10);
 
@@ -109,17 +107,16 @@ ret_type_e record_human_input(void)
     {
         request_card(HUMAN, 1);
     }
-
     else if (user_input[0] == 'e' || user_input[0] == 'E')
     {
         if (g_card_requested)
         {
-            end_turn(g_player_on_turn);
+            end_turn(HUMAN);
         }
         else
         {
             printf("Please draw a card before you can end your turn");
-            display_player_deck(human_player);
+            display_player_deck(HUMAN);
         }
     }
     else
@@ -132,8 +129,11 @@ ret_type_e record_human_input(void)
             if (check_is_valid_turn(human_card_choice))
             {
                 Deck_t **pp_head = &(human_player->cards_on_hand);
-                RET_TYPE(remove_card_from_deck(pp_head, human_card_choice));
+                remove_card_from_deck(pp_head, *human_card_choice);
                 add_card_at_end(g_discard_pile, *human_card_choice);
+                memcpy(&g_card_on_table, human_card_choice, sizeof(Card_t));
+                end_turn(HUMAN);
+                ret = RET_SUCCESS;
             }
         }
         else
@@ -141,39 +141,7 @@ ret_type_e record_human_input(void)
             invalid_turn_warning();
         }
     }
-    return SUCCESS;
-}
-/**
- * @brief Remove a particular card from the given deck
- * Can be used to discard a particular card - during each turn
- * Works for both the computer as well as human deck of cards
- * 
- * @param pp_head Pointer to the head of the deck from which card has to be removed
- * @param card_to_be_removed  Card to be removed
- * @return ret_type_e RET_EMPTY_LIST- If the deck has no cards
- *                 RET_FAILURE - If the removing of card fails
- *                 RET_SUCCESS - If the card is been removed successfully
- */
-ret_type_e remove_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_removed)
-{
-    Deck_t *to_delete = *pp_head;
-    Deck_t *prev = *pp_head;
-    if (*pp_head == NULL)
-    {
-        printf("List is already empty.");
-        return RET_EMPTY_LIST;
-    }
-    while (to_delete->next != NULL)
-    {
-        if (to_delete->card.color == card_to_be_removed->color && to_delete->card.name == card_to_be_removed->name)
-        {
-            prev->next = to_delete->next;
-            free(&(to_delete->card));
-            return SUCCESS;
-        }
-        to_delete = to_delete->next;
-    }
-    return RET_FAILURE;
+    return ret;
 }
 
 /**
@@ -263,7 +231,7 @@ Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched)
 void show_cards_assigned(Card_t assigned_card)
 {
     printf("The card from the draw pile is %s%s \n", CARD_COLOR_STRING[assigned_card.color], CARD_NAME_STRING[assigned_card.name]);
-    display_player_deck(human_player);
+    display_player_deck(HUMAN);
     return;
 }
 
@@ -318,7 +286,7 @@ PlayerType_e determine_next_player(struct CARD *previous_card, PlayerType_e curr
  */
 ret_type_e handle_human_turn(void)
 {
-    display_player_deck(human_player);
+    display_player_deck(HUMAN);
     record_human_input(); //TODO: Handle error here
     return SUCCESS;
 }
@@ -331,28 +299,6 @@ ret_type_e handle_human_turn(void)
 void display_player_turn(PlayerType_e next_player)
 {
     printf("%s Player's Turn now", PLAYER_TYPE_STRING[next_player]);
-}
-
-/**
- * @brief Displays player's current list of cards
- * 
- * @param player Player whose card list has to be displayed
- */
-void display_player_deck(Player_t *player)
-{
-    display_cards_list(player->cards_on_hand);
-}
-
-/**
- * @brief Ends the player turn as requested
- * 
- * @param player - Indicates whether user requested is Human or Computer Player
- */
-void end_turn(PlayerType_e type)
-{
-    printf("Turn ended...\n");
-    printf("Computer's Turn now \n");
-    //Call computer function to handle its turn
 }
 
 /**
