@@ -37,7 +37,7 @@ void start_new_game(void)
 
     while (1)
     {
-        printf("Latest Discard Card is: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
+        printf("Card on the table now: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
         printf("Current player is %s.\n\n", PLAYER_TYPE_STRING[g_player_on_turn]); 
         if (g_player_on_turn == HUMAN) 
         {
@@ -148,10 +148,15 @@ bool update_game_winner(PlayerType_e player)
  */
 void handle_computer_turn(void)
 {
-    if (0 == computer_discard_card())
+    int ret = computer_take_turn();
+    if ((0 == ret) || (1 == ret))
     {
-        display_player_deck(COMPUTER);
         end_turn(COMPUTER);
+        display_player_deck(COMPUTER);
+    }
+    else
+    {
+        printf("Error: Not Computer's turn now.\n");
     }
 }
 
@@ -167,7 +172,7 @@ void handle_computer_turn(void)
  *               1 - No playable card to discard, end of turn, game continues.
  *               2 - Invalid player.
  */
-int computer_discard_card(void)
+int computer_take_turn(void)
 {
     int result = 0;
     Card_t draw_card;
@@ -200,12 +205,12 @@ int computer_discard_card(void)
     { /*If there is playable card, then remove the first playable card from on hand cards list*/
         Deck_t* discard_card = remove_first_playable_card(&g_players[COMPUTER].cards_on_hand);
         memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
-        printf("discard card on table is (%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
+        printf("Card on table now: (%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
         add_card_at_end(g_discard_pile, g_card_on_table);
         result = 0;
     }
 
     update_game_winner(COMPUTER);
-    end_turn(COMPUTER);
+
     return result;
 }

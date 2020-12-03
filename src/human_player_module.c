@@ -95,6 +95,7 @@ bool validate_card(char *entered_value)
 ret_type_e record_human_input(void)
 {
     char user_input[10];//TODO Modify the array size later
+    ret_type_e ret = RET_FAILURE;
     printf("Please enter your choice \n");
     scanf_s("%s", user_input, 10);
 
@@ -106,12 +107,11 @@ ret_type_e record_human_input(void)
     {
         request_card(HUMAN, 1);
     }
-
     else if (user_input[0] == 'e' || user_input[0] == 'E')
     {
         if (g_card_requested)
         {
-            end_turn(g_player_on_turn);
+            end_turn(HUMAN);
         }
         else
         {
@@ -131,6 +131,9 @@ ret_type_e record_human_input(void)
                 Deck_t **pp_head = &(human_player->cards_on_hand);
                 remove_card_from_deck(pp_head, *human_card_choice);
                 add_card_at_end(g_discard_pile, *human_card_choice);
+                memcpy(&g_card_on_table, human_card_choice, sizeof(Card_t));
+                end_turn(HUMAN);
+                ret = RET_SUCCESS;
             }
         }
         else
@@ -138,7 +141,7 @@ ret_type_e record_human_input(void)
             invalid_turn_warning();
         }
     }
-    return SUCCESS;
+    return ret;
 }
 
 /**

@@ -50,6 +50,6 @@ void handle_computer_turn(void);
  *               1 - No playable card to discard, end of turn, game continues.
  *               2 - Invalid player.
  */
-int computer_discard_card(void);
+int computer_take_turn(void);
 
 #endif // __GAME_HEADER__#pragma once
