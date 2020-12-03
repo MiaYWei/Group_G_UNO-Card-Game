@@ -24,13 +24,13 @@ bool confirm_exit(void);
 void end_turn(PlayerType_e player);
 
 /**
- * @brief Update the winner of the game
- * 
+ * @brief check if meet the condition to end the game
+ *
  * @param player Player who is going to be updated as a game player.
- * @return true set the specific player as winner successsful
- * @return false set the specific player as winner failed
+ * @return true game ends
+ * @return false game doesn't end
  */
-bool update_game_winner(PlayerType_e player);
+bool if_end_game(PlayerType_e player);
 
 /**
  * @brief his function handles the functionality to support computer player's turn

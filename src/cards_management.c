@@ -162,8 +162,11 @@ int add_card_at_end(Deck_t *p_head, Card_t card)
         p_head = p_head->next;
     }
 
-    p_head->next = new_card; /* Add the new node at end */
-
+    if (p_head != NULL && p_head->next == NULL)
+    {
+        p_head->next = new_card; /* Add the new node at end */
+    }
+    
     //printf("Card (%d, %d) added at end of list successfully.\n", card.color, card.name);
     return 0;
 }

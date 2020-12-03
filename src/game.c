@@ -11,7 +11,7 @@ void start_new_game(void);
 bool confirm_exit(void);
 int initialize_game(void);
 void end_turn(PlayerType_e player);
-bool update_game_winner(PlayerType_e player);
+bool if_end_game(PlayerType_e player);
 void handle_computer_turn(void);
 
 /**
@@ -31,7 +31,6 @@ void start_new_game(void)
     display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
     printf("Computer Player on hand card list: ");
     display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
-
     printf("%s player starts the game.\n\n", PLAYER_TYPE_STRING[g_player_on_turn]);
     printf("Game begins now...\n");
 
@@ -108,10 +107,10 @@ int initialize_game(void)
  */
 void end_turn(PlayerType_e player)
 {
-    PlayerType_e next_turn_type = (player + 1) %2;
+    PlayerType_e next_turn_type = (player + 1) % 2;
     printf("%s Turn ended...\n\n", PLAYER_TYPE_STRING[player]);
 
-    if (update_game_winner(player)) 
+    if (if_end_game(player))
     {
         g_end_game = true;
         g_game_winner = player;
@@ -125,13 +124,13 @@ void end_turn(PlayerType_e player)
 }
 
 /**
- * @brief Update the winner of the game
+ * @brief check if meet the condition to end the game
  * 
  * @param player Player who is going to be updated as a game player.
- * @return true set the specific player as winner successsful
- * @return false set the specific player as winner failed
+ * @return true game ends
+ * @return false game doesn't end
  */
-bool update_game_winner(PlayerType_e player)
+bool if_end_game(PlayerType_e player)
 {
     bool ret = false;
     if (0 == get_pile_length(g_players[player].cards_on_hand)) 
@@ -208,8 +207,6 @@ int computer_take_turn(void)
         add_card_at_end(g_discard_pile, g_card_on_table);
         result = 0;
     }
-
-    update_game_winner(COMPUTER);
 
     return result;
 }
