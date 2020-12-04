@@ -205,7 +205,8 @@ void display_player_deck(PlayerType_e player);
 
 /**
  * @brief shuffles the cards in draw pile
- * @return the shuffled deck
+ * @return int   0 - Successful;
+ *               1 - Failed.
  */
 int shuffle_cards(void);
 

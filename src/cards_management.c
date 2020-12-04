@@ -76,7 +76,10 @@ int initialize_cards(void)
         }
     }
 
-    shuffle_cards();
+    if (0 != shuffle_cards())
+    {
+        printf("Shuffle cards failed in initialization.");
+    }
 
     g_discard_pile = (Deck_t *)malloc(sizeof(Deck_t));
     if (g_discard_pile == NULL)
