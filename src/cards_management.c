@@ -326,7 +326,7 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
         prev = *pp_head;             // Get reference of head node
         *pp_head = (*pp_head)->next; // Adjust head node link
         //free(prev);            // Delete prev since it contains reference to head node
-        //printf("Successfully deleted the first palyable card (%s, %s) at beginning. \n", CARD_COLOR_STRING[removed_card.color], CARD_NAME_STRING[removed_card.name]);
+        //printf("Successfully deleted the first playable card (%s, %s) at beginning. \n", CARD_COLOR_STRING[removed_card.color], CARD_NAME_STRING[removed_card.name]);
         return prev; // No need to delete further
     }
 
@@ -340,7 +340,7 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
                 prev->next = cur->next; // Adjust links for previous node
             }
             //free(cur);                  // Delete current node
-            printf("Successfully deleted the first palyable card (%s, %s) in the middle. \n", CARD_COLOR_STRING[cur->card.color], CARD_NAME_STRING[cur->card.name]);
+            printf("Successfully deleted the first playable card (%s, %s) in the middle. \n", CARD_COLOR_STRING[cur->card.color], CARD_NAME_STRING[cur->card.name]);
             return cur;
         }
 
