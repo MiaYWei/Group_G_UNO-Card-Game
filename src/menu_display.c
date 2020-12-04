@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "cards_management.h"
 #include "game.h"
 
