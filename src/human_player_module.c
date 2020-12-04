@@ -20,6 +20,7 @@ Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched); //Can
 ret_type_e record_human_input(void);
 void show_cards_assigned(Card_t assigned_card);
 bool check_is_valid_turn(Card_t *current_card);
+bool is_human_card(Card_t *current_card);
 void display_player_turn(PlayerType_e next_player);
 int quit_game(void);
 ret_type_e handle_human_turn(void);
@@ -67,7 +68,7 @@ bool validate_card(char *entered_value)
     int i = 0;
     while (i < size)
     {
-        if (0 != strcmp(CARD_VALUES[i], entered_value))  //strcmp returns 0, if both strings are identical (equal)
+        if (0 != strcmp(CARD_VALUES[i], entered_value)) //strcmp returns 0, if both strings are identical (equal)
         {
             i++;
         }
@@ -91,7 +92,7 @@ bool validate_card(char *entered_value)
 
 ret_type_e record_human_input(void)
 {
-    char user_input[10];//TODO Modify the array size later
+    char user_input[10]; //TODO Modify the array size later
     ret_type_e ret = RET_FAILURE;
     printf("Please enter your choice \n");
     scanf_s("%s", user_input, 10);
@@ -104,7 +105,7 @@ ret_type_e record_human_input(void)
     {
         if (g_card_requested)
         {
-            printf("You've already drawn a card from the pile. Please discard card or end turn now \n");
+            printf("!!Warning!! You've already drawn a card from the pile. Please discard card or end turn now \n");
         }
         else
         {
@@ -121,7 +122,7 @@ ret_type_e record_human_input(void)
         }
         else
         {
-            printf("Please draw a card before you can end your turn \n");
+            printf("!!Warning!! Please draw a card before you can end your turn \n");
             display_player_deck(HUMAN);
         }
     }
@@ -131,6 +132,14 @@ ret_type_e record_human_input(void)
         {
             //To be added if the format of user input is different
             Card_t human_card_choice = map_user_input(user_input);
+
+            //Check if the card is from the human player deck
+            if (!is_human_card(&human_card_choice))
+            {
+                printf("!!Warning!! Please select a card from your deck! \n");
+                return RET_INVALID_CARD;
+            }
+
             //If valid add the card to the discard_pile
             if (check_is_valid_turn(&human_card_choice))
             {
@@ -139,6 +148,10 @@ ret_type_e record_human_input(void)
                 memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
                 end_turn(HUMAN);
                 ret = RET_SUCCESS;
+            }
+            else
+            {
+                invalid_turn_warning();
             }
         }
         else
@@ -163,21 +176,21 @@ ret_type_e record_human_input(void)
  */
 Card_t map_user_input(char *input)
 {
-    Card_t temp_card = { ColorNum, NameNum };
+    Card_t temp_card = {ColorNum, NameNum};
 
-    if (input[0] == 'R') 
+    if (input[0] == 'R')
     {
         temp_card.color = RED;
     }
-    else if (input[0] == 'G') 
+    else if (input[0] == 'G')
     {
         temp_card.color = GREEN;
     }
-    else if (input[0] == 'B') 
+    else if (input[0] == 'B')
     {
         temp_card.color = BLUE;
     }
-    else if (input[0] == 'Y') 
+    else if (input[0] == 'Y')
     {
         temp_card.color = YELLOW;
     }
@@ -229,12 +242,42 @@ void show_cards_assigned(Card_t assigned_card)
 }
 
 /**
+ * @brief Checks if the card dropped by human player during his turn actually belongs to him
+ *
+ * @param current_card - Current card dropped by the human player
+ *
+ * @return- True if the card is valid
+ *          False if the card is invalid
+ */
+bool is_human_card(Card_t *current_card)
+{
+
+    bool is_valid = false;
+
+    Deck_t *temp = g_players[HUMAN].cards_on_hand;
+
+    while (temp->next != NULL)
+    {
+
+        if (temp->card.color == current_card->color && temp->card.name == current_card->name)
+        {
+
+            return true;
+        }
+
+        temp = temp->next;
+    }
+
+    return false;
+}
+
+/**
  * @brief Checks if the card dropped by human player during his turn is valid
  * 
  * @param current_card - Current card dropped by the human player
  * 
- * @return- True if the card is invaid
- *          False if the card is valid
+ * @return- True if the card is valid
+ *          False if the card is invalid
  */
 bool check_is_valid_turn(Card_t *current_card)
 {

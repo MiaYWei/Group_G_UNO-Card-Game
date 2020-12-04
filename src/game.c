@@ -30,8 +30,9 @@ void start_new_game(void)
     printf("\nGame begins now...\n");
     printf("Human Player Deck: ");
     display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
-    printf("Computer Player Deck: ");
-    display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
+    //For Testing only
+    //printf("Computer Player Deck: ");
+    //display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
     printf("\n\n");
 
     while (1)
@@ -108,6 +109,9 @@ void end_turn(PlayerType_e player)
 {
     PlayerType_e next_turn_type = (player + 1) % PLAYERS_NUM;
     printf("%s Turn ended...\n\n", PLAYER_TYPE_STRING[player]);
+    printf(". \n");
+    printf(". \n");
+
 
     if (if_end_game(player))
     {
@@ -203,8 +207,8 @@ int computer_take_turn(void)
     else
     {   /*If there is playable card, then remove the first playable card from on hand cards list*/
         Deck_t* discard_card = remove_first_playable_card(&g_players[COMPUTER].cards_on_hand);
-        memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
-        //printf("Card on the table now: (%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
+        printf("Computer Drops..(%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
+        memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));      
         add_card_at_end(g_discard_pile, g_card_on_table);
         result = 0;
     }
