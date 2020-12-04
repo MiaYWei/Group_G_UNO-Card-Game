@@ -203,4 +203,11 @@ bool is_card_exist_in_list(const Deck_t* p_list, Card_t card);
  */
 void display_player_deck(PlayerType_e player);
 
+/**
+ * @brief shuffles the cards in draw pile
+ * @return int   0 - Successful;
+ *               1 - Failed.
+ */
+int shuffle_cards(void);
+
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once

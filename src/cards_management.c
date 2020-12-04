@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "cards_management.h"
 
 /* Global variables */
@@ -26,6 +27,7 @@ void swap_cards(Card_t *p_a, Card_t *p_b);
 Deck_t *remove_first_playable_card(Deck_t **pp_head);
 int draw_cards(int num_draw_cards, PlayerType_e player);
 Card_t draw_one_card(void);
+int shuffle_cards(void);
 
 /**
  * @brief Initializes players global variables
@@ -74,7 +76,10 @@ int initialize_cards(void)
         }
     }
 
-    //shuffle_cards();
+    if (0 != shuffle_cards())
+    {
+        printf("Shuffle cards failed in initialization.");
+    }
 
     g_discard_pile = (Deck_t *)malloc(sizeof(Deck_t));
     if (g_discard_pile == NULL)
@@ -408,13 +413,10 @@ Card_t draw_one_card(void)
     return draw_deck->card;
 }
 
-/*----shuffle cards---------*/   
 /**
  * @brief Recursively free the given deck
  * @param d deck to be freed
  */
- 
-
 void free_deck(Deck_t* d) {
     // Recursively free the deck
     if (d != NULL) {
@@ -423,18 +425,17 @@ void free_deck(Deck_t* d) {
     }
 }
 
-
-
-
 /**
- * @brief shuffle_cards the cards in remaining_pile
- * @param length current length of remaining_pile
- * @return the shuffled deck
+ * @brief shuffles the cards in draw pile
+ * @return int   0 - Successful;
+ *               1 - Failed.
  */
-
-int shuffle(int length) {
+int shuffle_cards(void) 
+{
+    int length = MAX_CARDS_NUM;
+    int i;
     // reset seed
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
     // copy the cards in remaining pile into a Card array
     Deck_t* current = g_draw_pile;
     Card_t* array = malloc(sizeof(Card_t) * length);
@@ -442,7 +443,7 @@ int shuffle(int length) {
         free_deck(g_draw_pile);
         return 1;
     }
-    for (int i = 0; i < length; i++) {
+    for (i = 0; i < length; i++) {
         array[i] = current->card;
         current = current->next;
     }
@@ -464,12 +465,10 @@ int shuffle(int length) {
     // Set the last elements's next deck to null
     current->card = array[length - 1];
     current->next = NULL;
+
     free(array);
     return 0;
 }
-
-
-/*------------------------------------------------------*/
 
 /**
  * @brief initialize the global varibale g_card_on_table, which indicates the latest card in the discard pile 
