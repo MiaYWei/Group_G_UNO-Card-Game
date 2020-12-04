@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __RETURN_TYPES_HEADER__
+#define __RETURN_TYPES_HEADER__
 /**
  * @file return_types.h
  * @author krithigasr
@@ -29,3 +30,5 @@ ret_type_e;
                             printf("ERR code - %d in file %s and line %d\n", x,  __FILE__, __LINE__);\
                             return x;\
                         }
+
+#endif // __RETURN_TYPES_HEADER__#pragma once
