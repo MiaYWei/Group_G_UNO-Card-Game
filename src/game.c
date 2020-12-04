@@ -208,8 +208,7 @@ int computer_take_turn(void)
     {   /*If there is playable card, then remove the first playable card from on hand cards list*/
         Deck_t* discard_card = remove_first_playable_card(&g_players[COMPUTER].cards_on_hand);
         printf("Computer Drops..(%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
-        memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
-        //printf("Card on the table now: (%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
+        memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));      
         add_card_at_end(g_discard_pile, g_card_on_table);
         result = 0;
     }
