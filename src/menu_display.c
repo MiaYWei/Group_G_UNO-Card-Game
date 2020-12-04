@@ -61,7 +61,7 @@ void display_rules(void)
      printf(" Inputs to play the game\n");
     printf("  To request a card from the Draw pile, Press N or n. \n");
     printf("  To end turn, Press e or E. \n");
-    printf("  To discard a card - Say you want discard(RED,3), Press r3.\n");
+    printf("  To discard a card - Say you want discard(RED,3), Press R3.\n");
     printf("  To quit the game, Press Q or q.\n\n");
     printf("************************************************************************\n\n");
 
