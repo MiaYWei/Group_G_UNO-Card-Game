@@ -74,7 +74,7 @@ void display_rules(void)
     printf("************************************************************************\n\n");
 
     printf("\nPress any key to go back to menu...");
-    scanf_s("%s", choice, 1);    
+    scanf("%s", choice);    
 }
 
 void display_score_board(void)
@@ -82,7 +82,7 @@ void display_score_board(void)
     char choice[5] = { 0 };
     printf("Will be available in Release 2\n");
     printf("Press any key to go back to menu...");
-    scanf_s("%s", choice, 1);
+    scanf("%s", choice);
 }
 
 void main_menu(void)
@@ -92,7 +92,7 @@ void main_menu(void)
     while(1){    
         system("cls"); //clear screen      
         start_screen();
-        scanf_s("%d", &int_choice);
+        scanf("%d", &int_choice);
         switch (int_choice) {
             case 1:
                 display_rules();

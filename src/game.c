@@ -71,7 +71,7 @@ bool confirm_exit(void)
 
     printf("Exit Game?\n");
     printf("Please enter 'Yes' to confirm the Exit. Press any other key to cancel Exit.\n");
-    scanf_s("%s", char_choice, 4);
+    scanf("%s", char_choice);
     printf("Entered choice is %s \n", char_choice);
 
     if (0 == strcmp(char_choice, exit_string)) 
