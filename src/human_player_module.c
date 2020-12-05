@@ -256,7 +256,7 @@ bool is_human_card(Card_t *current_card)
 
     Deck_t *temp = g_players[HUMAN].cards_on_hand;
 
-    while (temp->next != NULL)
+    while (temp!= NULL)
     {
 
         if (temp->card.color == current_card->color && temp->card.name == current_card->name)
