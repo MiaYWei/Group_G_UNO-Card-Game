@@ -95,7 +95,7 @@ ret_type_e record_human_input(void)
     char user_input[10]; //TODO Modify the array size later
     ret_type_e ret = RET_FAILURE;
     printf("Please enter your choice \n");
-    scanf_s("%s", user_input, 10);
+    scanf("%s", user_input);
 
     if (user_input[0] == 'q' || user_input[0] == 'Q')
     {
