@@ -52,4 +52,10 @@ void handle_computer_turn(void);
  */
 int computer_take_turn(void);
 
+/**
+ * @brief Requests Human player's name
+ *
+ */
+void player_name_inquiry(void);
+
 #endif // __GAME_HEADER__#pragma once
