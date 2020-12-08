@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include "cards_management.h"
+#include "human_player_module.h"
 
 /* Global variables */
 Deck_t *g_draw_pile = NULL;            /* Draw cards pile */
@@ -35,6 +36,7 @@ int shuffle_cards(void);
  */
 void initialize_players(void)
 {
+    
     for (int i = 0; i < PLAYERS_NUM; i++)
     {
         g_players[i].type = (PlayerType_e)i;
@@ -66,8 +68,17 @@ int initialize_cards(void)
     }
     g_draw_pile->next = NULL;
 
-    for (i = RED; i <= YELLOW; i++)
+	int count_wild_card = 0;
+    for (i = RED; i <= BLACK; i++)
     {
+    	if(i == BLACK && count_wild_card != 2)
+    	{
+    		card.color = i;
+            card.name = WILD;
+            result += add_card_at_beginning(&g_draw_pile, card);
+            count_wild_card++;
+            continue;
+		}
         for (j = ZERO; j <= NINE; j++)
         {
             card.color = i;
@@ -75,7 +86,6 @@ int initialize_cards(void)
             result += add_card_at_beginning(&g_draw_pile, card);
         }
     }
-
     if (0 != shuffle_cards())
     {
         printf("Shuffle cards failed in initialization.");
@@ -279,10 +289,22 @@ int get_pile_length(Deck_t *p_pile)
  */
 bool is_playable_card(Card_t card)
 {
-    if ((card.color == g_card_on_table.color) || (card.name == g_card_on_table.name))
-    {
-        return true;
-    }
+	if(is_wild_card_played)
+	
+	{
+		if (card.color == g_card_on_table.color)
+		{
+			is_wild_card_played = false;
+			return true;
+		}
+	}
+	else
+	{
+		if ((card.color == g_card_on_table.color) || (card.name == g_card_on_table.name))
+		{
+			return true;
+		}
+	}
 
     return false;
 }
