@@ -25,7 +25,7 @@ void player_name_inquiry(void);
 void start_new_game(void)
 {
     player_name_inquiry();
-    bool is_confirmed = false;
+   
     if (0 != initialize_game())
     {
         printf("Initialize game failed.\n ");
