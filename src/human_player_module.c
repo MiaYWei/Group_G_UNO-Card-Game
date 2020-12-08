@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,6 +66,7 @@ void invalid_turn_warning(void)
 bool validate_card(char *entered_value)
 {
     int size = sizeof CARD_VALUES / sizeof *CARD_VALUES;
+
     int i = 0;
     while (i < size)
     {
@@ -118,7 +120,7 @@ ret_type_e record_human_input(void)
         {
             g_card_requested = false;
             end_turn(HUMAN);
-            ret = RET_SUCCESS;
+            return RET_SUCCESS;
         }
         else
         {
@@ -147,7 +149,7 @@ ret_type_e record_human_input(void)
                 add_card_at_end(g_discard_pile, human_card_choice);
                 memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
                 end_turn(HUMAN);
-                ret = RET_SUCCESS;
+                return RET_SUCCESS;
             }
             else
             {

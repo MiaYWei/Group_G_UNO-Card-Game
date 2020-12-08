@@ -508,7 +508,8 @@ bool remove_card_from_deck(Deck_t** pp_head, const Card_t card)
     while (temp != NULL)
     {
         // Search for the key to be deleted, keep track of the previous node as we need to change 'prev->next'
-        while (temp != NULL && ((temp->card.name != card.name) || (temp->card.color =! card.color))) {
+        while (temp != NULL && ((temp->card.name != card.name) || (temp->card.color =! card.color))) 
+        {
             prev = temp;
             temp = temp->next;
         }
