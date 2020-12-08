@@ -200,12 +200,11 @@ Card_t map_user_input(char *input)
         temp_card.name = input[1] - '0';
     }
 	else if (input[0] == 'W')
-    {
-		
-		temp_card.name = WILD;
-		wild_card(HUMAN);
-		temp_card.color = g_card_on_table.color;
-    }
+{
+	temp_card.name = WILD;
+	wild_card(HUMAN);
+	temp_card.color = g_card_on_table.color;
+}
 	
     //To map the number part of the User input to the card name field
     return temp_card;
