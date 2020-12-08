@@ -5,7 +5,10 @@
 #include "human_player_module.h"
 #include "game.h"
 
+#define PLAYERS_NAME_LENGTH  20
+
 bool g_end_game = false;
+char g_human_player_name[PLAYERS_NAME_LENGTH] = "HumanPlayer";
 
 void start_new_game(void);
 bool confirm_exit(void);
@@ -13,6 +16,7 @@ int initialize_game(void);
 void end_turn(PlayerType_e player);
 bool if_end_game(PlayerType_e player);
 void handle_computer_turn(void);
+void player_name_inquiry(void);
 
 /**
  * @brief Starts a new game
@@ -20,7 +24,8 @@ void handle_computer_turn(void);
  */
 void start_new_game(void)
 {
-    bool is_confirmed = false;
+    player_name_inquiry();
+
     if (0 != initialize_game())
     {
         printf("Initialize game failed.\n ");
@@ -50,11 +55,29 @@ void start_new_game(void)
 
         if (g_end_game)
         {
-            printf("Game over. The winner is %s\n", PLAYER_TYPE_STRING[g_game_winner]);
+            printf("Game over. The winner is %s", PLAYER_TYPE_STRING[g_game_winner]);
+            if (g_game_winner == HUMAN) 
+            {
+                printf(": %s", g_human_player_name);
+            }
+            printf("\n");
             return;
         }
     }
 
+    return;
+}
+
+/**
+ * @brief Requests Human player's name
+ *
+ */
+void player_name_inquiry(void)
+{
+    char choice[PLAYERS_NAME_LENGTH] = {0};
+    printf("Please enter your name:");
+    scanf("%s", choice);
+    memcpy(g_human_player_name, choice, sizeof(choice));
     return;
 }
 
@@ -66,7 +89,7 @@ void start_new_game(void)
  */
 bool confirm_exit(void)
 {
-    char char_choice[4] = { 0,0,0,0 };
+    char char_choice[4] = {0,0,0,0};
     char exit_string[] = "Yes";
 
     printf("Exit Game?\n");
@@ -95,8 +118,9 @@ int initialize_game(void)
     int result = initialize_cards();
     initialize_players();
     result += deal_cards();
-
     initialize_card_on_table();
+
+    printf("Hi %s! Let's start a new game.\n", g_human_player_name);
     return result;
 }
 
@@ -111,7 +135,6 @@ void end_turn(PlayerType_e player)
     printf("%s Turn ended...\n\n", PLAYER_TYPE_STRING[player]);
     printf(". \n");
     printf(". \n");
-
 
     if (if_end_game(player))
     {

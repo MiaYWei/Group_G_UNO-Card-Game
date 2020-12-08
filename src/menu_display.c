@@ -23,7 +23,7 @@ void start_screen(void)
 
 void display_rules(void)
 {
-    char choice[5] = { 0 };
+    char choice[5] = {0};
 
     printf("************************************************************************\n");
     printf("*                                                                      *\n");
@@ -122,6 +122,10 @@ void main_menu(void)
 
 int main(void) 
 {
+    char choice[5] = {0};
     main_menu();
+    printf("Press any key to exit console display...\n");
+    scanf("%s", choice);
+
     return 0;
 }
