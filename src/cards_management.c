@@ -70,22 +70,22 @@ int initialize_cards(void)
 
 	int count_wild_card = 0;
     for (i = RED; i <= BLACK; i++)
-    {
-    	if(i == BLACK && count_wild_card != 2)
-    	{
-    		card.color = i;
-            card.name = WILD;
-            result += add_card_at_beginning(&g_draw_pile, card);
-            count_wild_card++;
-            continue;
-		}
-        for (j = ZERO; j <= NINE; j++)
-        {
-            card.color = i;
-            card.name = j;
-            result += add_card_at_beginning(&g_draw_pile, card);
-        }
-    }
+ {
+ 	if (i == BLACK && count_wild_card != 2)
+ 	{
+ 		card.color = i;
+ 		card.name = WILD;
+ 		result += add_card_at_beginning(&g_draw_pile, card);
+ 		count_wild_card++;
+ 		continue;
+ 	}
+ 	for (j = ZERO; j <= NINE; j++)
+ 	{
+ 		card.color = i;
+ 		card.name = j;
+ 		result += add_card_at_beginning(&g_draw_pile, card);
+ 	}
+ }
     if (0 != shuffle_cards())
     {
         printf("Shuffle cards failed in initialization.");
