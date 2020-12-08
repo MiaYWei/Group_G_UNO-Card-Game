@@ -3,6 +3,7 @@
 #include "cards_management.h"
 #include "return_types.h"
 
+extern bool is_wild_card_played;
 int request_card(PlayerType_e PlayerType, int no_of_cards);
 void invalid_turn_warning(void);
 PlayerType_e determine_next_player(struct CARD *previous_card, PlayerType_e current_player);
