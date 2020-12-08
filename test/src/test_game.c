@@ -1,4 +1,5 @@
 #include "../../src/cards_management.h"
+#include "../../src/game.h"
 #include "test.h"
 #include "test_game.h"
 
