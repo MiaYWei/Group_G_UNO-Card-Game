@@ -13,6 +13,7 @@ void show_cards_assigned(Card_t assigned_card);
 bool check_is_valid_turn(Card_t *current_card);
 bool is_human_card(Card_t* current_card);
 void display_player_turn(PlayerType_e next_player);
+void wild_card(PlayerType_e type);
 int quit_game(void);
 ret_type_e handle_human_turn(void);
 
