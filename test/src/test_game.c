@@ -1,5 +1,6 @@
 #include "../../src/cards_management.h"
 #include "test.h"
+#include "test_game.h"
 
 void test_game(void)
 {

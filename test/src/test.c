@@ -3,13 +3,17 @@
 #include <stdio.h>
 #include "test.h"
 #include "test_cards_management.h"
+#include "test_game.h"
 
 void init_log(void);
 
 void main(void)
 {
     init_log();
-	test_cards_mgmt();
+
+    test_cards_mgmt();
+    test_game();
+	
 	return;
 }
 
