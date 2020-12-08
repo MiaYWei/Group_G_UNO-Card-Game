@@ -23,6 +23,7 @@ bool check_is_valid_turn(Card_t *current_card);
 bool is_human_card(Card_t *current_card);
 void display_player_turn(PlayerType_e next_player);
 int quit_game(void);
+bool is_wild_card_played = false;
 ret_type_e handle_human_turn(void);
 
 /**
@@ -181,22 +182,32 @@ Card_t map_user_input(char *input)
     if (input[0] == 'R')
     {
         temp_card.color = RED;
+        temp_card.name = input[1] - '0';
     }
     else if (input[0] == 'G')
     {
         temp_card.color = GREEN;
+        temp_card.name = input[1] - '0';
     }
     else if (input[0] == 'B')
     {
         temp_card.color = BLUE;
+        temp_card.name = input[1] - '0';
     }
     else if (input[0] == 'Y')
     {
         temp_card.color = YELLOW;
+        temp_card.name = input[1] - '0';
     }
-
+	else if (input[0] == 'W')
+    {
+		
+		temp_card.name = WILD;
+		wild_card(HUMAN);
+		temp_card.color = g_card_on_table.color;
+    }
+	
     //To map the number part of the User input to the card name field
-    temp_card.name = input[1] - '0';
     return temp_card;
 }
 
@@ -256,10 +267,17 @@ bool is_human_card(Card_t *current_card)
 
     Deck_t *temp = g_players[HUMAN].cards_on_hand;
 
-    while (temp!= NULL)
+  while (temp!= NULL)
     {
+    	if(is_wild_card_played)
+    	{
+    		if(temp->card.name == current_card->name)
+    		{
+    			return true;
+			}
+		}
 
-        if (temp->card.color == current_card->color && temp->card.name == current_card->name)
+        else if (temp->card.color == current_card->color && temp->card.name == current_card->name)
         {
 
             return true;
@@ -371,9 +389,30 @@ enum CardColor action_color(char color)
  *
  * @param PlayerType - Indicates whether the card is played by Human or Computer Player
  */
-/*
+
 void wild_card(PlayerType_e type)
 {
+    is_wild_card_played = true;
+	char color_to_be_played[10];
+	Card_t wild_card_played;
+	printf("Please enter color of your choice \n");
+    scanf("%s", color_to_be_played);
+	if (color_to_be_played[0] == 'R')
+    {
+        g_card_on_table.color = RED;
+    }
+    else if (color_to_be_played[0] == 'G')
+    {
+        g_card_on_table.color = GREEN;
+    }
+    else if (color_to_be_played[0] == 'B')
+    {
+        g_card_on_table.color = BLUE;
+    }
+    else if (color_to_be_played[0] == 'Y')
+    {
+        g_card_on_table.color = YELLOW;
+    }	
+	
 }
 
-*/
