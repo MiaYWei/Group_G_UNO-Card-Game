@@ -111,7 +111,7 @@ Deck_t* create_list(void)
 
 void test_remove_cards(void)
 {
-    Card_t card_1 = { RED, 0 };
+    Card_t card_1 = {RED, 0};
     Deck_t* pile_test = create_list();
     int result = 0;
 
@@ -119,7 +119,7 @@ void test_remove_cards(void)
     remove_card_from_deck(&pile_test, card_1);
     display_cards_list(pile_test);
 
-    Card_t card_2 = { RED, 2 };
+    Card_t card_2 = {RED, 2};
     remove_card_from_deck(&pile_test, card_2);
     display_cards_list(pile_test);
 }
