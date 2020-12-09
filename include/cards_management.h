@@ -117,6 +117,16 @@ int get_pile_length(Deck_t* p_pile);
 bool is_playable_card(Card_t card);
 
 /**
+ * @brief Determines the card exist or not in the list
+ *
+ * @param p_pile  pointer which points to the specific pile
+ * @param card The card which needs to be checked
+ * @return true The card exist
+ * @return false The card does not exist
+ */
+bool is_exist_card(Deck_t* p_pile, Card_t card);
+
+/**
  * @brief remove the fist playable card from the card list
  * 
  * @param pp_head : pointer which points to pointer of the list head of

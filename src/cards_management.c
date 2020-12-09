@@ -288,6 +288,37 @@ bool is_playable_card(Card_t card)
 }
 
 /**
+ * @brief Determines the card exist or not in the list
+ *
+ * @param p_pile  pointer which points to the specific pile
+ * @param card The card which needs to be checked 
+ * @return true The card exist
+ * @return false The card does not exist
+ */
+bool is_exist_card(Deck_t* p_pile, Card_t card)
+{
+    bool is_exist = false;
+    Deck_t* cur_element = p_pile;
+    if (p_pile == NULL) 
+    {
+        printf("List is empty.\n");
+        return false;
+    }
+
+    /* Iterate till last element until key is not found*/
+    while (cur_element != NULL) 
+    {
+        if ((cur_element->card.color == card.color) && (cur_element->card.name == card.name))
+        {
+            return true;
+        }
+        cur_element = cur_element->next;
+    }
+
+    return false;
+}
+
+/**
  * @brief Swaps the position of card a and card b
  *
  * @param p_a pointer to card a;

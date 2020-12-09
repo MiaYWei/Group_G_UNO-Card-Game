@@ -62,8 +62,6 @@ Deck_t* create_list(void)
         return NULL;
     }
 
-    //printf("Enter the data of node 1: ");
-    //scanf("%d", &data);
     head->card.color = RED;    // Link data field with data
     head->card.name = ZERO;
     head->next = NULL;        // Link address field to NULL
@@ -112,18 +110,42 @@ Deck_t* create_list(void)
 
 void test_remove_cards(void)
 {
-    Card_t card_1 = {RED, 0};
     Deck_t* pile_test = create_list();
-    int result = 0;
+    bool card_1_exist = false;
+    bool card_2_exist = false;
 
-    display_cards_list(pile_test);
+    //Remove the card at the beginning of the list
+    Card_t card_1 = {RED, 0};
     remove_card_from_deck(&pile_test, card_1);
-    display_cards_list(pile_test);
 
+    //Remove the card in the middile of the list
     Card_t card_2 = {RED, 2};
     remove_card_from_deck(&pile_test, card_2);
-    display_cards_list(pile_test);
-}
 
+    card_1_exist = is_exist_card(pile_test, card_1);
+    card_2_exist = is_exist_card(pile_test, card_2);
+
+    //case 1: Remove the card at the beginning of the list
+    if (!is_exist_card(pile_test, card_1))
+    {
+        write_log("Test --- remove_card_from_deck().Case 1......successful!\n");
+    }
+    else
+    {
+        write_log("Test --- remove_card_from_deck().Case 1......failed!\n");
+    }
+
+    //case 2: Remove the card in the middile of the list
+    if (!is_exist_card(pile_test, card_2))
+    {
+        write_log("Test --- remove_card_from_deck().Case 2......successful!\n");
+    }
+    else
+    {
+        write_log("Test --- remove_card_from_deck().Case 2......failed!\n");
+    }
+
+    return;
+}
         
 
