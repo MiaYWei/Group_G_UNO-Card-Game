@@ -11,7 +11,7 @@ void test_remove_cards(void);
 /*#################################### Test Functions ####################################*/
 void test_cards_mgmt(void)
 {
-    write_log("--------------- Start Card Management Module Test ---------------\n");
+    write_log("--------------- Start Cards Management Module Test ---------------\n");
     test_initialize_cards();
     test_deal_cards();
     test_remove_cards();
@@ -25,9 +25,7 @@ void test_initialize_cards(void)
     int length = get_pile_length(g_draw_pile);
     if ((0 == result) && (length == MAX_CARDS_NUM)) {
         write_log("Test --- initialize_cards()......successful!\n");
-    }
-    else
-    {
+    } else {
         write_log("Test --- initialize_cards()......failed!\n");
     }
     return;
@@ -38,20 +36,16 @@ void test_deal_cards(void)
     initialize_players();
     int result = deal_cards();
     int length = get_pile_length(g_draw_pile);
-    if ((0 == result)
-        && (length == (MAX_CARDS_NUM - DEAL_CARDS_NUM * PLAYERS_NUM)))
-    {
+    if ((0 == result) && (length == (MAX_CARDS_NUM - DEAL_CARDS_NUM * PLAYERS_NUM))){
         write_log("Test --- deal_cards()......successful!\n");
-    }
-    else
-    {
+    } else {
         write_log("Test --- deal_cards()......failed!\n");
     }
 
     return;
 }
 
-Deck_t* create_list(void)
+Deck_t* create_list_test(void)
 {
     int i,j = 0;
     Deck_t* newNode, * temp;
@@ -68,8 +62,7 @@ Deck_t* create_list(void)
     temp = head;
 
     /* Create n nodes and adds to linked list */
-    for (j = 1; j <= NINE; j++)
-    {
+    for (j = 1; j <= NINE; j++) {
         newNode = (Deck_t*)malloc(sizeof(Deck_t));
         if (newNode == NULL) { /* If memory is not allocated for newNode */
             printf("Unable to allocate memory.");
@@ -85,10 +78,8 @@ Deck_t* create_list(void)
         temp = temp->next;
     }
 
-    for (i = BLUE; i <= YELLOW; i++)
-    {
-        for (j = ZERO; j <= NINE; j++)
-        {
+    for (i = BLUE; i <= YELLOW; i++) {
+        for (j = ZERO; j <= NINE; j++) {
             newNode = (Deck_t*)malloc(sizeof(Deck_t));
             if (newNode == NULL) { /* If memory is not allocated for newNode */
                 printf("Unable to allocate memory.");
@@ -104,13 +95,13 @@ Deck_t* create_list(void)
         }
     }
     
-    printf("Linked List Created Successfully.\n");
+    printf("Test List Created Successfully.\n");
     return head;
 }
 
 void test_remove_cards(void)
 {
-    Deck_t* pile_test = create_list();
+    Deck_t* pile_test = create_list_test();
     bool card_1_exist, card_2_exist, card_3_exist = true;
 
     //Remove the card at the beginning of the list
@@ -130,32 +121,23 @@ void test_remove_cards(void)
     card_3_exist = is_exist_card(pile_test, card_3);
 
     //case 1: Remove the card at the beginning of the list
-    if (!is_exist_card(pile_test, card_1))
-    {
+    if (!is_exist_card(pile_test, card_1)) {
         write_log("Test --- remove_card_from_deck().Case 1......successful!\n");
-    }
-    else
-    {
+    } else {
         write_log("Test --- remove_card_from_deck().Case 1......failed!\n");
     }
 
     //case 2: Remove the card in the middile of the list
-    if (!is_exist_card(pile_test, card_2))
-    {
+    if (!is_exist_card(pile_test, card_2)) {
         write_log("Test --- remove_card_from_deck().Case 2......successful!\n");
-    }
-    else
-    {
+    } else {
         write_log("Test --- remove_card_from_deck().Case 2......failed!\n");
     }
 
     //case 3: Remove the card at end of the list
-    if (!is_exist_card(pile_test, card_3))
-    {
+    if (!is_exist_card(pile_test, card_3)) {
         write_log("Test --- remove_card_from_deck().Case 3......successful!\n");
-    }
-    else
-    {
+    } else {
         write_log("Test --- remove_card_from_deck().Case 3......failed!\n");
     }
 
