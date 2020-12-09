@@ -17,7 +17,7 @@ int initialize_cards(void);
 int deal_cards(void);
 int add_card_at_beginning(Deck_t **pp_head, Card_t card);
 int add_card_at_end(Deck_t *p_head, Card_t card);
-const Deck_t *remove_first_card_at_beginning(Deck_t **pp_head);
+const Deck_t *remove_first_card_from_deck(Deck_t **pp_head);
 bool remove_card_from_deck(Deck_t** pp_head, const Card_t card);
 const Deck_t *find_playable_card(PlayerType_e player);
 void display_cards_list(const Deck_t *p_list);
@@ -108,7 +108,7 @@ int deal_cards(void)
     {
         for (j = 0; j < PLAYERS_NUM; j++)
         {
-            dealt_card = remove_first_card_at_beginning(&g_draw_pile);
+            dealt_card = remove_first_card_from_deck(&g_draw_pile);
             result += add_card_at_beginning(&g_players[(PlayerType_e)j].cards_on_hand, dealt_card->card);
         }
     }
@@ -183,7 +183,7 @@ int add_card_at_end(Deck_t *p_head, Card_t card)
  * @param pp_head :pointer which points to the address of head of card list
  * @return const Deck_t* pointer type variable, which points to the removed card 
  */
-const Deck_t *remove_first_card_at_beginning(Deck_t **pp_head)
+const Deck_t *remove_first_card_from_deck(Deck_t **pp_head)
 {
     Deck_t *to_delete;
     if (*pp_head == NULL)
@@ -405,12 +405,12 @@ int draw_cards(int num_draw_cards, PlayerType_e player)
         {
             while (g_discard_pile != NULL)
             {
-                temp_deck = remove_first_card_at_beginning(&g_discard_pile);
+                temp_deck = remove_first_card_from_deck(&g_discard_pile);
                 result += add_card_at_end(g_draw_pile, temp_deck->card);
             }
         }
 
-        draw_card = remove_first_card_at_beginning(&g_draw_pile);
+        draw_card = remove_first_card_from_deck(&g_draw_pile);
         result = add_card_at_end(g_players[player].cards_on_hand, draw_card->card);
     }
 
@@ -435,12 +435,12 @@ Card_t draw_one_card(void)
     {
         while (g_discard_pile != NULL)
         {
-            temp_deck = remove_first_card_at_beginning(&g_discard_pile);
+            temp_deck = remove_first_card_from_deck(&g_discard_pile);
             result += add_card_at_end(g_draw_pile, temp_deck->card);
         }
     }
 
-    draw_deck = remove_first_card_at_beginning(&g_draw_pile);
+    draw_deck = remove_first_card_from_deck(&g_draw_pile);
     return draw_deck->card;
 }
 
@@ -555,38 +555,6 @@ bool remove_card_from_deck(Deck_t** pp_head, const Card_t card)
     free(temp); // Free memory
 
     return true;
-}
-
-/**
- * @brief Checks if the specific card exist in the list or not
- * 
- * @param list the head of the list
- * @param card  the specific card to be checked
- * @return true  The card is in the list
- * @return false The card is not in the list
- */
-bool is_card_exist_in_list(const Deck_t* p_list, Card_t card)
-{
-    int index = 0;
-    const Deck_t* cur_element = p_list;
-    if (p_list == NULL) {
-        printf("List is empty.\n");
-        return false;
-    }
-
-    /* Iterate till last element until key is not found*/
-    while (cur_element != NULL)
-    {
-        if ((cur_element->card.color == card.color) && (cur_element->card.name == card.name))
-        {
-            return true;
-        }
-
-        index++;
-        cur_element = cur_element->next;
-    }
-
-    return false;
 }
 
 /**

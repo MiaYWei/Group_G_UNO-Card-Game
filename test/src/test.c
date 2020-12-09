@@ -25,6 +25,7 @@ void init_log(void)
 {
     FILE* output_file;
     char* output_file_name = ".\\test_log.txt";
+    //char* output_file_name = "..\\test\\data\\test_log.txt";
     output_file = fopen(output_file_name, "w");
     if (output_file != NULL)
     {

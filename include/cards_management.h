@@ -83,6 +83,14 @@ int initialize_cards(void);
 int deal_cards(void);
 
 /**
+ * @brief remove the first card at the beginning of the card list
+ *
+ * @param pp_head :pointer which points to the address of head of card list
+ * @return const Deck_t* pointer type variable, which points to the removed card
+ */
+const Deck_t* remove_first_card_from_deck(Deck_t** pp_head);
+
+/**
  * @brief Finds a playable cards from player on hand card list,
  *        which should be has the same color or same name comparing with the on tabe card
  *
@@ -197,16 +205,6 @@ int add_card_at_end(Deck_t *p_head, Card_t card);
 bool remove_card_from_deck(Deck_t** ptr_head, const Card_t card);
 
 /**
- * @brief Checks if the specific card exist in the list or not
- *
- * @param list the head of the list
- * @param card  the specific card to be checked
- * @return true  The card is in the list
- * @return false The card is not in the list
- */
-bool is_card_exist_in_list(const Deck_t* p_list, Card_t card);
-
-/**
  * @brief Displays player's current list of cards
  *
  * @param player Player whose card list has to be displayed
@@ -219,5 +217,13 @@ void display_player_deck(PlayerType_e player);
  *               1 - Failed.
  */
 int shuffle_cards(void);
+
+/**
+ * @brief remove the first card at the beginning of the card list
+ *
+ * @param pp_head :pointer which points to the address of head of card list
+ * @return const Deck_t* pointer type variable, which points to the removed card
+ */
+const Deck_t* remove_first_card_at_beginning(Deck_t** pp_head);
 
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once

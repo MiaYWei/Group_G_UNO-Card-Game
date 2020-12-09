@@ -6,7 +6,8 @@
 
 void test_initialize_cards(void);
 void test_deal_cards(void);
-void test_remove_cards(void);
+void test_remove_card_from_deck(void);
+void test_remove_first_card_from_deck(void);
 
 /*#################################### Test Functions ####################################*/
 void test_cards_mgmt(void)
@@ -14,8 +15,8 @@ void test_cards_mgmt(void)
     write_log("--------------- Start Cards Management Module Test ---------------\n");
     test_initialize_cards();
     test_deal_cards();
-    test_remove_cards();
-
+    test_remove_card_from_deck();
+    test_remove_first_card_from_deck();
     return;
 }
 
@@ -99,7 +100,7 @@ Deck_t* create_list_test(void)
     return head;
 }
 
-void test_remove_cards(void)
+void test_remove_card_from_deck(void)
 {
     Deck_t* pile_test = create_list_test();
     bool card_1_exist, card_2_exist, card_3_exist = true;
@@ -143,5 +144,16 @@ void test_remove_cards(void)
 
     return;
 }
-        
+
+void test_remove_first_card_from_deck(void)
+{
+    Card_t card = {RED, ZERO};
+    Deck_t* pile_test = create_list_test();
+    remove_first_card_from_deck(&pile_test);
+    if (!is_exist_card(pile_test, card)) {
+        write_log("Test --- remove_first_card_from_deck().Case 1......successful!\n");
+    } else {
+        write_log("Test --- remove_first_card_from_deck().Case 1......failed!\n");
+    }
+}
 
