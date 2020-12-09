@@ -96,7 +96,7 @@ Deck_t* create_list_test(void)
         }
     }
     
-    printf("Test List Created Successfully.\n");
+    //printf("Test List Created Successfully.\n");
     return head;
 }
 

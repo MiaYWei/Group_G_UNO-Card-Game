@@ -91,7 +91,6 @@ bool validate_card(char *entered_value)
  *        E/e - End Turn
  *        Other- Map to appropriate Card Info
  */
-
 ret_type_e record_human_input(void)
 {
     char user_input[10]; //TODO Modify the array size later
@@ -120,7 +119,7 @@ ret_type_e record_human_input(void)
         {
             g_card_requested = false;
             end_turn(HUMAN);
-            return RET_SUCCESS;
+            ret = RET_SUCCESS;
         }
         else
         {
@@ -150,7 +149,7 @@ ret_type_e record_human_input(void)
                 memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
                 end_turn(HUMAN);
                 g_card_requested = false;
-                return RET_SUCCESS;
+                ret = RET_SUCCESS;
             }
             else
             {

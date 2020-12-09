@@ -218,12 +218,4 @@ void display_player_deck(PlayerType_e player);
  */
 int shuffle_cards(void);
 
-/**
- * @brief remove the first card at the beginning of the card list
- *
- * @param pp_head :pointer which points to the address of head of card list
- * @return const Deck_t* pointer type variable, which points to the removed card
- */
-const Deck_t* remove_first_card_at_beginning(Deck_t** pp_head);
-
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once
