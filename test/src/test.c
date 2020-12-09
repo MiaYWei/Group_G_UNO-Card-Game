@@ -8,7 +8,6 @@
 
 Deck_t* g_draw_pile_test = NULL;            /* Draw cards pile */
 Deck_t* g_discard_pile_test = NULL;         /* discarded cards */
-Player_t g_players_test[PLAYERS_NUM];       /* array of players */
 
 void init_log(void);
 
