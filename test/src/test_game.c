@@ -22,7 +22,6 @@ void card_discarded_from_one_hand_list(void)
     g_player_on_turn = COMPUTER;
 }
 
-
 void test_discard_card(int test_case)
 {
     if (initialize_game())
@@ -32,14 +31,14 @@ void test_discard_card(int test_case)
 
     switch (test_case)
     {
-    case (1):
-        no_card_discarded();
-        break;
-    case (2):
-        card_discarded_from_one_hand_list();
-        break;
-    default:
-        break;
+        case (1):
+            no_card_discarded();
+            break;
+        case (2):
+            card_discarded_from_one_hand_list();
+            break;
+        default:
+            break;
     }
 
     write_log("\n************* Discard Card Test *************\n");
