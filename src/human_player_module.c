@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "cards_management.h"
-#include "human_player_module.h"
-#include "game.h"
+#include "../include/cards_management.h"
+#include "../include/human_player_module.h"
+#include "../include/game.h"
 
 /* Global variables */
 bool g_card_requested = false;

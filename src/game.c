@@ -2,9 +2,9 @@
 #include <stddef.h>  
 #include <stdlib.h>   
 #include <string.h>
-#include "cards_management.h"
-#include "human_player_module.h"
-#include "game.h"
+#include "../include/cards_management.h"
+#include "../include/human_player_module.h"
+#include "../include/game.h"
 
 #define PLAYERS_NAME_LENGTH  20
 

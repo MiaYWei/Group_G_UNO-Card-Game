@@ -1,10 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stddef.h>
 #include <stdio.h>
-#include "test.h"
-#include "test_cards_management.h"
-#include "test_game.h"
-#include "../../src/cards_management.h"
+#include <stdlib.h>
+#include "../include/test.h"
+#include "../include/test_cards_management.h"
+#include "../include/test_game.h"
+#include "../../include/cards_management.h"
 
 Deck_t* g_draw_pile_test = NULL;            /* Draw cards pile */
 Deck_t* g_discard_pile_test = NULL;         /* discarded cards */

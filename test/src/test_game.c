@@ -1,7 +1,7 @@
-#include "../../src/cards_management.h"
-#include "../../src/game.h"
-#include "test.h"
-#include "test_game.h"
+#include "../../include/cards_management.h"
+#include "../../include/game.h"
+#include "../include/test.h"
+#include "../include/test_game.h"
 
 void test_game(void)
 {

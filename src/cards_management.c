@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "cards_management.h"
+#include "../include/cards_management.h"
 
 /* Global variables */
 Deck_t *g_draw_pile = NULL;            /* Draw cards pile */

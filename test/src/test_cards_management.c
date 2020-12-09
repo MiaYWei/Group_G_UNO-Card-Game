@@ -1,7 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "../../src/cards_management.h"
-#include "../../src/game.h"
-#include "test.h"
+#include <stdlib.h>
+#include "../../include/cards_management.h"
+#include "../../include/game.h"
+#include "../include/test.h"
 
 void test_initialize_cards(void);
 void test_deal_cards(void);
