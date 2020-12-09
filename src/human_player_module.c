@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "cards_management.h"
-#include "human_player_module.h"
-#include "game.h"
+#include "../include/cards_management.h"
+#include "../include/human_player_module.h"
+#include "../include/game.h"
 
 /* Global variables */
 bool g_card_requested = false;
@@ -66,6 +66,7 @@ void invalid_turn_warning(void)
 bool validate_card(char *entered_value)
 {
     int size = sizeof CARD_VALUES / sizeof *CARD_VALUES;
+
     int i = 0;
     while (i < size)
     {
@@ -90,7 +91,6 @@ bool validate_card(char *entered_value)
  *        E/e - End Turn
  *        Other- Map to appropriate Card Info
  */
-
 ret_type_e record_human_input(void)
 {
     char user_input[10]; //TODO Modify the array size later
