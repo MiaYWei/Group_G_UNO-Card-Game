@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -147,6 +148,7 @@ ret_type_e record_human_input(void)
                 add_card_at_end(g_discard_pile, human_card_choice);
                 memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
                 end_turn(HUMAN);
+                g_card_requested = false;
                 ret = RET_SUCCESS;
             }
             else
