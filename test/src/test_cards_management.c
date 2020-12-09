@@ -85,7 +85,7 @@ Deck_t* create_list(void)
         temp = temp->next;
     }
 
-    for (i = BLUE; i <= BLUE; i++)
+    for (i = BLUE; i <= YELLOW; i++)
     {
         for (j = ZERO; j <= NINE; j++)
         {
@@ -111,19 +111,23 @@ Deck_t* create_list(void)
 void test_remove_cards(void)
 {
     Deck_t* pile_test = create_list();
-    bool card_1_exist = false;
-    bool card_2_exist = false;
+    bool card_1_exist, card_2_exist, card_3_exist = true;
 
     //Remove the card at the beginning of the list
-    Card_t card_1 = {RED, 0};
+    Card_t card_1 = {RED, ZERO};
     remove_card_from_deck(&pile_test, card_1);
 
     //Remove the card in the middile of the list
-    Card_t card_2 = {RED, 2};
+    Card_t card_2 = {RED, TWO};
     remove_card_from_deck(&pile_test, card_2);
+
+    //Remove the card at end of the list
+    Card_t card_3 = {YELLOW, NINE};
+    remove_card_from_deck(&pile_test, card_3);
 
     card_1_exist = is_exist_card(pile_test, card_1);
     card_2_exist = is_exist_card(pile_test, card_2);
+    card_3_exist = is_exist_card(pile_test, card_3);
 
     //case 1: Remove the card at the beginning of the list
     if (!is_exist_card(pile_test, card_1))
@@ -143,6 +147,16 @@ void test_remove_cards(void)
     else
     {
         write_log("Test --- remove_card_from_deck().Case 2......failed!\n");
+    }
+
+    //case 3: Remove the card at end of the list
+    if (!is_exist_card(pile_test, card_3))
+    {
+        write_log("Test --- remove_card_from_deck().Case 3......successful!\n");
+    }
+    else
+    {
+        write_log("Test --- remove_card_from_deck().Case 3......failed!\n");
     }
 
     return;
