@@ -67,7 +67,7 @@ int init_test(void)
 
     for (i = RED; i <= YELLOW; i++)
     {
-        for (j = ZERO; j <= NINE; j++)
+        for (j = ZERO; j <= TWO; j++)
         {
             card.color = i;
             card.name = j;

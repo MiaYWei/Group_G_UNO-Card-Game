@@ -5,7 +5,7 @@
 
 void test_initialize_cards(void);
 void test_deal_cards(void);
-void test_get_pile_length(void);
+void test_remove_cards(void);
 
 /*#################################### Test Functions ####################################*/
 void test_cards_mgmt(void)
@@ -13,7 +13,7 @@ void test_cards_mgmt(void)
     write_log("--------------- Start Card Management Module Test ---------------\n");
     test_initialize_cards();
     test_deal_cards();
-    test_get_pile_length();
+    test_remove_cards();
 
     return;
 }
@@ -50,22 +50,78 @@ void test_deal_cards(void)
     return;
 }
 
-void test_get_pile_length(void)
+Deck_t* create_list(void)
 {
-    int length = get_pile_length(g_draw_pile_test);
-    printf("get_pile_length   %d", length);
+    int i,j = 0;
+    Deck_t* newNode, * temp;
 
-    if (40 == length)
-    {
-        write_log("Test --- get_pile_length()......successful!\n");
-
-    }
-    else
-    {
-        write_log("Test --- get_pile_length()......failed!\n");
+    Deck_t* head = (Deck_t*)malloc(sizeof(Deck_t));
+    if (head == NULL) {      /* If unable to allocate memory for head node*/
+        printf("Unable to allocate memory.");
+        return NULL;
     }
 
-    return;
+    //printf("Enter the data of node 1: ");
+    //scanf("%d", &data);
+    head->card.color = RED;    // Link data field with data
+    head->card.name = ZERO;
+    head->next = NULL;        // Link address field to NULL
+    temp = head;
+
+    /* Create n nodes and adds to linked list */
+    for (j = 1; j <= NINE; j++)
+    {
+        newNode = (Deck_t*)malloc(sizeof(Deck_t));
+        if (newNode == NULL) { /* If memory is not allocated for newNode */
+            printf("Unable to allocate memory.");
+            break;
+        }
+        //printf("Enter the data of node %d: ", i);
+        //scanf("%d", &data);
+        newNode->card.color = RED;    // Link data field of newNode with data
+        newNode->card.name = j;
+        newNode->next = NULL; // Link address field of newNode with NULL
+
+        temp->next = newNode; // Link previous node i.e. temp to the newNode
+        temp = temp->next;
+    }
+
+    for (i = BLUE; i <= BLUE; i++)
+    {
+        for (j = ZERO; j <= NINE; j++)
+        {
+            newNode = (Deck_t*)malloc(sizeof(Deck_t));
+            if (newNode == NULL) { /* If memory is not allocated for newNode */
+                printf("Unable to allocate memory.");
+                break;
+            }
+
+            newNode->card.color = i;    // Link data field of newNode with data
+            newNode->card.name = j;
+            newNode->next = NULL; // Link address field of newNode with NULL
+
+            temp->next = newNode; // Link previous node i.e. temp to the newNode
+            temp = temp->next;
+        }
+    }
+    
+    printf("Linked List Created Successfully.\n");
+    return head;
+}
+
+void test_remove_cards(void)
+{
+    Card_t card_1 = { RED, 0 };
+    Deck_t* pile_test = create_list();
+    int result = 0;
+
+    display_cards_list(pile_test);
+    remove_card_from_deck(&pile_test, card_1);
+    display_cards_list(pile_test);
+
+    Card_t card_2 = { RED, 2 };
+    remove_card_from_deck(&pile_test, card_2);
+    display_cards_list(pile_test);
 }
 
         

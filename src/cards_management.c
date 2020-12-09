@@ -505,10 +505,10 @@ bool remove_card_from_deck(Deck_t** pp_head, const Card_t card)
     }
 
     // To delete key if it's not present in head 
-    while (temp != NULL)
+    //while (temp != NULL)
     {
         // Search for the key to be deleted, keep track of the previous node as we need to change 'prev->next'
-        while (temp != NULL && ((temp->card.name != card.name) || (temp->card.color =! card.color))) 
+        while (temp != NULL && ((temp->card.name != card.name) || (temp->card.color != card.color))) 
         {
             prev = temp;
             temp = temp->next;
@@ -524,10 +524,11 @@ bool remove_card_from_deck(Deck_t** pp_head, const Card_t card)
         prev->next = temp->next;
 
         free(temp); // Free memory
+
         return true;
     }
 
-    return false;
+    //return false;
 }
 
 /**
