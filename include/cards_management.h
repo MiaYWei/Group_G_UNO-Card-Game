@@ -83,6 +83,14 @@ int initialize_cards(void);
 int deal_cards(void);
 
 /**
+ * @brief remove the first card at the beginning of the card list
+ *
+ * @param pp_head :pointer which points to the address of head of card list
+ * @return const Deck_t* pointer type variable, which points to the removed card
+ */
+const Deck_t* remove_first_card_from_deck(Deck_t** pp_head);
+
+/**
  * @brief Finds a playable cards from player on hand card list,
  *        which should be has the same color or same name comparing with the on tabe card
  *
@@ -117,24 +125,22 @@ int get_pile_length(Deck_t* p_pile);
 bool is_playable_card(Card_t card);
 
 /**
+ * @brief Determines the card exist or not in the list
+ *
+ * @param p_pile  pointer which points to the specific pile
+ * @param card The card which needs to be checked
+ * @return true The card exist
+ * @return false The card does not exist
+ */
+bool is_exist_card(Deck_t* p_pile, Card_t card);
+
+/**
  * @brief remove the fist playable card from the card list
  * 
  * @param pp_head : pointer which points to pointer of the list head of
  * @return Deck_t* pointer which points to the removed the card
  */
 Deck_t *remove_first_playable_card(Deck_t** pp_head);
-
-/**
- * @brief Draws the requested number of cards from the remaining deck for the current player
- *        If there is no cards left in the remaining deck, then place all the cards from discard deck
- *        into the remaining deck.
- *
- * @param num_draw_cards number of draw cards
- * @param player emum type variable: The specific playe who draws the cards
- * @return int   0 - Successful;
- *               1 - Failed.
- */
-int draw_cards(int num_draw_cards, PlayerType_e player);
 
 /**
  * @brief Draws one cards from the remaining deck for the current player
@@ -185,16 +191,6 @@ int add_card_at_end(Deck_t *p_head, Card_t card);
  * @return false If the removing of card fails
  */
 bool remove_card_from_deck(Deck_t** ptr_head, const Card_t card);
-
-/**
- * @brief Checks if the specific card exist in the list or not
- *
- * @param list the head of the list
- * @param card  the specific card to be checked
- * @return true  The card is in the list
- * @return false The card is not in the list
- */
-bool is_card_exist_in_list(const Deck_t* p_list, Card_t card);
 
 /**
  * @brief Displays player's current list of cards

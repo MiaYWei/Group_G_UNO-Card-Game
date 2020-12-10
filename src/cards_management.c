@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "cards_management.h"
+#include "../include/cards_management.h"
 
 /* Global variables */
 Deck_t *g_draw_pile = NULL;            /* Draw cards pile */
@@ -17,7 +17,7 @@ int initialize_cards(void);
 int deal_cards(void);
 int add_card_at_beginning(Deck_t **pp_head, Card_t card);
 int add_card_at_end(Deck_t *p_head, Card_t card);
-const Deck_t *remove_first_card_at_beginning(Deck_t **pp_head);
+const Deck_t *remove_first_card_from_deck(Deck_t **pp_head);
 bool remove_card_from_deck(Deck_t** pp_head, const Card_t card);
 const Deck_t *find_playable_card(PlayerType_e player);
 void display_cards_list(const Deck_t *p_list);
@@ -25,7 +25,6 @@ int get_pile_length(Deck_t *p_pile);
 bool is_playable_card(Card_t card);
 void swap_cards(Card_t *p_a, Card_t *p_b);
 Deck_t *remove_first_playable_card(Deck_t **pp_head);
-int draw_cards(int num_draw_cards, PlayerType_e player);
 Card_t draw_one_card(void);
 int shuffle_cards(void);
 
@@ -108,7 +107,7 @@ int deal_cards(void)
     {
         for (j = 0; j < PLAYERS_NUM; j++)
         {
-            dealt_card = remove_first_card_at_beginning(&g_draw_pile);
+            dealt_card = remove_first_card_from_deck(&g_draw_pile);
             result += add_card_at_beginning(&g_players[(PlayerType_e)j].cards_on_hand, dealt_card->card);
         }
     }
@@ -173,7 +172,6 @@ int add_card_at_end(Deck_t *p_head, Card_t card)
         p_head->next = new_card; /* Add the new node at end */
     }
     
-    //printf("Card (%d, %d) added at end of list successfully.\n", card.color, card.name);
     return 0;
 }
 
@@ -183,7 +181,7 @@ int add_card_at_end(Deck_t *p_head, Card_t card)
  * @param pp_head :pointer which points to the address of head of card list
  * @return const Deck_t* pointer type variable, which points to the removed card 
  */
-const Deck_t *remove_first_card_at_beginning(Deck_t **pp_head)
+const Deck_t *remove_first_card_from_deck(Deck_t **pp_head)
 {
     Deck_t *to_delete;
     if (*pp_head == NULL)
@@ -194,7 +192,6 @@ const Deck_t *remove_first_card_at_beginning(Deck_t **pp_head)
 
     to_delete = *pp_head;
     *pp_head = (*pp_head)->next; // Mark the second element as first
-    //free(to_delete);       // No need to free the memory occupied by first element, will return it later.
 
     return to_delete;
 }
@@ -247,6 +244,8 @@ void display_cards_list(const Deck_t *p_list)
     }
 
     printf(" ]\n");
+
+    return;
 }
 
 /**
@@ -288,6 +287,37 @@ bool is_playable_card(Card_t card)
 }
 
 /**
+ * @brief Determines the card exist or not in the list
+ *
+ * @param p_pile  pointer which points to the specific pile
+ * @param card The card which needs to be checked 
+ * @return true The card exist
+ * @return false The card does not exist
+ */
+bool is_exist_card(Deck_t* p_pile, Card_t card)
+{
+    bool is_exist = false;
+    Deck_t* cur_element = p_pile;
+    if (p_pile == NULL) 
+    {
+        printf("List is empty.\n");
+        return false;
+    }
+
+    /* Iterate till last element until key is not found*/
+    while (cur_element != NULL) 
+    {
+        if ((cur_element->card.color == card.color) && (cur_element->card.name == card.name))
+        {
+            return true;
+        }
+        cur_element = cur_element->next;
+    }
+
+    return false;
+}
+
+/**
  * @brief Swaps the position of card a and card b
  *
  * @param p_a pointer to card a;
@@ -298,6 +328,8 @@ void swap_cards(Card_t *p_a, Card_t *p_b)
     Card_t temp = *p_a;
     *p_a = *p_b;
     *p_b = temp;
+
+    return;
 }
 
 /**
@@ -325,8 +357,6 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
         removed_card.name = (*pp_head)->card.name;
         prev = *pp_head;             // Get reference of head node
         *pp_head = (*pp_head)->next; // Adjust head node link
-        //free(prev);            // Delete prev since it contains reference to head node
-        //printf("Successfully deleted the first palyable card (%s, %s) at beginning. \n", CARD_COLOR_STRING[removed_card.color], CARD_NAME_STRING[removed_card.name]);
         return prev; // No need to delete further
     }
 
@@ -339,8 +369,6 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
             {
                 prev->next = cur->next; // Adjust links for previous node
             }
-            //free(cur);                  // Delete current node
-            //printf("Successfully deleted the first palyable card (%s, %s) in the middle. \n", CARD_COLOR_STRING[cur->card.color], CARD_NAME_STRING[cur->card.name]);
             return cur;
         }
 
@@ -349,41 +377,6 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
     }
 
     return NULL;
-}
-
-/**
- * @brief Draws the requested number of cards from the draw pile for the current player
- *        If there is no cards left in the draw pile, then place all the cards from discard pile
- *        into the draw pile.
- *
- * @param num_draw_cards number of cards to be drawn
- * @param player enum type variable: The specific player who draws the cards
- * @return int   0 - Successful;
- *               1 - Failed.
- */
-int draw_cards(int num_draw_cards, PlayerType_e player)
-{
-    int i;
-    const Deck_t *draw_card;
-    const Deck_t *temp_deck;
-    int result = 1;
-
-    for (i = 0; i < num_draw_cards; i++)
-    {
-        if (g_draw_pile == NULL)
-        {
-            while (g_discard_pile != NULL)
-            {
-                temp_deck = remove_first_card_at_beginning(&g_discard_pile);
-                result += add_card_at_end(g_draw_pile, temp_deck->card);
-            }
-        }
-
-        draw_card = remove_first_card_at_beginning(&g_draw_pile);
-        result = add_card_at_end(g_players[player].cards_on_hand, draw_card->card);
-    }
-
-    return result;
 }
 
 /**
@@ -404,12 +397,12 @@ Card_t draw_one_card(void)
     {
         while (g_discard_pile != NULL)
         {
-            temp_deck = remove_first_card_at_beginning(&g_discard_pile);
+            temp_deck = remove_first_card_from_deck(&g_discard_pile);
             result += add_card_at_end(g_draw_pile, temp_deck->card);
         }
     }
 
-    draw_deck = remove_first_card_at_beginning(&g_draw_pile);
+    draw_deck = remove_first_card_from_deck(&g_draw_pile);
     return draw_deck->card;
 }
 
@@ -479,6 +472,8 @@ void initialize_card_on_table(void)
 {
     Card_t draw_card = draw_one_card();
     memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
+
+    return;
 }
 
 /**
@@ -505,60 +500,24 @@ bool remove_card_from_deck(Deck_t** pp_head, const Card_t card)
     }
 
     // To delete key if it's not present in head 
-    while (temp != NULL)
+    // Search for the key to be deleted, keep track of the previous node as we need to change 'prev->next'
+    while ((temp != NULL) && ((temp->card.name != card.name) || (temp->card.color != card.color)))
     {
-        // Search for the key to be deleted, keep track of the previous node as we need to change 'prev->next'
-        while (temp != NULL && ((temp->card.name != card.name) || (temp->card.color =! card.color))) {
-            prev = temp;
-            temp = temp->next;
-        }
-
-        // If key was not present in linked list
-        if (temp == NULL) 
-        { 
-            return false; 
-        }
-
-        // Unlink the node from linked list
-        prev->next = temp->next;
-
-        free(temp); // Free memory
-        return true;
+        prev = temp;
+        temp = temp->next;
     }
 
-    return false;
-}
-
-/**
- * @brief Checks if the specific card exist in the list or not
- * 
- * @param list the head of the list
- * @param card  the specific card to be checked
- * @return true  The card is in the list
- * @return false The card is not in the list
- */
-bool is_card_exist_in_list(const Deck_t* p_list, Card_t card)
-{
-    int index = 0;
-    const Deck_t* cur_element = p_list;
-    if (p_list == NULL) {
-        printf("List is empty.\n");
+    // If key was not present in linked list
+    if (temp == NULL)
+    {
         return false;
     }
 
-    /* Iterate till last element until key is not found*/
-    while (cur_element != NULL)
-    {
-        if ((cur_element->card.color == card.color) && (cur_element->card.name == card.name))
-        {
-            return true;
-        }
+    // Unlink the node from linked list
+    prev->next = temp->next;
 
-        index++;
-        cur_element = cur_element->next;
-    }
-
-    return false;
+    free(temp); // Free memory
+    return true;
 }
 
 /**
@@ -570,4 +529,6 @@ void display_player_deck(PlayerType_e player)
 {
     printf("%s", PLAYER_TYPE_STRING[player]);
     display_cards_list(g_players[player].cards_on_hand);
+
+    return;
 }

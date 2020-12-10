@@ -1,6 +1,7 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
-#include "cards_management.h"
-#include "game.h"
+#include "../include/cards_management.h"
+#include "../include/game.h"
 
 void start_screen(void)
 {
