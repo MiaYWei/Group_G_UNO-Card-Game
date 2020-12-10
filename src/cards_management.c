@@ -192,7 +192,6 @@ const Deck_t *remove_first_card_from_deck(Deck_t **pp_head)
 
     to_delete = *pp_head;
     *pp_head = (*pp_head)->next; // Mark the second element as first
-    //free(to_delete);       // No need to free the memory occupied by first element, will return it later.
 
     return to_delete;
 }
@@ -327,6 +326,8 @@ void swap_cards(Card_t *p_a, Card_t *p_b)
     Card_t temp = *p_a;
     *p_a = *p_b;
     *p_b = temp;
+
+    return;
 }
 
 /**
@@ -354,8 +355,6 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
         removed_card.name = (*pp_head)->card.name;
         prev = *pp_head;             // Get reference of head node
         *pp_head = (*pp_head)->next; // Adjust head node link
-        //free(prev);            // Delete prev since it contains reference to head node
-        //printf("Successfully deleted the first palyable card (%s, %s) at beginning. \n", CARD_COLOR_STRING[removed_card.color], CARD_NAME_STRING[removed_card.name]);
         return prev; // No need to delete further
     }
 
@@ -368,8 +367,6 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
             {
                 prev->next = cur->next; // Adjust links for previous node
             }
-            //free(cur);                  // Delete current node
-            //printf("Successfully deleted the first palyable card (%s, %s) in the middle. \n", CARD_COLOR_STRING[cur->card.color], CARD_NAME_STRING[cur->card.name]);
             return cur;
         }
 
