@@ -27,39 +27,12 @@ void test_cards_mgmt(void)
     return;
 }
 
-void test_initialize_cards(void)
-{
-    int result = initialize_cards();
-    int length = get_pile_length(g_draw_pile);
-    if ((0 == result) && (length == MAX_CARDS_NUM)) {
-        write_log("Test --- initialize_cards()......successful!\n");
-    } else {
-        write_log("Test --- initialize_cards()......failed!\n");
-    }
-    return;
-}
-
-void test_deal_cards(void)
-{
-    initialize_players();
-    int result = deal_cards();
-    int length = get_pile_length(g_draw_pile);
-    if ((0 == result) && (length == (MAX_CARDS_NUM - DEAL_CARDS_NUM * PLAYERS_NUM))){
-        write_log("Test --- deal_cards()......successful!\n");
-    } else {
-        write_log("Test --- deal_cards()......failed!\n");
-    }
-
-    return;
-}
-
 Deck_t* create_list_test(void)
 {
-    int i,j = 0;
+    int i, j = 0;
     Deck_t* newNode, * temp;
-
     Deck_t* head = (Deck_t*)malloc(sizeof(Deck_t));
-    if (head == NULL) {      /* If unable to allocate memory for head node*/
+    if (head == NULL) {    
         printf("Unable to allocate memory.");
         return NULL;
     }
@@ -102,9 +75,44 @@ Deck_t* create_list_test(void)
             temp = temp->next;
         }
     }
-    
-    //printf("Test List Created Successfully.\n");
     return head;
+}
+
+void test_initialize_cards(void)
+{
+    int expected_ret = 0;
+    int expected_length = MAX_CARDS_NUM;
+    int actual_ret = initialize_cards();
+    int actual_length = get_pile_length(g_draw_pile);
+    if ((actual_ret == expected_ret) && (actual_length == expected_length)) {
+        write_log("Test --- initialize_cards()......successful!\n");
+    }
+    else {
+        write_log("Test --- initialize_cards()......failed!\n");
+        write_fail_log("The return of initialize_cards():\n", actual_ret, expected_ret);
+        write_fail_log("After initializing the cards, the draw pile length:\n", actual_length, expected_length);
+    }
+    return;
+}
+
+void test_deal_cards(void)
+{
+    int expected_ret = 0;
+    int expected_length = MAX_CARDS_NUM - DEAL_CARDS_NUM * PLAYERS_NUM;
+
+    initialize_players();
+    int actual_ret = deal_cards();
+    int actual_length = get_pile_length(g_draw_pile);
+    if ((actual_ret == expected_ret) && (actual_length == expected_length)) {
+        write_log("Test --- deal_cards()......successful!\n");
+    }
+    else {
+        write_log("Test --- deal_cards()......failed!\n");
+        write_fail_log("The return of deal_cards():\n", actual_ret, expected_ret);
+        write_fail_log("After dealing cards, the draw pile length:\n", actual_length, expected_length);
+    }
+
+    return;
 }
 
 void test_add_card_at_end(void)
@@ -147,43 +155,44 @@ void test_add_card_at_beginning(void)
 void test_remove_card_from_deck(void)
 {
     Deck_t* pile_test = create_list_test();
-    bool card_1_exist, card_2_exist, card_3_exist = true;
-
-    //Remove the card at the beginning of the list
-    Card_t card_1 = {RED, ZERO};
-    remove_card_from_deck(&pile_test, card_1);
-
-    //Remove the card in the middile of the list
-    Card_t card_2 = {RED, TWO};
-    remove_card_from_deck(&pile_test, card_2);
-
-    //Remove the card at end of the list
-    Card_t card_3 = {YELLOW, NINE};
-    remove_card_from_deck(&pile_test, card_3);
-
-    card_1_exist = is_exist_card(pile_test, card_1);
-    card_2_exist = is_exist_card(pile_test, card_2);
-    card_3_exist = is_exist_card(pile_test, card_3);
-
+    bool card_exist_actual = true;
     //case 1: Remove the card at the beginning of the list
-    if (!is_exist_card(pile_test, card_1)) {
+    Card_t card_1 = { RED, ZERO };
+    remove_card_from_deck(&pile_test, card_1);
+    card_exist_actual = is_exist_card(pile_test, card_1);
+
+    if (card_exist_actual == false) {
         write_log("Test --- remove_card_from_deck().Case 1......successful!\n");
-    } else {
+    }
+    else {
         write_log("Test --- remove_card_from_deck().Case 1......failed!\n");
+        write_fail_log("After removing card from deck, check if the card is still existing in the deck:\n", card_exist_actual, false);
     }
 
     //case 2: Remove the card in the middile of the list
-    if (!is_exist_card(pile_test, card_2)) {
+    Card_t card_2 = { RED, TWO };
+    remove_card_from_deck(&pile_test, card_2);
+    card_exist_actual = is_exist_card(pile_test, card_2);
+
+    if (card_exist_actual == false) {
         write_log("Test --- remove_card_from_deck().Case 2......successful!\n");
-    } else {
+    }
+    else {
         write_log("Test --- remove_card_from_deck().Case 2......failed!\n");
+        write_fail_log("After removing card from deck, check if the card is still existing in the deck:\n", card_exist_actual, false);
     }
 
     //case 3: Remove the card at end of the list
-    if (!is_exist_card(pile_test, card_3)) {
+    Card_t card_3 = { YELLOW, NINE };
+    remove_card_from_deck(&pile_test, card_3);
+    card_exist_actual = is_exist_card(pile_test, card_3);
+
+    if (card_exist_actual == false) {
         write_log("Test --- remove_card_from_deck().Case 3......successful!\n");
-    } else {
+    }
+    else {
         write_log("Test --- remove_card_from_deck().Case 3......failed!\n");
+        write_fail_log("After removing card from deck, check if the card is still existing in the deck:\n", card_exist_actual, false);
     }
 
     return;
@@ -192,14 +201,15 @@ void test_remove_card_from_deck(void)
 void test_remove_first_card_from_deck(void)
 {
     Card_t card = {RED, ZERO};
-    Card_t *card_removed;
+    Card_t* card_removed;
     Deck_t* pile_test = NULL;
 
     // Empty list
     card_removed = remove_first_card_from_deck(&pile_test);
     if (card_removed == NULL) {
         write_log("Test --- remove_first_card_from_deck().Case 1......successful!\n");
-    } else {
+    } 
+    else {
         write_log("Test --- remove_first_card_from_deck().Case 1......failed!\n");
     }
 
