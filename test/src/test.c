@@ -18,6 +18,7 @@ void main(void)
     init_test();
     test_cards_mgmt();
     test_game();
+    test_hunman_player();
 	return;
 }
 
@@ -48,6 +49,26 @@ void write_log(const char* string)
     {
         //fprintf(output_file, "this is a test %d\n", integer);
         fprintf(output_file, string);
+        fclose(output_file);
+    }
+    else
+    {
+        printf("Can't open the log file.\n");
+    }
+
+    return;
+}
+
+void write_fail_log(const char* string, int actual, int expected)
+{
+    FILE* output_file;
+    char* output_file_name = ".\\test_log.txt";
+    output_file = fopen(output_file_name, "a");
+    if (output_file != NULL)
+    {
+        fprintf(output_file, string);
+        fprintf(output_file, "  The expected output is %d.\n", expected);
+        fprintf(output_file, "  The actual output is %d.\n", actual);
         fclose(output_file);
     }
     else

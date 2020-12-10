@@ -143,18 +143,6 @@ bool is_exist_card(Deck_t* p_pile, Card_t card);
 Deck_t *remove_first_playable_card(Deck_t** pp_head);
 
 /**
- * @brief Draws the requested number of cards from the remaining deck for the current player
- *        If there is no cards left in the remaining deck, then place all the cards from discard deck
- *        into the remaining deck.
- *
- * @param num_draw_cards number of draw cards
- * @param player emum type variable: The specific playe who draws the cards
- * @return int   0 - Successful;
- *               1 - Failed.
- */
-int draw_cards(int num_draw_cards, PlayerType_e player);
-
-/**
  * @brief Draws one cards from the remaining deck for the current player
  *        If there is no cards left in the remaining deck, then place all the cards from discard deck
  *        into the remaining deck, then get it.
