@@ -1,11 +1,10 @@
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <stddef.h>  
 #include <stdlib.h>   
 #include <string.h>
-#include "cards_management.h"
-#include "human_player_module.h"
-#include "game.h"
-#include "computer_player.h"
+#include "../include/cards_management.h"
+#include "../include/human_player_module.h"
+#include "../include/game.h"
 
 #define PLAYERS_NAME_LENGTH  20
 
@@ -38,8 +37,8 @@ void start_new_game(void)
     printf("Human Player Deck: ");
     display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
     //For Testing only
-    printf("Computer Player Deck: ");
-    display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
+    //printf("Computer Player Deck: ");
+    //display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
     printf("\n\n");
 
     while (1)
@@ -78,7 +77,7 @@ void player_name_inquiry(void)
 {
     char choice[PLAYERS_NAME_LENGTH] = {0};
     printf("Please enter your name:");
-    scanf_s("%s", choice,PLAYERS_NAME_LENGTH);
+    scanf("%s", choice);
     memcpy(g_human_player_name, choice, sizeof(choice));
     return;
 }
@@ -96,7 +95,8 @@ bool confirm_exit(void)
 
     printf("Exit Game?\n");
     printf("Please enter 'Yes' to confirm the Exit. Press any other key to cancel Exit.\n");
-    scanf_s("%s", char_choice, 4);
+
+    scanf("%s", char_choice);
     printf("Entered choice is %s \n", char_choice);
 
     if (0 == strcmp(char_choice, exit_string)) 
@@ -141,8 +141,7 @@ void end_turn(PlayerType_e player)
     if (if_end_game(player))
     {
         g_end_game = true;
-        g_game_winner = player;
-        
+        g_game_winner = player;   
     } 
     else 
     {
@@ -184,6 +183,8 @@ void handle_computer_turn(void)
     {
         printf("Error: Not Computer's turn now.\n");
     }
+
+    return;
 }
 
 /**
@@ -211,7 +212,6 @@ int computer_take_turn(void)
         return 2;
     }
 
-
     printf("Computer dect: ");
     display_player_deck(COMPUTER);
     playable_card = pick_card(g_card_on_table, &g_players[COMPUTER].cards_on_hand);
@@ -219,6 +219,7 @@ int computer_take_turn(void)
     if (playable_card == NULL)
     { /* If no playable card on hand */
         draw_card = draw_one_card();
+
         printf("Computer draws a new card from the draw pile \n");
         printf("No playable card on hand, drawing a new card from deck (%s,%s).\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);//TODO Remove this line after testing
         if (is_playable_card(draw_card))

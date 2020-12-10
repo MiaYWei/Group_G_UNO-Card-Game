@@ -1,7 +1,7 @@
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdlib.h>
-#include "cards_management.h"
-#include "game.h"
+#include "../include/cards_management.h"
+#include "../include/game.h"
 
 void start_screen(void)
 {
@@ -74,7 +74,7 @@ void display_rules(void)
     printf("************************************************************************\n\n");
 
     printf("\nPress any key to go back to Main Menu...");
-    scanf_s("%s", choice, 1);
+    scanf("%s", choice);    
 }
 
 void display_score_board(void)
@@ -82,14 +82,14 @@ void display_score_board(void)
     char choice[5] = { 0 };
     printf("Will be available in Release 2\n");
     printf("Press any key to go back to Main Menu...");
-    scanf_s("%s", choice, 5);
+    scanf("%s", choice);
 }
 
 void invalid_choice(void)
 {
     char choice[5] = {0,0,0,0,0};
     printf("Wrong choice. Press any key to go back to Main Menu...\n");
-    scanf_s("%s", choice, 1);
+    scanf("%s", choice);
 }
 
 void main_menu(void)
@@ -100,7 +100,7 @@ void main_menu(void)
     {    
         system("clear"); //clear screen      
         start_screen();
-        scanf_s("%d", &int_choice);
+        scanf("%d", &int_choice);
         switch (int_choice) {
             case 1:
                 display_rules();
@@ -126,7 +126,7 @@ int main(void)
     char choice[5] = {0};
     main_menu();
     printf("Press any key to exit console display...\n");
-    scanf_s("%s", choice,5);
+    scanf("%s", choice);
 
     return 0;
 }

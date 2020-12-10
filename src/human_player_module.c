@@ -1,13 +1,12 @@
-
 #define _CRT_SECURE_NO_WARNINGS
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "cards_management.h"
-#include "human_player_module.h"
-#include "game.h"
+#include "../include/cards_management.h"
+#include "../include/human_player_module.h"
+#include "../include/game.h"
 
 /* Global variables */
 bool g_card_requested = false;
@@ -68,6 +67,7 @@ void invalid_turn_warning(void)
 bool validate_card(char *entered_value)
 {
     int size = sizeof CARD_VALUES / sizeof *CARD_VALUES;
+
     int i = 0;
     while (i < size)
     {
@@ -92,12 +92,12 @@ bool validate_card(char *entered_value)
  *        E/e - End Turn
  *        Other- Map to appropriate Card Info
  */
-
 ret_type_e record_human_input(void)
 {
     char user_input[10]; //TODO Modify the array size later
     ret_type_e ret = RET_FAILURE;
     printf("Please enter your choice \n");
+
     scanf_s("%s", user_input, 10);
     CardColor_e color_changed = 0;
     char colornum = ' ' ;
@@ -136,7 +136,6 @@ ret_type_e record_human_input(void)
         Card_t updated_card = { BLACK, WILD };
         printf("Please enter your choice for the color changing. (R/B/G/Y)\n");
         scanf(" %c", &colornum);
-
 
         if (colornum == 'R') {
             color_changed = RED;
@@ -228,6 +227,7 @@ Card_t map_user_input(char *input)
 {
     Card_t temp_card = {ColorNum, NameNum};
 
+    //To map the number part of the User input to the card name field
     temp_card.name = input[1] - '0';
 
     if (input[0] == 'R')
@@ -250,10 +250,8 @@ Card_t map_user_input(char *input)
     {
         temp_card.color = BLACK;
         temp_card.name = WILD;
-        //wild_card(HUMAN);
     }
 
-    //To map the number part of the User input to the card name field
     return temp_card;
 }
 
@@ -403,53 +401,3 @@ int quit_game(void)
     printf("Exiting the game..");
     exit(0);
 }
-
-//Release 2
-//Write for computer?
-
-/**
- * @brief Records the action_color when the previous card is Draw2/Wild card
- *
- * @param color - Color that is received from human player
- * 
- * 
- * @return- Correct enum representaion of the defined colors
- */
-/*
-enum CardColor action_color(char color)
-{
-}
-*/
-/**
- * @brief Function called when card dropped on the pile is Wild card
- *
- * @param PlayerType - Indicates whether the card is played by Human or Computer Player
- */
-
-void wild_card(PlayerType_e type)
-{
-    is_wild_card_played = true;
-    char color_to_be_played[10];
-    Card_t wild_card_played;
-    printf("Please enter color of your choice \n");
-    scanf("%s", color_to_be_played);
-    if (color_to_be_played[0] == 'R')
-    {
-        g_card_on_table.color = RED;
-    }
-    else if (color_to_be_played[0] == 'G')
-    {
-        g_card_on_table.color = GREEN;
-    }
-    else if (color_to_be_played[0] == 'B')
-    {
-        g_card_on_table.color = BLUE;
-    }
-    else if (color_to_be_played[0] == 'Y')
-    {
-        g_card_on_table.color = YELLOW;
-    }
-
-}
-
-

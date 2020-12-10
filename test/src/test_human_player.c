@@ -1,7 +1,7 @@
-#include "../src/human_player_module.h"
+#include "../../include/human_player_module.h"
 
 void test_record_human_input(void);
-int main(void)
+int test_hunman_player(void)
 {
     int result = 0;
 
@@ -12,7 +12,7 @@ int main(void)
 
 void test_record_human_input(void)
 {
- record_human_input();    
+    record_human_input();    
 }
 
 
