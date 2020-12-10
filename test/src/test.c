@@ -59,6 +59,26 @@ void write_log(const char* string)
     return;
 }
 
+void write_fail_log(const char* string, int actual, int expected)
+{
+    FILE* output_file;
+    char* output_file_name = ".\\test_log.txt";
+    output_file = fopen(output_file_name, "a");
+    if (output_file != NULL)
+    {
+        fprintf(output_file, string);
+        fprintf(output_file, "  The expected output is %d.\n", expected);
+        fprintf(output_file, "  The actual output is %d.\n", actual);
+        fclose(output_file);
+    }
+    else
+    {
+        printf("Can't open the log file.\n");
+    }
+
+    return;
+}
+
 int init_test(void)
 {
     int i, j;
