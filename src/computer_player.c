@@ -23,6 +23,10 @@
 #define plarCardNumber 10
 
 enum casenumber {CASE1, CASE2, CASE3, CASE4} casenumber_e;
+struct colorInfo {
+    enum CardColor color;
+    int count;
+};
 ///* (not used for now) */
 //struct CARD record_array[MAX]; // array for recording all the cards
 //int record_size = 0, handcard_size = 0;
@@ -39,7 +43,6 @@ enum casenumber {CASE1, CASE2, CASE3, CASE4} casenumber_e;
 * @param: number of args 
 * @return int the max value
 */
-
 int get_max(int n, ...) {
     int max_value = INT_MIN;
     int temp;
@@ -63,10 +66,10 @@ int get_max(int n, ...) {
 * @param: pointer to the head of handcard list
 * @return CardColor the color with moset occurrence
 */
-enum CardColor  find_most_color(struct DECK **cards_on_hand)
+CardColor_e  find_most_color(Deck_t **cards_on_hand)
 {
     int R_count = 0, G_count = 0, B_count = 0, Y_count = 0, most = 0, least = 0;
-    struct DECK *temp = *cards_on_hand;
+    Deck_t* temp = *cards_on_hand;
 
     if (*cards_on_hand == NULL)
     {
@@ -113,8 +116,6 @@ enum CardColor  find_most_color(struct DECK **cards_on_hand)
     return 0;
 }
 
-
-
 /*
 * @brief: function that check if a card exist in the handcard deck
 * 
@@ -122,10 +123,9 @@ enum CardColor  find_most_color(struct DECK **cards_on_hand)
 * @param: pointer to the pointer to the head of handcard list, card that needs to be checked
 * @return 1 exist, 0 not exist
 */
-
-int ifexists(struct DECK **handcard, enum CardNumber inputCardName, enum CardColor inputCardColor)
+int ifexists(Deck_t** handcard, CardName_e inputCardName, CardColor_e inputCardColor)
 {
-    struct DECK *ptr = *handcard;
+    Deck_t* ptr = *handcard;
     while (ptr != NULL)
     {
         if (ptr->card.name == inputCardName && ptr->card.color == inputCardColor)
@@ -137,7 +137,6 @@ int ifexists(struct DECK **handcard, enum CardNumber inputCardName, enum CardCol
     return 0;
 }
 
-
 /*
 * @brief: function that find the largest number of given color
 * 
@@ -145,13 +144,11 @@ int ifexists(struct DECK **handcard, enum CardNumber inputCardName, enum CardCol
 * @param pointer to the pointer to the head of handcard list, color that need to be checked 
 * @return CardName the largest number
 */
-
-enum CardName find_largest_number(struct DECK **handcard, enum CardColor inputCardColor)
+CardName_e find_largest_number(Deck_t** handcard, CardColor_e inputCardColor)
 {
-    struct DECK *temp = *handcard;
-    enum CardName Max = ZERO;
-
-
+    Deck_t *temp = *handcard;
+    CardName_e Max = ZERO;
+   
     // Check loop while head not equal to NULL
     while (temp != NULL)
     {
@@ -175,10 +172,9 @@ enum CardName find_largest_number(struct DECK **handcard, enum CardColor inputCa
 * @param pointer to the pointer to the head of handcard list, number that needs to be checked
 * @return int number count for occruence
 */
-
-int find_occurence_of_number(struct DECK **handcard, enum CardName inputCardNumber)
+int find_occurence_of_number(Deck_t** handcard, CardName_e inputCardNumber)
 {
-    struct DECK *temp = *handcard;
+    Deck_t* temp = *handcard;
     int count = 0;
     while (temp != NULL)
     {
@@ -191,17 +187,15 @@ int find_occurence_of_number(struct DECK **handcard, enum CardName inputCardNumb
     return count;
 }
 
-
 /*
 * @brief: function that find the occruence of a color
 *
 * @param pointer to the pointer to the head of handcard list, color that needs to be checked
 * @return int number count for occruence
 */
-
-int find_occurence_of_color(struct DECK** handcard, enum CardColor inputCardcolor)
+int find_occurence_of_color(Deck_t** handcard, CardColor_e inputCardcolor)
 {
-    struct DECK* temp = *handcard;
+    Deck_t* temp = *handcard;
     int count = 0;
     while (temp != NULL)
     {
@@ -222,15 +216,10 @@ int find_occurence_of_color(struct DECK** handcard, enum CardColor inputCardcolo
 * @return CardColor  most color occruence of a given number
 *
 */
-
-enum CardColor find_color_with_most_occurence(struct DECK **handcard, enum CardName inputCardNumber)
+CardColor_e find_color_with_most_occurence(Deck_t**handcard, CardName_e inputCardNumber)
 {
-    struct colorInfo {
-        enum CardColor color;
-        int count;
-    };
-    struct DECK *temp = *handcard;
-    enum CardColor most_color_with_number;
+    Deck_t *temp = *handcard;
+    CardColor_e most_color_with_number;
     struct colorInfo colors [4];
     int i = 0, max = INT_MIN;
 
@@ -261,8 +250,8 @@ enum CardColor find_color_with_most_occurence(struct DECK **handcard, enum CardN
 * @return CardColor  the matched color
 *
 */
-enum CardColor find_matched_color(struct DECK** handcard, enum CardName number) {
-    struct DECK* temp = *handcard;
+CardColor_e find_matched_color(Deck_t** handcard, CardName_e number) {
+    Deck_t* temp = *handcard;
     
     while (temp != NULL) {
         if (temp->card.name == number) {
@@ -281,8 +270,8 @@ enum CardColor find_matched_color(struct DECK** handcard, enum CardName number) 
 * @return DECK * the address of that card
 *
 */
-struct DECK* find_address(struct DECK** head, struct CARD CARD) {
-    struct DECK* temp = *head;
+Deck_t* find_address(Deck_t** head, Card_t CARD) {
+    Deck_t* temp = *head;
     if (CARD.name == WILD) {
         while (temp != NULL) {
             if (temp->card.name == WILD) {
@@ -308,10 +297,10 @@ struct DECK* find_address(struct DECK** head, struct CARD CARD) {
 * @param card that will be played, pointer to the pointer to the head of handcard list
 * @return 1 for successed, 0 for failed
 */
-struct DECK * play_card(struct DECK* cardAddress, struct DECK** head)
+Deck_t* play_card(Deck_t* cardAddress, Deck_t** head)
 {
-    struct DECK* temp = *head;
-    struct DECK* prev = *head;
+    Deck_t* temp = *head;
+    Deck_t* prev = *head;
     if (*head == NULL)
     {
         printf("List is already empty.\n");
@@ -323,7 +312,6 @@ struct DECK * play_card(struct DECK* cardAddress, struct DECK** head)
         return NULL;
     }
 
-   
     if (cardAddress->card.name == WILD) {
         // head node
         while ((temp != NULL) && (temp->card.name == WILD))
@@ -371,10 +359,7 @@ struct DECK * play_card(struct DECK* cardAddress, struct DECK** head)
         return temp;
 
     }
-
 }
-
-
 
 /* function that choose the right card to draw */
 /*
@@ -403,11 +388,9 @@ struct DECK * play_card(struct DECK* cardAddress, struct DECK** head)
 * @param Card that will be evaluated, pointer to the head of handcard list
 * @return int the case number
 */
-
-
-enum casenumber pick_case(struct CARD card, struct DECK **hand_card)
+enum casenumber pick_case(Card_t card, Deck_t **hand_card)
 {
-    struct DECK *ptr1 = *hand_card, *ptr2 = *hand_card, *ptr3 = *hand_card;
+    Deck_t *ptr1 = *hand_card, *ptr2 = *hand_card, *ptr3 = *hand_card;
     int commonColor = 0, commonName = 0;
     if (card.name == WILD) {
         while (ptr3 != NULL) {
@@ -479,15 +462,14 @@ enum casenumber pick_case(struct CARD card, struct DECK **hand_card)
  *
  *  @return A best cooresponding card from hand cards, or call an action (draw card)
  */
-
-struct DECK *  pick_card(struct CARD inputCard, struct DECK **hand_card)
+Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
 {
     int wildCount= 0, colorCount=0, numberCount=0;
-    enum CardColor most_color;
-    struct DECK *playCard =NULL,*NULLCARD = NULL;
-    struct CARD playableCard;
+    CardColor_e most_color;
+    Deck_t* playCard =NULL,*NULLCARD = NULL;
+    Card_t playableCard;
 
-    struct DECK *temp = *hand_card;
+    Deck_t* temp = *hand_card;
     enum casenumber caseNum = pick_case(inputCard, hand_card);
     most_color = find_most_color(hand_card);
     //if (temp->next->next = NULL) {
@@ -544,7 +526,7 @@ struct DECK *  pick_card(struct CARD inputCard, struct DECK **hand_card)
         }
         else
         {
-            enum CardName Max = find_largest_number(hand_card, inputCard.color);
+            CardName_e Max = find_largest_number(hand_card, inputCard.color);
             playableCard.name = Max;
             playableCard.color = inputCard.color;
             playCard = find_address(hand_card, playableCard);
@@ -593,10 +575,8 @@ struct DECK *  pick_card(struct CARD inputCard, struct DECK **hand_card)
     return;
 }
 
-
 /*********************** test functions ********************************/
-
-int test_find_most_color(struct DECK* head) {
+int test_find_most_color(Deck_t * head) {
     enum CardColor color;
     color = find_most_color(head);
 
@@ -606,7 +586,7 @@ int test_find_most_color(struct DECK* head) {
     return 0;
 }
 
-int test_pick_case(struct DECK** head, struct CARD card, int n) {
+int test_pick_case(Deck_t** head, Card_t card, int n) {
     int CaseNumber;
 
     CaseNumber = pick_case(card, head);
@@ -616,7 +596,7 @@ int test_pick_case(struct DECK** head, struct CARD card, int n) {
     return 0;
 }
 
-int test_ifexists(struct DECK** head, struct CARD card, int n) {
+int test_ifexists(Deck_t** head, Card_t card, int n) {
     int result;
     result = ifexists(head, card.name, card.color);
     if (result == n) {
@@ -625,8 +605,8 @@ int test_ifexists(struct DECK** head, struct CARD card, int n) {
     return 0;
 }
 
-int test_find_largest_number(struct DECK** handcard, enum CardColor color,enum CardName name) {
-    enum CardName Max;
+int test_find_largest_number(Deck_t** handcard, CardColor_e color, CardName_e name) {
+    CardName_e Max;
     Max = find_largest_number(handcard, color);  
     if (Max == name) {
         return 1;
@@ -634,35 +614,33 @@ int test_find_largest_number(struct DECK** handcard, enum CardColor color,enum C
     return 0;
 }
 
-int test_find_occurence_of_number(struct DECK** handcard, enum CardName inputCardNumber, int n) {
+int test_find_occurence_of_number(Deck_t** handcard, CardName_e inputCardNumber, int n) {
     int occurence = 0;
     occurence = find_occurence_of_number(handcard, inputCardNumber);
     if (occurence == n) {
         return 1;
     }
     return 0;
-
 }
 
-int test_find_occurence_of_color(struct DECK** handcard, enum CardColor inputCardColor, int n) {
+int test_find_occurence_of_color(Deck_t** handcard, CardColor_e inputCardColor, int n) {
     int occurence = 0;
     occurence = find_occurence_of_color(handcard, inputCardColor);
     if (occurence == n) {
         return 1;
     }
     return 0;
-
 }
 
-int test_find_color_with_most_occurence(struct DECK** handcard, enum CardName inputCardNumber, enum CardColor Final_color) {
-    enum CardColor color;
+int test_find_color_with_most_occurence(Deck_t** handcard, CardName_e inputCardNumber, CardColor_e Final_color) {
+    CardColor_e color;
     color = find_color_with_most_occurence(handcard, inputCardNumber);
     if (color == Final_color) {
         return 1;
     }
     return 0;
 }
-void append(struct DECK** head_ref, struct CARD card) {
+void append(Deck_t** head_ref, Card_t card) {
     /* 1. allocate node */
 
     Deck_t* new_card = (Deck_t*)malloc(sizeof(Deck_t));
