@@ -18,6 +18,7 @@ void main(void)
     init_test();
     test_cards_mgmt();
     test_game();
+    test_hunman_player();
 	return;
 }
 
