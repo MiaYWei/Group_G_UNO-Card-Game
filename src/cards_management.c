@@ -244,6 +244,8 @@ void display_cards_list(const Deck_t *p_list)
     }
 
     printf(" ]\n");
+
+    return;
 }
 
 /**
@@ -470,6 +472,8 @@ void initialize_card_on_table(void)
 {
     Card_t draw_card = draw_one_card();
     memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
+
+    return;
 }
 
 /**
@@ -525,4 +529,6 @@ void display_player_deck(PlayerType_e player)
 {
     printf("%s", PLAYER_TYPE_STRING[player]);
     display_cards_list(g_players[player].cards_on_hand);
+
+    return;
 }

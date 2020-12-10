@@ -9,6 +9,7 @@ void test_deal_cards(void);
 void test_remove_card_from_deck(void);
 void test_remove_first_card_from_deck(void);
 void test_add_card_at_end(void);
+void test_remove_first_playable_card(void);
 
 /*#################################### Test Functions ####################################*/
 void test_cards_mgmt(void)
@@ -16,9 +17,11 @@ void test_cards_mgmt(void)
     write_log("--------------- Start Cards Management Module Test ---------------\n");
     test_initialize_cards();
     test_deal_cards();
+    test_add_card_at_end();
     test_remove_card_from_deck();
     test_remove_first_card_from_deck();
-    test_add_card_at_end();
+    test_remove_first_playable_card();
+
     return;
 }
 
@@ -180,11 +183,29 @@ void test_add_card_at_end(void)
     int length = get_pile_length(pile_test);
 
     if (1 == (length - pre_length)) {
-        write_log("Test --- add_card_at_end().Case 1......successful!\n");
+        write_log("Test --- add_card_at_end()......successful!\n");
     } else {
-        write_log("Test --- add_card_at_end().Case 1......failed!\n");
+        write_log("Test --- add_card_at_end()......failed!\n");
     }
 
+    return;
+}
+
+void test_remove_first_playable_card(void)
+{
+    g_card_on_table.color = BLUE;
+    g_card_on_table.name = FIVE;
+    Card_t expected_removed_card = { RED, FIVE };
+    Deck_t* pile_test = create_list_test();
+    Card_t *removed_card = remove_first_playable_card(&pile_test);
+
+    if ((removed_card->color == expected_removed_card.color) && (removed_card->name == expected_removed_card.name)) {
+        write_log("Test --- remove_first_playable_card()......successful!\n");
+    } else {
+        write_log("Test --- remove_first_playable_card()......failed!\n");
+    }
+
+    return;
 }
 
 
