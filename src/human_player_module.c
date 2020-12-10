@@ -1,3 +1,5 @@
+
+#define _CRT_SECURE_NO_WARNINGS
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,22 +12,22 @@
 /* Global variables */
 bool g_card_requested = false;
 bool is_action_card = false;
-static Player_t *human_player = &g_players[HUMAN]; //TODO use g_player directly
 
 int request_card(PlayerType_e PlayerType, int no_of_cards);
 void invalid_turn_warning(void);
-PlayerType_e determine_next_player(struct CARD *previous_card, PlayerType_e current_player);
+PlayerType_e determine_next_player(struct CARD *previous_card, PlayerType_e current_player); //Release 2
 bool validate_card(char *entered_value);
-Card_t *map_user_input(char *input);
-Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched);      //Can be included in Card management
+Card_t map_user_input(char *input);
+Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched); //Can be included in Card management
 ret_type_e record_human_input(void);
 void show_cards_assigned(Card_t assigned_card);
 bool check_is_valid_turn(Card_t *current_card);
+bool is_human_card(Card_t *current_card);
 void display_player_turn(PlayerType_e next_player);
 int quit_game(void);
+bool is_wild_card_played = false;
 ret_type_e handle_human_turn(void);
 
-//Write for computer as well?
 /**
  * @brief Function called when the human player requests a card during each turn/
  *  Draw1/ Draw2 
@@ -42,14 +44,13 @@ int request_card(PlayerType_e PlayerType, int no_of_cards)
     card = draw_one_card();
     show_cards_assigned(card);
     //Assigning the drawn card to the human player
-    result = add_card_at_end(human_player->cards_on_hand, card);
+    result = add_card_at_end(g_players[HUMAN].cards_on_hand, card);
     return result;
 }
 /**
  * @brief Throws a warning message if the card dropped by the user is invalid
  * 
  */
-
 void invalid_turn_warning(void)
 {
     printf("!!Warning!! Invalid card - Please choose a valid card \n");
@@ -70,7 +71,7 @@ bool validate_card(char *entered_value)
     int i = 0;
     while (i < size)
     {
-        if (!strcmp(CARD_VALUES[i], entered_value))
+        if (0 != strcmp(CARD_VALUES[i], entered_value)) //strcmp returns 0, if both strings are identical (equal)
         {
             i++;
         }
@@ -87,53 +88,120 @@ bool validate_card(char *entered_value)
  * Called each time when it's the human player's turn 
  * Keyboard Input from Human 
  *        Q/q - Exit game
- *        R/r - Requests card 
+ *        n/N - Requests card 
  *        E/e - End Turn
  *        Other- Map to appropriate Card Info
  */
 
 ret_type_e record_human_input(void)
 {
-    char user_input[10];//TODO Modify the array size later
+    char user_input[10]; //TODO Modify the array size later
     ret_type_e ret = RET_FAILURE;
     printf("Please enter your choice \n");
     scanf_s("%s", user_input, 10);
+    CardColor_e color_changed = 0;
+    char colornum = ' ' ;
 
     if (user_input[0] == 'q' || user_input[0] == 'Q')
     {
         quit_game();
     }
-    else if (user_input[0] == 'r' || user_input[0] == 'R')
+    else if (user_input[0] == 'n' || user_input[0] == 'N')
     {
-        request_card(HUMAN, 1);
+        if (g_card_requested)
+        {
+            printf("!!Warning!! You've already drawn a card from the pile. Please discard card or end turn now \n");
+        }
+        else
+        {
+            request_card(HUMAN, 1);
+        }
     }
     else if (user_input[0] == 'e' || user_input[0] == 'E')
     {
         if (g_card_requested)
         {
+            g_card_requested = false;
             end_turn(HUMAN);
+            ret = RET_SUCCESS;
         }
         else
         {
-            printf("Please draw a card before you can end your turn");
+            printf("!!Warning!! Please draw a card before you can end your turn \n");
             display_player_deck(HUMAN);
         }
+    }
+    else if (user_input[0] == 'w' || user_input[0] == 'W')  //Action -Wild
+    {
+        Card_t updated_card = { BLACK, WILD };
+        printf("Please enter your choice for the color changing. (R/B/G/Y)\n");
+        scanf(" %c", &colornum);
+
+
+        if (colornum == 'R') {
+            color_changed = RED;
+        }
+        else if (colornum == 'G') {
+            color_changed = GREEN;
+        }
+        else if (colornum == 'B') {
+            color_changed = BLUE;
+        }
+        else if (colornum == 'Y') {
+            color_changed = YELLOW;
+        }
+        else
+        {
+            printf("!!Warning!! Choose a valid color (R/B/G/Y) \n");
+            return RET_INVALID_CARD;
+        }
+
+        //If valid add the card to the discard_pile
+        if (!is_human_card(&updated_card))
+        {
+            printf("!!Warning!! Please select a card from your deck! \n");
+            return RET_INVALID_CARD;
+        }
+
+        remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), updated_card);
+        add_card_at_end(g_discard_pile, updated_card);
+
+        //update g_card_on_table
+        g_card_on_table.color = color_changed;
+        g_card_on_table.name = WILD;
+        
+        //End turn
+        end_turn(HUMAN);
+        g_card_requested = false;
+        return RET_SUCCESS;
     }
     else
     {
         if (validate_card(user_input))
         {
             //To be added if the format of user input is different
-            Card_t *human_card_choice = map_user_input(user_input);
-            //If valid add the card to the discard_pile
-            if (check_is_valid_turn(human_card_choice))
+            Card_t human_card_choice = map_user_input(user_input);
+
+            //Check if the card is from the human player deck
+            if (!is_human_card(&human_card_choice))
             {
-                Deck_t **pp_head = &(human_player->cards_on_hand);
-                remove_card_from_deck(pp_head, *human_card_choice);
-                add_card_at_end(g_discard_pile, *human_card_choice);
-                memcpy(&g_card_on_table, human_card_choice, sizeof(Card_t));
+                printf("!!Warning!! Please select a card from your deck! \n");
+                return RET_INVALID_CARD;
+            }
+
+            //If valid add the card to the discard_pile
+            if (check_is_valid_turn(&human_card_choice))
+            {
+                remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), human_card_choice);
+                add_card_at_end(g_discard_pile, human_card_choice);
+                memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
                 end_turn(HUMAN);
+                g_card_requested = false;
                 ret = RET_SUCCESS;
+            }
+            else
+            {
+                invalid_turn_warning();
             }
         }
         else
@@ -153,46 +221,41 @@ ret_type_e record_human_input(void)
  * 
  * @param input Value entered by the human during his turn
  * 
- * @return Card_t* Contains the mapped card name and color values
+ * @return Card_t the mapped card name and color values
  *         NULL If the input is invalid
  */
-Card_t *map_user_input(char *input)
+Card_t map_user_input(char *input)
 {
+    Card_t temp_card = {ColorNum, NameNum};
 
-    Card_t *temp_card = (Card_t *)malloc(sizeof(Card_t));
-    if (temp_card == NULL)
-    {
-        printf("Memory allocation failed during mapping user input"); //TODO Map it with valid return type
-        return NULL;
-    }
+    temp_card.name = input[1] - '0';
 
     if (input[0] == 'R')
     {
-        temp_card->color = RED;
+        temp_card.color = RED;
     }
     else if (input[0] == 'G')
     {
-        temp_card->color = GREEN;
+        temp_card.color = GREEN;
     }
     else if (input[0] == 'B')
     {
-        temp_card->color = BLUE;
+        temp_card.color = BLUE;
     }
-
     else if (input[0] == 'Y')
     {
-        temp_card->color = YELLOW;
+        temp_card.color = YELLOW;
     }
-    else
+    else if (input[0] == 'W')
     {
-        free(temp_card);
-        return NULL;
+        temp_card.color = BLACK;
+        temp_card.name = WILD;
+        //wild_card(HUMAN);
     }
+
     //To map the number part of the User input to the card name field
-    temp_card->name = input[1] - '0';
     return temp_card;
 }
-
 
 //TODO Remove this function if unused
 /**
@@ -230,9 +293,36 @@ Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched)
  */
 void show_cards_assigned(Card_t assigned_card)
 {
-    printf("The card from the draw pile is %s%s \n", CARD_COLOR_STRING[assigned_card.color], CARD_NAME_STRING[assigned_card.name]);
+    printf("The card from the draw pile is (%s,%s) \n", CARD_COLOR_STRING[assigned_card.color], CARD_NAME_STRING[assigned_card.name]);
     display_player_deck(HUMAN);
     return;
+}
+
+/**
+ * @brief Checks if the card dropped by human player during his turn actually belongs to him
+ *
+ * @param current_card - Current card dropped by the human player
+ *
+ * @return- True if the card is valid
+ *          False if the card is invalid
+ */
+bool is_human_card(Card_t* current_card)
+{
+    bool is_valid = false;
+    Deck_t* temp = g_players[HUMAN].cards_on_hand;
+
+    while (temp != NULL)
+    {
+        if (temp->card.color == current_card->color && temp->card.name == current_card->name)
+        {
+
+            return true;
+        }
+
+        temp = temp->next;
+    }
+
+    return false;
 }
 
 /**
@@ -240,8 +330,8 @@ void show_cards_assigned(Card_t assigned_card)
  * 
  * @param current_card - Current card dropped by the human player
  * 
- * @return- True if the card is invaid
- *          False if the card is valid
+ * @return- True if the card is valid
+ *          False if the card is invalid
  */
 bool check_is_valid_turn(Card_t *current_card)
 {
@@ -287,8 +377,9 @@ PlayerType_e determine_next_player(struct CARD *previous_card, PlayerType_e curr
 ret_type_e handle_human_turn(void)
 {
     display_player_deck(HUMAN);
-    record_human_input(); //TODO: Handle error here
-    return SUCCESS;
+    ret_type_e ret = record_human_input();
+
+    return ret;
 }
 
 /**
@@ -334,9 +425,31 @@ enum CardColor action_color(char color)
  *
  * @param PlayerType - Indicates whether the card is played by Human or Computer Player
  */
-/*
+
 void wild_card(PlayerType_e type)
 {
+    is_wild_card_played = true;
+    char color_to_be_played[10];
+    Card_t wild_card_played;
+    printf("Please enter color of your choice \n");
+    scanf("%s", color_to_be_played);
+    if (color_to_be_played[0] == 'R')
+    {
+        g_card_on_table.color = RED;
+    }
+    else if (color_to_be_played[0] == 'G')
+    {
+        g_card_on_table.color = GREEN;
+    }
+    else if (color_to_be_played[0] == 'B')
+    {
+        g_card_on_table.color = BLUE;
+    }
+    else if (color_to_be_played[0] == 'Y')
+    {
+        g_card_on_table.color = YELLOW;
+    }
+
 }
 
-*/
+

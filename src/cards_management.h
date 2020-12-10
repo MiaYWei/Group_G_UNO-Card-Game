@@ -8,26 +8,22 @@
 * Release 1: 10 cards per colour;
 * Release 2: 4 Skip cards; 4 Draw One cards; 2 Wild cards; 2 Wild Draw Two cards*/
 #define MAX_CARDS_NUM   40
-#define LINE_SIZE       1000         /*LINESIZE to read input */
 #define MALLOC_FAIL     1
 #define SUCCESS         0
 #define PLAYERS_NUM     2
 #define DEAL_CARDS_NUM  5
 
-typedef enum PlayerType { HUMAN, COMPUTER, PlayerTypeNum} PlayerType_e;
-typedef enum Direction { CLOCKWISE, COUNTER_CLOCKWISE } Direction_e;
-typedef enum CardColor { RED, BLUE, GREEN, YELLOW, BLACK } CardColor_e;
-typedef enum CardName { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, FDRAW, FDRAW2, WILD, SKIP } CardName_e;
-typedef enum CardPile { DRAW, DISCARD, HUMAN_PLAYER, COMPUTER_PLAYER } CardPile_e;
+typedef enum { HUMAN, COMPUTER, PlayerTypeNum} PlayerType_e;
+typedef enum { RED, BLUE, GREEN, YELLOW, BLACK, ColorNum } CardColor_e;
+typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, DRAWONE, WILD, NameNum } CardName_e;
 
-static const char* PLAYER_TYPE_STRING[] = { "HUMAN", "COMPUTER" };
-static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "FDRAW", "FDRAW2", "WILD" ,"SKIP"};
-static const char* CARD_COLOR_STRING[] = { "RED", "BLUE", "GREEN", "YELLOW", "BLACK" };
-
-static const char* CARD_VALUES [] = {   "0R", "1R", "2R","3R", "4R", "5R","6R", "7R", "8R","9R",
-                                        "0Y", "1Y", "2Y","3Y", "4Y", "5Y","6Y", "7Y", "8Y","9Y",
-                                        "0B", "1B", "2B","3B", "4B", "5B","6B", "7B", "8B","9B",
-                                        "0G", "1G", "2G","3G", "4G", "5G","6G", "7G", "8G","9G" };
+static const char* PLAYER_TYPE_STRING[] = { "HUMAN", "COMPUTER", "INVALID"};
+static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "DRAWONE", "WILD","INVALID" };
+static const char* CARD_COLOR_STRING[] = { "RED", "BLUE", "GREEN", "YELLOW", "BLACK", "INVALID" };
+static const char* CARD_VALUES[] = {   "R0", "R1", "R2","R3", "R4", "R5","R6", "R7", "R8","R9",
+                                        "Y0", "Y1", "Y2","Y3", "Y4", "Y5","Y6", "Y7", "Y8","Y9",
+                                        "B0", "B1", "B2","B3", "B4", "B5","B6", "B7", "B8","B9",
+                                        "G0", "G1", "G2","G3", "G4", "G5","G6", "G7", "G8","G9" };
 
 /* Card struct */
 typedef struct CARD {
@@ -206,5 +202,12 @@ bool is_card_exist_in_list(const Deck_t* p_list, Card_t card);
  * @param player Player whose card list has to be displayed
  */
 void display_player_deck(PlayerType_e player);
+
+/**
+ * @brief shuffles the cards in draw pile
+ * @return int   0 - Successful;
+ *               1 - Failed.
+ */
+int shuffle_cards(void);
 
 #endif // __CARDS_MANAGEMENT_HEADER__#pragma once
