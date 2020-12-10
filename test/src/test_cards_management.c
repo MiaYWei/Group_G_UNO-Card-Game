@@ -6,9 +6,10 @@
 
 void test_initialize_cards(void);
 void test_deal_cards(void);
+void test_add_card_at_end(void);
+void test_add_card_at_beginning(void);
 void test_remove_card_from_deck(void);
 void test_remove_first_card_from_deck(void);
-void test_add_card_at_end(void);
 void test_remove_first_playable_card(void);
 
 /*#################################### Test Functions ####################################*/
@@ -18,6 +19,7 @@ void test_cards_mgmt(void)
     test_initialize_cards();
     test_deal_cards();
     test_add_card_at_end();
+    test_add_card_at_beginning();
     test_remove_card_from_deck();
     test_remove_first_card_from_deck();
     test_remove_first_playable_card();
@@ -105,6 +107,44 @@ Deck_t* create_list_test(void)
     return head;
 }
 
+
+void test_add_card_at_end(void)
+{
+    Card_t new_card = { GREEN, SEVEN };
+    Deck_t* pile_test = create_list_test();
+    int pre_length = get_pile_length(pile_test);
+    add_card_at_end(pile_test, new_card);
+    int length = get_pile_length(pile_test);
+
+    if (1 == (length - pre_length)) {
+        write_log("Test --- add_card_at_end()......successful!\n");
+    }
+    else {
+        write_log("Test --- add_card_at_end()......failed!\n");
+    }
+
+    return;
+}
+
+void test_add_card_at_beginning(void)
+{
+    Card_t new_card = { GREEN, SEVEN };
+    Deck_t* pile_test = create_list_test();
+    int pre_length = get_pile_length(pile_test);
+    add_card_at_beginning(&pile_test, new_card);
+    int length = get_pile_length(pile_test);
+    Card_t* card_removed = remove_first_card_from_deck(&pile_test);
+
+    if ((1 == (length - pre_length)) && (card_removed->color == new_card.color) && (card_removed->name == new_card.name)) {
+        write_log("Test --- add_card_at_beginning()......successful!\n");
+    }
+    else {
+        write_log("Test --- add_card_at_beginning()......failed!\n");
+    }
+
+    return;
+}
+
 void test_remove_card_from_deck(void)
 {
     Deck_t* pile_test = create_list_test();
@@ -172,23 +212,6 @@ void test_remove_first_card_from_deck(void)
     } else {
         write_log("Test --- remove_first_card_from_deck().Case 2......failed!\n");
     }
-}
-
-void test_add_card_at_end(void)
-{
-    Card_t new_card = { GREEN, SEVEN };
-    Deck_t* pile_test = create_list_test();
-    int pre_length = get_pile_length(pile_test);
-    add_card_at_end(pile_test, new_card);
-    int length = get_pile_length(pile_test);
-
-    if (1 == (length - pre_length)) {
-        write_log("Test --- add_card_at_end()......successful!\n");
-    } else {
-        write_log("Test --- add_card_at_end()......failed!\n");
-    }
-
-    return;
 }
 
 void test_remove_first_playable_card(void)
