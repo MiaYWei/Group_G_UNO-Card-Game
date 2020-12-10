@@ -7,5 +7,6 @@ extern Deck_t* g_draw_pile_test;                     /* remaining cards to draw 
 extern Deck_t* g_discard_pile_test;                  /* discarded cards */
 
 void write_log(const char* string);
+void write_fail_log(const char* string, int actual, int expected);
 int init_test(void);
 #endif // __TEST_CARDS_MANAGEMENT_HEADER__

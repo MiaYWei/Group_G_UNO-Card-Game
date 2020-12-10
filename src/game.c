@@ -182,6 +182,8 @@ void handle_computer_turn(void)
     {
         printf("Error: Not Computer's turn now.\n");
     }
+
+    return;
 }
 
 /**
@@ -210,7 +212,6 @@ int computer_take_turn(void)
     }
 
     playable_card = find_playable_card(COMPUTER);
-
     if (NULL == playable_card)
     { /* If no playable card on hand */
         draw_card = draw_one_card();

@@ -25,7 +25,6 @@ int get_pile_length(Deck_t *p_pile);
 bool is_playable_card(Card_t card);
 void swap_cards(Card_t *p_a, Card_t *p_b);
 Deck_t *remove_first_playable_card(Deck_t **pp_head);
-int draw_cards(int num_draw_cards, PlayerType_e player);
 Card_t draw_one_card(void);
 int shuffle_cards(void);
 
@@ -173,7 +172,6 @@ int add_card_at_end(Deck_t *p_head, Card_t card)
         p_head->next = new_card; /* Add the new node at end */
     }
     
-    //printf("Card (%d, %d) added at end of list successfully.\n", card.color, card.name);
     return 0;
 }
 
@@ -194,7 +192,6 @@ const Deck_t *remove_first_card_from_deck(Deck_t **pp_head)
 
     to_delete = *pp_head;
     *pp_head = (*pp_head)->next; // Mark the second element as first
-    //free(to_delete);       // No need to free the memory occupied by first element, will return it later.
 
     return to_delete;
 }
@@ -247,6 +244,8 @@ void display_cards_list(const Deck_t *p_list)
     }
 
     printf(" ]\n");
+
+    return;
 }
 
 /**
@@ -329,6 +328,8 @@ void swap_cards(Card_t *p_a, Card_t *p_b)
     Card_t temp = *p_a;
     *p_a = *p_b;
     *p_b = temp;
+
+    return;
 }
 
 /**
@@ -356,8 +357,6 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
         removed_card.name = (*pp_head)->card.name;
         prev = *pp_head;             // Get reference of head node
         *pp_head = (*pp_head)->next; // Adjust head node link
-        //free(prev);            // Delete prev since it contains reference to head node
-        //printf("Successfully deleted the first palyable card (%s, %s) at beginning. \n", CARD_COLOR_STRING[removed_card.color], CARD_NAME_STRING[removed_card.name]);
         return prev; // No need to delete further
     }
 
@@ -370,8 +369,6 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
             {
                 prev->next = cur->next; // Adjust links for previous node
             }
-            //free(cur);                  // Delete current node
-            //printf("Successfully deleted the first palyable card (%s, %s) in the middle. \n", CARD_COLOR_STRING[cur->card.color], CARD_NAME_STRING[cur->card.name]);
             return cur;
         }
 
@@ -380,41 +377,6 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
     }
 
     return NULL;
-}
-
-/**
- * @brief Draws the requested number of cards from the draw pile for the current player
- *        If there is no cards left in the draw pile, then place all the cards from discard pile
- *        into the draw pile.
- *
- * @param num_draw_cards number of cards to be drawn
- * @param player enum type variable: The specific player who draws the cards
- * @return int   0 - Successful;
- *               1 - Failed.
- */
-int draw_cards(int num_draw_cards, PlayerType_e player)
-{
-    int i;
-    const Deck_t *draw_card;
-    const Deck_t *temp_deck;
-    int result = 1;
-
-    for (i = 0; i < num_draw_cards; i++)
-    {
-        if (g_draw_pile == NULL)
-        {
-            while (g_discard_pile != NULL)
-            {
-                temp_deck = remove_first_card_from_deck(&g_discard_pile);
-                result += add_card_at_end(g_draw_pile, temp_deck->card);
-            }
-        }
-
-        draw_card = remove_first_card_from_deck(&g_draw_pile);
-        result = add_card_at_end(g_players[player].cards_on_hand, draw_card->card);
-    }
-
-    return result;
 }
 
 /**
@@ -510,6 +472,8 @@ void initialize_card_on_table(void)
 {
     Card_t draw_card = draw_one_card();
     memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
+
+    return;
 }
 
 /**
@@ -565,4 +529,6 @@ void display_player_deck(PlayerType_e player)
 {
     printf("%s", PLAYER_TYPE_STRING[player]);
     display_cards_list(g_players[player].cards_on_hand);
+
+    return;
 }
