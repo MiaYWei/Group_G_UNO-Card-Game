@@ -200,7 +200,6 @@ void test_remove_card_from_deck(void)
 
 void test_remove_first_card_from_deck(void)
 {
-    Card_t card = {RED, ZERO};
     Card_t* card_removed;
     Deck_t* pile_test = NULL;
 
@@ -211,15 +210,25 @@ void test_remove_first_card_from_deck(void)
     } 
     else {
         write_log("Test --- remove_first_card_from_deck().Case 1......failed!\n");
+        write_fail_log("After removing the first card from deck, the expected removed card color:\n", card_removed->color, ColorNum);
+        write_fail_log("After removing the first card from deck, the expected removed card name:\n", card_removed->name, NameNum);
     }
 
     // Not empty list
+    Card_t expected_card = { RED, ZERO };
+    bool expected_ret = false;
     pile_test = create_list_test();
     card_removed = remove_first_card_from_deck(&pile_test);
-    if (!is_exist_card(pile_test, card) && (card_removed->color == card.color) && (card_removed->name == card.name)) {
+    bool card_exist_actual = is_exist_card(pile_test, expected_card);
+    if ((card_exist_actual == expected_ret) && (card_removed->color == expected_card.color) && (card_removed->name == expected_card.name)) {
         write_log("Test --- remove_first_card_from_deck().Case 2......successful!\n");
-    } else {
+    } 
+    else {
         write_log("Test --- remove_first_card_from_deck().Case 2......failed!\n");
+        write_log(" After removing the first card from deck: \n");
+        write_fail_log("  check if the card is still existing in the deck:\n", card_exist_actual, false);
+        write_fail_log("  the expected removed card color:\n", card_removed->color, expected_card.color);
+        write_fail_log("  the expected removed card name:\n", card_removed->name, expected_card.name);
     }
 }
 
@@ -233,8 +242,12 @@ void test_remove_first_playable_card(void)
 
     if ((removed_card->color == expected_removed_card.color) && (removed_card->name == expected_removed_card.name)) {
         write_log("Test --- remove_first_playable_card()......successful!\n");
-    } else {
+    } 
+    else {
         write_log("Test --- remove_first_playable_card()......failed!\n");
+        write_log(" After removing the first playable card from deck: \n");
+        write_fail_log("  the expected removed card color:\n", removed_card->color, expected_removed_card.color);
+        write_fail_log("  the expected removed card name:\n", removed_card->name, expected_removed_card.name);
     }
 
     return;
