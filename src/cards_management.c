@@ -25,7 +25,6 @@ int get_pile_length(Deck_t *p_pile);
 bool is_playable_card(Card_t card);
 void swap_cards(Card_t *p_a, Card_t *p_b);
 Deck_t *remove_first_playable_card(Deck_t **pp_head);
-int draw_cards(int num_draw_cards, PlayerType_e player);
 Card_t draw_one_card(void);
 int shuffle_cards(void);
 
@@ -380,41 +379,6 @@ Deck_t *remove_first_playable_card(Deck_t **pp_head)
     }
 
     return NULL;
-}
-
-/**
- * @brief Draws the requested number of cards from the draw pile for the current player
- *        If there is no cards left in the draw pile, then place all the cards from discard pile
- *        into the draw pile.
- *
- * @param num_draw_cards number of cards to be drawn
- * @param player enum type variable: The specific player who draws the cards
- * @return int   0 - Successful;
- *               1 - Failed.
- */
-int draw_cards(int num_draw_cards, PlayerType_e player)
-{
-    int i;
-    const Deck_t *draw_card;
-    const Deck_t *temp_deck;
-    int result = 1;
-
-    for (i = 0; i < num_draw_cards; i++)
-    {
-        if (g_draw_pile == NULL)
-        {
-            while (g_discard_pile != NULL)
-            {
-                temp_deck = remove_first_card_from_deck(&g_discard_pile);
-                result += add_card_at_end(g_draw_pile, temp_deck->card);
-            }
-        }
-
-        draw_card = remove_first_card_from_deck(&g_draw_pile);
-        result = add_card_at_end(g_players[player].cards_on_hand, draw_card->card);
-    }
-
-    return result;
 }
 
 /**
