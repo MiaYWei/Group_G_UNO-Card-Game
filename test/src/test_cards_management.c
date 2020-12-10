@@ -8,6 +8,7 @@ void test_initialize_cards(void);
 void test_deal_cards(void);
 void test_remove_card_from_deck(void);
 void test_remove_first_card_from_deck(void);
+void test_add_card_at_end(void);
 
 /*#################################### Test Functions ####################################*/
 void test_cards_mgmt(void)
@@ -17,6 +18,7 @@ void test_cards_mgmt(void)
     test_deal_cards();
     test_remove_card_from_deck();
     test_remove_first_card_from_deck();
+    test_add_card_at_end();
     return;
 }
 
@@ -148,12 +150,41 @@ void test_remove_card_from_deck(void)
 void test_remove_first_card_from_deck(void)
 {
     Card_t card = {RED, ZERO};
-    Deck_t* pile_test = create_list_test();
-    remove_first_card_from_deck(&pile_test);
-    if (!is_exist_card(pile_test, card)) {
+    Card_t *card_removed;
+    Deck_t* pile_test = NULL;
+
+    // Empty list
+    card_removed = remove_first_card_from_deck(&pile_test);
+    if (card_removed == NULL) {
         write_log("Test --- remove_first_card_from_deck().Case 1......successful!\n");
     } else {
         write_log("Test --- remove_first_card_from_deck().Case 1......failed!\n");
     }
+
+    // Not empty list
+    pile_test = create_list_test();
+    card_removed = remove_first_card_from_deck(&pile_test);
+    if (!is_exist_card(pile_test, card) && (card_removed->color == card.color) && (card_removed->name == card.name)) {
+        write_log("Test --- remove_first_card_from_deck().Case 2......successful!\n");
+    } else {
+        write_log("Test --- remove_first_card_from_deck().Case 2......failed!\n");
+    }
 }
+
+void test_add_card_at_end(void)
+{
+    Card_t new_card = { GREEN, SEVEN };
+    Deck_t* pile_test = create_list_test();
+    int pre_length = get_pile_length(pile_test);
+    add_card_at_end(pile_test, new_card);
+    int length = get_pile_length(pile_test);
+
+    if (1 == (length - pre_length)) {
+        write_log("Test --- add_card_at_end().Case 1......successful!\n");
+    } else {
+        write_log("Test --- add_card_at_end().Case 1......failed!\n");
+    }
+
+}
+
 
