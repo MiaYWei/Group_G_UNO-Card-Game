@@ -107,7 +107,6 @@ Deck_t* create_list_test(void)
     return head;
 }
 
-
 void test_add_card_at_end(void)
 {
     Card_t new_card = { GREEN, SEVEN };
