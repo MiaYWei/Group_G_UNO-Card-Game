@@ -5,7 +5,7 @@
 #include "../include/cards_management.h"
 #include "../include/human_player_module.h"
 #include "../include/game.h"
-
+#include "../include/computer_player.h"
 #define PLAYERS_NAME_LENGTH  20
 
 bool g_end_game = false;
@@ -211,9 +211,9 @@ int computer_take_turn(void)
     {
         return 2;
     }
-
-    printf("Computer dect: ");
-    display_player_deck(COMPUTER);
+    //For test only
+    //printf("Computer dect: ");
+    //display_player_deck(COMPUTER);
     playable_card = pick_card(g_card_on_table, &g_players[COMPUTER].cards_on_hand);
 
     if (playable_card == NULL)

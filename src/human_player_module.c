@@ -131,9 +131,11 @@ ret_type_e record_human_input(void)
             display_player_deck(HUMAN);
         }
     }
-    else if (user_input[0] == 'w' || user_input[0] == 'W')  //Action -Wild
+    //else if (user_input[0] == 'a' || user_input[0] == 'A')  //Action -Wild
+    else if ((user_input[0] == 'a' || user_input[0] == 'A') && (user_input[1] == 'w' || user_input[1] == 'W'))
     {
-        Card_t updated_card = { BLACK, WILD };
+        Card_t updated_card = { ACTION, WILD };
+
         printf("Please enter your choice for the color changing. (R/B/G/Y)\n");
         scanf(" %c", &colornum);
 
@@ -246,9 +248,9 @@ Card_t map_user_input(char *input)
     {
         temp_card.color = YELLOW;
     }
-    else if (input[0] == 'W')
+    else if (input[0] == 'A')
     {
-        temp_card.color = BLACK;
+        temp_card.color = ACTION;
         temp_card.name = WILD;
     }
 

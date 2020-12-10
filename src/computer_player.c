@@ -18,11 +18,11 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include "../include/cards_management.h"
- 
+
 #define hand_MAX 20
 #define plarCardNumber 10
 
-enum casenumber {CASE1, CASE2, CASE3, CASE4} casenumber_e;
+enum casenumber { CASE1, CASE2, CASE3, CASE4 } casenumber_e;
 struct colorInfo {
     enum CardColor color;
     int count;
@@ -40,7 +40,7 @@ struct colorInfo {
 /*
 * @brief: variadic function that returns the max of given numbers
 *
-* @param: number of args 
+* @param: number of args
 * @return int the max value
 */
 int get_max(int n, ...) {
@@ -58,15 +58,15 @@ int get_max(int n, ...) {
     }
     va_end(list);
     return max_value;
-    }
+}
 
-/* 
-* @brief: function that find the most occurrence with the color 
-* 
+/*
+* @brief: function that find the most occurrence with the color
+*
 * @param: pointer to the head of handcard list
 * @return CardColor the color with moset occurrence
 */
-CardColor_e  find_most_color(Deck_t **cards_on_hand)
+CardColor_e  find_most_color(Deck_t** cards_on_hand)
 {
     int R_count = 0, G_count = 0, B_count = 0, Y_count = 0, most = 0, least = 0;
     Deck_t* temp = *cards_on_hand;
@@ -118,8 +118,8 @@ CardColor_e  find_most_color(Deck_t **cards_on_hand)
 
 /*
 * @brief: function that check if a card exist in the handcard deck
-* 
-* 
+*
+*
 * @param: pointer to the pointer to the head of handcard list, card that needs to be checked
 * @return 1 exist, 0 not exist
 */
@@ -139,20 +139,20 @@ int ifexists(Deck_t** handcard, CardName_e inputCardName, CardColor_e inputCardC
 
 /*
 * @brief: function that find the largest number of given color
-* 
-* 
-* @param pointer to the pointer to the head of handcard list, color that need to be checked 
+*
+*
+* @param pointer to the pointer to the head of handcard list, color that need to be checked
 * @return CardName the largest number
 */
 CardName_e find_largest_number(Deck_t** handcard, CardColor_e inputCardColor)
 {
-    Deck_t *temp = *handcard;
+    Deck_t* temp = *handcard;
     CardName_e Max = ZERO;
-   
+
     // Check loop while head not equal to NULL
     while (temp != NULL)
     {
-        
+
         // If max is less then head->data then
         // assign value of head->data to max
         // otherwise node point to next node.
@@ -162,7 +162,7 @@ CardName_e find_largest_number(Deck_t** handcard, CardColor_e inputCardColor)
         }
         temp = temp->next;
     }
-    
+
     return Max;
 }
 
@@ -211,16 +211,16 @@ int find_occurence_of_color(Deck_t** handcard, CardColor_e inputCardcolor)
 /*
 * @brief: function that find the most color occruence of a given number
 *
-* 
+*
 * @param pointer to the pointer to the head of handcard list, name that need to be checked
 * @return CardColor  most color occruence of a given number
 *
 */
-CardColor_e find_color_with_most_occurence(Deck_t**handcard, CardName_e inputCardNumber)
+CardColor_e find_color_with_most_occurence(Deck_t** handcard, CardName_e inputCardNumber)
 {
-    Deck_t *temp = *handcard;
+    Deck_t* temp = *handcard;
     CardColor_e most_color_with_number;
-    struct colorInfo colors [4];
+    struct colorInfo colors[4];
     int i = 0, max = INT_MIN;
 
     while (temp != NULL)
@@ -229,21 +229,21 @@ CardColor_e find_color_with_most_occurence(Deck_t**handcard, CardName_e inputCar
         {
             colors[i].color = temp->card.color;
             colors[i].count = find_occurence_of_color(handcard, temp->card.color);
-            i=i+1;
+            i = i + 1;
         }
         temp = temp->next;
     }
     for (int n = 0; n < i; n++) {
         if (colors[n].count > max) {
             max = colors->count;
-            most_color_with_number= colors[n].color;
+            most_color_with_number = colors[n].color;
         }
     }
     return most_color_with_number;
- }
+}
 
 /*
-* @brief: function that get the matched color in the list for the given number 
+* @brief: function that get the matched color in the list for the given number
 *
 *
 * @param pointer to the pointer to the head of handcard list, name that need to be checked
@@ -252,7 +252,7 @@ CardColor_e find_color_with_most_occurence(Deck_t**handcard, CardName_e inputCar
 */
 CardColor_e find_matched_color(Deck_t** handcard, CardName_e number) {
     Deck_t* temp = *handcard;
-    
+
     while (temp != NULL) {
         if (temp->card.name == number) {
             return temp->card.color;
@@ -287,76 +287,6 @@ Deck_t* find_address(Deck_t** head, Card_t CARD) {
             }
             temp = temp->next;
         }
-    
-    }
-}
-
-/*
-* @brief: function that play card from handcard list
-*
-* @param card that will be played, pointer to the pointer to the head of handcard list
-* @return 1 for successed, 0 for failed
-*/
-Deck_t* play_card(Deck_t* cardAddress, Deck_t** head)
-{
-    Deck_t* temp = *head;
-    Deck_t* prev = *head;
-    if (*head == NULL)
-    {
-        printf("List is already empty.\n");
-        return NULL;
-    }
-
-    if (cardAddress == NULL) {
-        printf("Drawed One card \n");
-        return NULL;
-    }
-
-    if (cardAddress->card.name == WILD) {
-        // head node
-        while ((temp != NULL) && (temp->card.name == WILD))
-        {
-
-            *head = temp->next;
-
-            return temp;
-        }
-        /* For each node in the list */
-        while ((temp != NULL) && ((temp->card.name !=WILD)))
-        {
-            prev = temp;
-            temp = temp->next;
-        }
-
-        if (temp == NULL)
-            return NULL;
-        prev->next = temp->next;
-        printf("Successfully deleted  card (%s, %s). \n", CARD_COLOR_STRING[temp->card.color], CARD_NAME_STRING[temp->card.name]);
-        return temp;
-    
-    
-    }
-    else {
-        // head node
-        while ((temp != NULL) && (temp->card.name == cardAddress->card.name) && (temp->card.color == cardAddress->card.color))
-        {
-
-            *head = temp->next;
-
-            return temp;
-        }
-        /* For each node in the list */
-        while ((temp != NULL) && ((temp->card.name != cardAddress->card.name) || (temp->card.color != cardAddress->card.color)))
-        {
-            prev = temp;
-            temp = temp->next;
-        }
-
-        if (temp == NULL)
-            return NULL;
-        prev->next = temp->next;
-        printf("Successfully deleted  card (%s, %s). \n", CARD_COLOR_STRING[temp->card.color], CARD_NAME_STRING[temp->card.name]);
-        return temp;
 
     }
 }
@@ -388,9 +318,9 @@ Deck_t* play_card(Deck_t* cardAddress, Deck_t** head)
 * @param Card that will be evaluated, pointer to the head of handcard list
 * @return int the case number
 */
-enum casenumber pick_case(Card_t card, Deck_t **hand_card)
+enum casenumber pick_case(Card_t card, Deck_t** hand_card)
 {
-    Deck_t *ptr1 = *hand_card, *ptr2 = *hand_card, *ptr3 = *hand_card;
+    Deck_t* ptr1 = *hand_card, * ptr2 = *hand_card, * ptr3 = *hand_card;
     int commonColor = 0, commonName = 0;
     if (card.name == WILD) {
         while (ptr3 != NULL) {
@@ -403,14 +333,14 @@ enum casenumber pick_case(Card_t card, Deck_t **hand_card)
 
     }
     while (ptr1 != NULL) {
-        if ( ptr1->card.color == card.color) {
+        if (ptr1->card.color == card.color) {
             commonColor = 1;
         }
         ptr1 = ptr1->next;
     }
 
     while (ptr2 != NULL) {
-        if ( ptr2->card.name == card.name) {
+        if (ptr2->card.name == card.name) {
             commonName = 1;
         }
         ptr2 = ptr2->next;
@@ -439,24 +369,24 @@ enum casenumber pick_case(Card_t card, Deck_t **hand_card)
  *              - if it is a draw/draw2 card and number of the card of the color of that draw/draw2 card < 2,
  *                use wild card if possible to change to color
  *              - if it is a wild card, play the corresponding color
- *              - if do not have the corresponding color, draw card 
+ *              - if do not have the corresponding color, draw card
  *         if opponent player has more than one card # > 1:
  *          case 1 : no matched color and no matched number
  *              - if have more than one wild card, play wild card with color with the most occurence
- *              - if have skip, use skip card 
+ *              - if have skip, use skip card
  *              - if don't have wild or skip, draw card from pile
  *          case 2 : have the matched color and no matched number
  *              - choose the largest number on that color to make opponent lose more point
- *              - if matched color > 2, use match draw/draw2/skip card based on the color with 
+ *              - if matched color > 2, use match draw/draw2/skip card based on the color with
  *                the most occurence
  *          case 3 : no matched color, but have matched number
- *              - if have multiple matched number, choose the color with the most occurence 
+ *              - if have multiple matched number, choose the color with the most occurence
  *                or corresponding action card
  *              - if have only one matched number with different card, get rid of it
  *          case 4 : have both matched color and match number
  *              - Quickly get rid of matched numbers in the hand.
- *              
- *          if opponent player has one card left: 
+ *
+ *          if opponent player has one card left:
  *              - use action card if possibile
  *              - avoid play the last color that the player played
  *
@@ -464,9 +394,9 @@ enum casenumber pick_case(Card_t card, Deck_t **hand_card)
  */
 Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
 {
-    int wildCount= 0, colorCount=0, numberCount=0;
+    int wildCount = 0, colorCount = 0, numberCount = 0;
     CardColor_e most_color;
-    Deck_t* playCard =NULL,*NULLCARD = NULL;
+    Deck_t* playCard = NULL, * NULLCARD = NULL;
     Card_t playableCard;
 
     Deck_t* temp = *hand_card;
@@ -493,7 +423,7 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
         /* if wild card >1, play the WILD with color with the most occurence */
         if (wildCount > 1)
         {
-            
+
             playableCard.name = WILD;
             playCard = find_address(hand_card, playableCard);
             playCard->card.color = most_color;
@@ -538,16 +468,16 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
         numberCount = find_occurence_of_number(hand_card, inputCard.name);
         if (numberCount == 1)
         {
-            
+
             playableCard.name = inputCard.name;
-            playableCard.color = find_matched_color(hand_card,inputCard.name);
+            playableCard.color = find_matched_color(hand_card, inputCard.name);
             playCard = find_address(hand_card, playableCard);
             return playCard;
 
         }
         else
         {
-            playableCard.color = find_color_with_most_occurence(hand_card,inputCard.name);
+            playableCard.color = find_color_with_most_occurence(hand_card, inputCard.name);
             playableCard.name = inputCard.name;
             playCard = find_address(hand_card, playableCard);
             return playCard;
@@ -555,15 +485,16 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
         break;
     case CASE4:
         /* have matched color, and have matched number */
-        
-        if(inputCard.color == find_most_color(hand_card)){
+
+        if (inputCard.color == find_most_color(hand_card)) {
             playableCard.name = find_largest_number(hand_card, inputCard.color);
             playableCard.color = inputCard.color;
             playCard = find_address(hand_card, playableCard);
             return playCard;
-        }else{
-            playableCard.color = find_color_with_most_occurence(hand_card,inputCard.name);
-            playableCard.name =inputCard.name;
+        }
+        else {
+            playableCard.color = find_color_with_most_occurence(hand_card, inputCard.name);
+            playableCard.name = inputCard.name;
             playCard = find_address(hand_card, playableCard);
             return playCard;
         }
@@ -575,8 +506,78 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
     return;
 }
 
+/*
+* @brief: function that play card from handcard list
+*
+* @param card that will be played, pointer to the pointer to the head of handcard list
+* @return 1 for successed, 0 for failed
+*/
+Deck_t* play_card(Deck_t* cardAddress, Deck_t** head)
+{
+    Deck_t* temp = *head;
+    Deck_t* prev = *head;
+    if (*head == NULL)
+    {
+        printf("List is already empty.\n");
+        return NULL;
+    }
+
+    if (cardAddress == NULL) {
+        printf("Drawed One card \n");
+        return NULL;
+    }
+
+    if (cardAddress->card.name == WILD) {
+        // head node
+        while ((temp != NULL) && (temp->card.name == WILD))
+        {
+            *head = temp->next;
+
+            return temp;
+        }
+        /* For each node in the list */
+        while ((temp != NULL) && ((temp->card.name != WILD)))
+        {
+            prev = temp;
+            temp = temp->next;
+        }
+
+        if (temp == NULL)
+            return NULL;
+        prev->next = temp->next;
+        printf("Successfully deleted WILD card (%s, %s). \n", CARD_COLOR_STRING[temp->card.color], CARD_NAME_STRING[temp->card.name]);
+        return temp;
+
+    }
+    else {
+        // head node
+        while ((temp != NULL) && (temp->card.name == cardAddress->card.name) && (temp->card.color == cardAddress->card.color))
+        {
+
+            *head = temp->next;
+
+            return temp;
+        }
+        /* For each node in the list */
+        while ((temp != NULL) && ((temp->card.name != cardAddress->card.name) || (temp->card.color != cardAddress->card.color)))
+        {
+            prev = temp;
+            temp = temp->next;
+        }
+
+        if (temp == NULL)
+            return NULL;
+        prev->next = temp->next;
+        printf("Successfully deleted  card (%s, %s). \n", CARD_COLOR_STRING[temp->card.color], CARD_NAME_STRING[temp->card.name]);
+        return temp;
+
+    }
+}
+
+
+
 /*********************** test functions ********************************/
-int test_find_most_color(Deck_t * head) {
+int test_find_most_color(Deck_t* head) {
     enum CardColor color;
     color = find_most_color(head);
 
@@ -607,7 +608,7 @@ int test_ifexists(Deck_t** head, Card_t card, int n) {
 
 int test_find_largest_number(Deck_t** handcard, CardColor_e color, CardName_e name) {
     CardName_e Max;
-    Max = find_largest_number(handcard, color);  
+    Max = find_largest_number(handcard, color);
     if (Max == name) {
         return 1;
     }
@@ -644,7 +645,7 @@ void append(Deck_t** head_ref, Card_t card) {
     /* 1. allocate node */
 
     Deck_t* new_card = (Deck_t*)malloc(sizeof(Deck_t));
-    struct DECK *last = *head_ref;  /* used in step 5*/
+    struct DECK* last = *head_ref;  /* used in step 5*/
 
     /* 2. put in the data  */
     new_card->card.color = card.color;
@@ -660,7 +661,7 @@ void append(Deck_t** head_ref, Card_t card) {
     }
 
     /* 5. Else traverse till the last node */
-    while (last->next!= NULL)
+    while (last->next != NULL)
         last = last->next;
 
     /* 6. Change the next of last node */
@@ -674,12 +675,12 @@ int main()
 {
 
     /* define cards*/
-    struct CARD card1 = { RED, ONE }, card2 = { RED, FIVE }, card3 = { GREEN, FIVE }, card4 = { BLACK, WILD }, card5 = { GREEN, TWO }, card6 = { YELLOW, FOUR }, card7 = { RED, NINE};
-    struct CARD testCard1 = { BLUE, SIX }, testCard2 = { GREEN , SEVEN }, testCard3 = { BLUE, FIVE }, testCard4 = { BLUE, ONE }, testCard5 = { GREEN, FOUR }, testWILD = { BLUE, WILD }, testDRAW = { BLUE, DRAWONE};
+    struct CARD card1 = { RED, ONE }, card2 = { RED, FIVE }, card3 = { GREEN, FIVE }, card4 = { BLACK, WILD }, card5 = { GREEN, TWO }, card6 = { YELLOW, FOUR }, card7 = { RED, NINE };
+    struct CARD testCard1 = { BLUE, SIX }, testCard2 = { GREEN , SEVEN }, testCard3 = { BLUE, FIVE }, testCard4 = { BLUE, ONE }, testCard5 = { GREEN, FOUR }, testWILD = { BLUE, WILD }, testDRAW = { BLUE, DRAWONE };
 
     /* define hand card list */
-    struct DECK *hand_card_list = NULL, *played=NULL;
-    struct DECK *ptr = NULL;
+    struct DECK* hand_card_list = NULL, * played = NULL;
+    struct DECK* ptr = NULL;
     append(&hand_card_list, card1);
     append(&hand_card_list, card2);
     append(&hand_card_list, card3);
@@ -688,59 +689,59 @@ int main()
     append(&hand_card_list, card6);
     append(&hand_card_list, card7);
     display_cards_list(hand_card_list);
-   /* ptr = find_address(&hand_card_list, card4);
-    printf("card is (%s,%s) \n", CARD_COLOR_STRING[ptr->card.color], CARD_NAME_STRING[ptr->card.name]);
-    played = play_card(ptr, &hand_card_list);
-    played->card.color = RED;
-    printf("card is (%s,%s) \n", CARD_COLOR_STRING[ptr->card.color], CARD_NAME_STRING[ptr->card.name]);
-    display_cards_list(hand_card_list);*/
+    /* ptr = find_address(&hand_card_list, card4);
+     printf("card is (%s,%s) \n", CARD_COLOR_STRING[ptr->card.color], CARD_NAME_STRING[ptr->card.name]);
+     played = play_card(ptr, &hand_card_list);
+     played->card.color = RED;
+     printf("card is (%s,%s) \n", CARD_COLOR_STRING[ptr->card.color], CARD_NAME_STRING[ptr->card.name]);
+     display_cards_list(hand_card_list);*/
 
-    /*rintf("\n\n");
-    printf("****************** function test *******************\n");
-    if (test_find_most_color(&hand_card_list)) {
-        printf("find_most_color Passed !\n");
-    }
+     /*rintf("\n\n");
+     printf("****************** function test *******************\n");
+     if (test_find_most_color(&hand_card_list)) {
+         printf("find_most_color Passed !\n");
+     }
 
-    if (test_pick_case(&hand_card_list, testCard1, CASE1)) {
-        printf("pick_case CASE 1 Passed ! \n");
-    }
-    if (test_pick_case(&hand_card_list, testCard2, CASE2)) {
-        printf("pick_case CASE 2 Passed ! \n");
-    }
-    if (test_pick_case(&hand_card_list, testCard3, CASE3)) {
-        printf("pick_case CASE 3 Passed ! \n");
-    }
-    if (test_pick_case(&hand_card_list, testCard5, CASE4)) {
-        printf("pick_case CASE 4 Passed ! \n");
-    }
+     if (test_pick_case(&hand_card_list, testCard1, CASE1)) {
+         printf("pick_case CASE 1 Passed ! \n");
+     }
+     if (test_pick_case(&hand_card_list, testCard2, CASE2)) {
+         printf("pick_case CASE 2 Passed ! \n");
+     }
+     if (test_pick_case(&hand_card_list, testCard3, CASE3)) {
+         printf("pick_case CASE 3 Passed ! \n");
+     }
+     if (test_pick_case(&hand_card_list, testCard5, CASE4)) {
+         printf("pick_case CASE 4 Passed ! \n");
+     }
 
-    if (test_ifexists(&hand_card_list, card1, 1)) {
-        printf("ifexists EXIST Passed ! \n");
-    }
-    if (test_ifexists(&hand_card_list, testCard1, 0)) {
-        printf("ifexists NOT EXIST Passed ! \n");
-    }
+     if (test_ifexists(&hand_card_list, card1, 1)) {
+         printf("ifexists EXIST Passed ! \n");
+     }
+     if (test_ifexists(&hand_card_list, testCard1, 0)) {
+         printf("ifexists NOT EXIST Passed ! \n");
+     }
 
-    if (test_find_largest_number(&hand_card_list, RED, EIGHT)) {
-        printf("find_largest_number TEST1 Passed ! \n");
-    }
-    if (test_find_largest_number(&hand_card_list, GREEN, FIVE)) {
-        printf("find_largest_number TEST2 Passed ! \n");
-    }
+     if (test_find_largest_number(&hand_card_list, RED, EIGHT)) {
+         printf("find_largest_number TEST1 Passed ! \n");
+     }
+     if (test_find_largest_number(&hand_card_list, GREEN, FIVE)) {
+         printf("find_largest_number TEST2 Passed ! \n");
+     }
 
-    if (test_find_occurence_of_number(&hand_card_list, FIVE, 2)) {
-        printf("find_occurence_of_number Passed ! \n");
-    }
+     if (test_find_occurence_of_number(&hand_card_list, FIVE, 2)) {
+         printf("find_occurence_of_number Passed ! \n");
+     }
 
-    if (test_find_occurence_of_color(&hand_card_list, RED, 3)) {
-        printf("find_occurence_of_color Passed ! \n");
-    }
+     if (test_find_occurence_of_color(&hand_card_list, RED, 3)) {
+         printf("find_occurence_of_color Passed ! \n");
+     }
 
-    if (test_find_color_with_most_occurence(&hand_card_list, FIVE, RED)) {
-        printf("find_color_with_most_occurence Passed ! \n");
-    }
+     if (test_find_color_with_most_occurence(&hand_card_list, FIVE, RED)) {
+         printf("find_color_with_most_occurence Passed ! \n");
+     }
 
-    initialize_cards();*/
+     initialize_cards();*/
     printf("\n\n");
     printf("****************** Pick_action test *******************\n");
     /* PASSED

@@ -4,10 +4,14 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
-
+#include "../include/cards_management.h"
 #define hand_MAX 20
 #define plarCardNumber 10
 typedef enum casenumber { CASE1, CASE2, CASE3, CASE4 } casenumber_e;
+struct colorInfo {
+    enum CardColor color;
+    int count;
+};
 
 /*
 * @brief: variadic function that returns the max of given numbers
@@ -23,7 +27,7 @@ int get_max(int n, ...);
 * @param: pointer to the head of handcard list
 * @return CardColor the color with moset occurrence
 */
-enum CardColor  find_most_color(struct DECK** cards_on_hand);
+CardColor_e  find_most_color(struct DECK** cards_on_hand);
 
 /*
 * @brief: function that check if a card exist in the handcard deck
@@ -41,7 +45,7 @@ int ifexists(struct DECK** handcard, enum CardNumber inputCardName, enum CardCol
 * @param pointer to the pointer to the head of handcard list, color that need to be checked
 * @return CardName the largest number
 */
-enum CardName find_largest_number(struct DECK** handcard, enum CardColor inputCardColor);
+CardName_e find_largest_number(struct DECK** handcard, enum CardColor inputCardColor);
 
 /*
 * @brief: function that find the occruence of a number
@@ -68,7 +72,7 @@ int find_occurence_of_color(struct DECK** handcard, enum CardColor inputCardcolo
 * @return CardColor  most color occruence of a given number
 *
 */
-enum CardColor find_color_with_most_occurence(struct DECK** handcard, enum CardName inputCardNumber);
+CardColor_e find_color_with_most_occurence(struct DECK** handcard, enum CardName inputCardNumber);
 
 /*
 * @brief: function that get the matched color in the list for the given number
@@ -78,7 +82,7 @@ enum CardColor find_color_with_most_occurence(struct DECK** handcard, enum CardN
 * @return CardColor  the matched color
 *
 */
-enum CardColor find_matched_color(struct DECK** handcard, enum CardName number);
+CardColor_e find_matched_color(struct DECK** handcard, enum CardName number);
 
 
 /*
@@ -89,7 +93,7 @@ enum CardColor find_matched_color(struct DECK** handcard, enum CardName number);
 * @return DECK * the address of that card
 *
 */
-struct DECK* find_address(struct DECK** head, struct CARD CARD);
+Deck_t* find_address(struct DECK** head, struct CARD CARD);
 
 /*
 * @brief: function that play card from handcard list
@@ -97,7 +101,7 @@ struct DECK* find_address(struct DECK** head, struct CARD CARD);
 * @param card that will be played, pointer to the pointer to the head of handcard list
 * @return 1 for successed, 0 for failed
 */
-struct DECK * play_card(struct CARD* card, struct DECK** head);
+Deck_t* play_card(struct CARD* card, struct DECK** head);
 
 
 /* function that choose the right card to draw */
@@ -136,6 +140,6 @@ enum casenumber pick_case(struct CARD card, struct DECK** hand_card);
  *  @return A best cooresponding card from hand cards
  */
 
-struct CARD * pick_card(struct CARD inputCard, struct DECK** hand_card);
+Deck_t * pick_card(struct CARD inputCard, struct DECK** hand_card);
 
 #endif
