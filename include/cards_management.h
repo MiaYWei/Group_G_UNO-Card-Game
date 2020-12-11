@@ -14,12 +14,12 @@
 #define DEAL_CARDS_NUM  5
 
 typedef enum { HUMAN, COMPUTER, PlayerTypeNum} PlayerType_e;
-typedef enum { RED, BLUE, GREEN, YELLOW, ColorNum } CardColor_e;
-typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, NameNum } CardName_e;
+typedef enum { RED, BLUE, GREEN, YELLOW, ACTION, ColorNum } CardColor_e;
+typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, DRAWONE, WILD, NameNum } CardName_e;
 
 static const char* PLAYER_TYPE_STRING[] = { "HUMAN", "COMPUTER", "INVALID"};
-static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9","INVALID" };
-static const char* CARD_COLOR_STRING[] = { "RED", "BLUE", "GREEN", "YELLOW", "INVALID" };
+static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "DRAWONE", "WILD","INVALID" };
+static const char* CARD_COLOR_STRING[] = { "RED", "BLUE", "GREEN", "YELLOW", "ACTION", "INVALID" };
 static const char* CARD_VALUES[] = {   "R0", "R1", "R2","R3", "R4", "R5","R6", "R7", "R8","R9",
                                         "Y0", "Y1", "Y2","Y3", "Y4", "Y5","Y6", "Y7", "Y8","Y9",
                                         "B0", "B1", "B2","B3", "B4", "B5","B6", "B7", "B8","B9",

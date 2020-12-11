@@ -51,13 +51,14 @@ void initialize_players(void)
  * @return int    0 - Initialization is successful;
  *             != 0 - Initialization is failed, since malloc memory fails
  */
+
 int initialize_cards(void)
 {
     int i, j;
     Card_t card;
     int result = 0;
 
-    g_draw_pile = (Deck_t *)malloc(sizeof(Deck_t));
+    g_draw_pile = (Deck_t*)malloc(sizeof(Deck_t));
     if (g_draw_pile == NULL)
     {
         printf("Unable to allocate memory to initialize draw_pile.");
@@ -75,21 +76,28 @@ int initialize_cards(void)
         }
     }
 
+    //Added 2 wild cards
+    card.color = ACTION;
+    card.name = WILD;
+    result += add_card_at_beginning(&g_draw_pile, card);
+    result += add_card_at_beginning(&g_draw_pile, card);
+
     if (0 != shuffle_cards())
     {
         printf("Shuffle cards failed in initialization.");
     }
 
-    g_discard_pile = (Deck_t *)malloc(sizeof(Deck_t));
+    g_discard_pile = (Deck_t*)malloc(sizeof(Deck_t));
     if (g_discard_pile == NULL)
     {
         printf("Unable to allocate memory to initialize discard pile.");
         return -1;
-    } 
+    }
     g_discard_pile->next = NULL;
 
     return result;
 }
+
 
 /**
  * @brief Deals each player 5 cards during the game initialization
@@ -266,7 +274,7 @@ int get_pile_length(Deck_t *p_pile)
     }
 
     return length;
-}
+} 
 
 /**
  * @brief Determines the card is playable or not by comparing the card with current card on table.
@@ -282,7 +290,6 @@ bool is_playable_card(Card_t card)
     {
         return true;
     }
-
     return false;
 }
 

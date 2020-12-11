@@ -24,6 +24,7 @@ bool check_is_valid_turn(Card_t *current_card);
 bool is_human_card(Card_t *current_card);
 void display_player_turn(PlayerType_e next_player);
 int quit_game(void);
+bool is_wild_card_played = false;
 ret_type_e handle_human_turn(void);
 
 /**
@@ -96,7 +97,10 @@ ret_type_e record_human_input(void)
     char user_input[10]; //TODO Modify the array size later
     ret_type_e ret = RET_FAILURE;
     printf("Please enter your choice \n");
-    scanf("%s", user_input);
+
+    scanf_s("%s", user_input, 10);
+    CardColor_e color_changed = 0;
+    char colornum = ' ' ;
 
     if (user_input[0] == 'q' || user_input[0] == 'Q')
     {
@@ -126,6 +130,51 @@ ret_type_e record_human_input(void)
             printf("!!Warning!! Please draw a card before you can end your turn \n");
             display_player_deck(HUMAN);
         }
+    }
+    //else if (user_input[0] == 'a' || user_input[0] == 'A')  //Action -Wild
+    else if ((user_input[0] == 'a' || user_input[0] == 'A') && (user_input[1] == 'w' || user_input[1] == 'W'))
+    {
+        Card_t updated_card = { ACTION, WILD };
+
+        printf("Please enter your choice for the color changing. (R/B/G/Y)\n");
+        scanf(" %c", &colornum);
+
+        if (colornum == 'R') {
+            color_changed = RED;
+        }
+        else if (colornum == 'G') {
+            color_changed = GREEN;
+        }
+        else if (colornum == 'B') {
+            color_changed = BLUE;
+        }
+        else if (colornum == 'Y') {
+            color_changed = YELLOW;
+        }
+        else
+        {
+            printf("!!Warning!! Choose a valid color (R/B/G/Y) \n");
+            return RET_INVALID_CARD;
+        }
+
+        //If valid add the card to the discard_pile
+        if (!is_human_card(&updated_card))
+        {
+            printf("!!Warning!! Please select a card from your deck! \n");
+            return RET_INVALID_CARD;
+        }
+
+        remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), updated_card);
+        add_card_at_end(g_discard_pile, updated_card);
+
+        //update g_card_on_table
+        g_card_on_table.color = color_changed;
+        g_card_on_table.name = WILD;
+        
+        //End turn
+        end_turn(HUMAN);
+        g_card_requested = false;
+        return RET_SUCCESS;
     }
     else
     {
@@ -180,6 +229,9 @@ Card_t map_user_input(char *input)
 {
     Card_t temp_card = {ColorNum, NameNum};
 
+    //To map the number part of the User input to the card name field
+    temp_card.name = input[1] - '0';
+
     if (input[0] == 'R')
     {
         temp_card.color = RED;
@@ -196,9 +248,12 @@ Card_t map_user_input(char *input)
     {
         temp_card.color = YELLOW;
     }
+    else if (input[0] == 'A')
+    {
+        temp_card.color = ACTION;
+        temp_card.name = WILD;
+    }
 
-    //To map the number part of the User input to the card name field
-    temp_card.name = input[1] - '0';
     return temp_card;
 }
 
@@ -251,16 +306,13 @@ void show_cards_assigned(Card_t assigned_card)
  * @return- True if the card is valid
  *          False if the card is invalid
  */
-bool is_human_card(Card_t *current_card)
+bool is_human_card(Card_t* current_card)
 {
-
     bool is_valid = false;
+    Deck_t* temp = g_players[HUMAN].cards_on_hand;
 
-    Deck_t *temp = g_players[HUMAN].cards_on_hand;
-
-    while (temp!= NULL)
+    while (temp != NULL)
     {
-
         if (temp->card.color == current_card->color && temp->card.name == current_card->name)
         {
 
@@ -351,31 +403,3 @@ int quit_game(void)
     printf("Exiting the game..");
     exit(0);
 }
-
-//Release 2
-//Write for computer?
-
-/**
- * @brief Records the action_color when the previous card is Draw2/Wild card
- *
- * @param color - Color that is received from human player
- * 
- * 
- * @return- Correct enum representaion of the defined colors
- */
-/*
-enum CardColor action_color(char color)
-{
-}
-*/
-/**
- * @brief Function called when card dropped on the pile is Wild card
- *
- * @param PlayerType - Indicates whether the card is played by Human or Computer Player
- */
-/*
-void wild_card(PlayerType_e type)
-{
-}
-
-*/
