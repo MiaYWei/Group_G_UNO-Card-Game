@@ -27,7 +27,7 @@ int get_max(int n, ...);
 * @param: pointer to the head of handcard list
 * @return CardColor the color with moset occurrence
 */
-CardColor_e  find_most_color(struct DECK** cards_on_hand);
+CardColor_e  find_most_color(Deck_t** cards_on_hand);
 
 /*
 * @brief: function that check if a card exist in the handcard deck
@@ -36,8 +36,7 @@ CardColor_e  find_most_color(struct DECK** cards_on_hand);
 * @param: pointer to the pointer to the head of handcard list, card that needs to be checked
 * @return 1 exist, 0 not exist
 */
-int ifexists(struct DECK** handcard, enum CardNumber inputCardName, enum CardColor inputCardColor);
-
+int ifexists(Deck_t** handcard, CardName_e inputCardName, CardColor_e inputCardColor);
 /*
 * @brief: function that find the largest number of given color
 *
@@ -45,7 +44,7 @@ int ifexists(struct DECK** handcard, enum CardNumber inputCardName, enum CardCol
 * @param pointer to the pointer to the head of handcard list, color that need to be checked
 * @return CardName the largest number
 */
-CardName_e find_largest_number(struct DECK** handcard, enum CardColor inputCardColor);
+CardName_e find_largest_number(Deck_t** handcard, CardColor_e inputCardColor);
 
 /*
 * @brief: function that find the occruence of a number
@@ -53,7 +52,7 @@ CardName_e find_largest_number(struct DECK** handcard, enum CardColor inputCardC
 * @param pointer to the pointer to the head of handcard list, number that needs to be checked
 * @return int number count for occruence
 */
-int find_occurence_of_number(struct DECK** handcard, enum CardName inputCardNumber);
+int find_occurence_of_number(Deck_t** handcard, CardName_e inputCardNumber);
 
 
 /*
@@ -62,7 +61,7 @@ int find_occurence_of_number(struct DECK** handcard, enum CardName inputCardNumb
 * @param pointer to the pointer to the head of handcard list, color that needs to be checked
 * @return int number count for occruence
 */
-int find_occurence_of_color(struct DECK** handcard, enum CardColor inputCardcolor);
+int find_occurence_of_color(Deck_t** handcard, CardColor_e inputCardcolor);
 
 /*
 * @brief: function that find the most color occruence of a given number
@@ -72,8 +71,7 @@ int find_occurence_of_color(struct DECK** handcard, enum CardColor inputCardcolo
 * @return CardColor  most color occruence of a given number
 *
 */
-CardColor_e find_color_with_most_occurence(struct DECK** handcard, enum CardName inputCardNumber);
-
+CardColor_e find_color_with_most_occurence(Deck_t** handcard, CardName_e inputCardNumber);
 /*
 * @brief: function that get the matched color in the list for the given number
 *
@@ -82,7 +80,7 @@ CardColor_e find_color_with_most_occurence(struct DECK** handcard, enum CardName
 * @return CardColor  the matched color
 *
 */
-CardColor_e find_matched_color(struct DECK** handcard, enum CardName number);
+CardColor_e find_matched_color(Deck_t** handcard, CardName_e number);
 
 
 /*
@@ -93,15 +91,7 @@ CardColor_e find_matched_color(struct DECK** handcard, enum CardName number);
 * @return DECK * the address of that card
 *
 */
-Deck_t* find_address(struct DECK** head, struct CARD CARD);
-
-/*
-* @brief: function that play card from handcard list
-*
-* @param card that will be played, pointer to the pointer to the head of handcard list
-* @return 1 for successed, 0 for failed
-*/
-Deck_t* play_card(struct CARD* card, struct DECK** head);
+Deck_t* find_address(Deck_t** head, Card_t CARD);
 
 
 /* function that choose the right card to draw */
@@ -131,7 +121,7 @@ Deck_t* play_card(struct CARD* card, struct DECK** head);
 * @param Card that will be evaluated, pointer to the head of handcard list
 * @return int the case number
 */
-enum casenumber pick_case(struct CARD card, struct DECK** hand_card);
+enum casenumber pick_case(Card_t card, Deck_t** hand_card);
 
 /** @brief Pick the best card to discard from hand cards based on
  *         the newest card on the table.
@@ -140,6 +130,13 @@ enum casenumber pick_case(struct CARD card, struct DECK** hand_card);
  *  @return A best cooresponding card from hand cards
  */
 
-Deck_t * pick_card(struct CARD inputCard, struct DECK** hand_card);
+Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card);
+/*
+* @brief: function that play card from handcard list
+*
+* @param card that will be played, pointer to the pointer to the head of handcard list
+* @return 1 for successed, 0 for failed
+*/
+Deck_t* play_card(Deck_t* cardAddress, Deck_t** head);
 
 #endif
