@@ -221,7 +221,7 @@ int computer_take_turn(void)
         draw_card = draw_one_card();
 
         printf("Computer draws a new card from the draw pile \n");
-        printf("No playable card on hand, drawing a new card from deck (%s,%s).\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);//TODO Remove this line after testing
+        //printf("No playable card on hand, drawing a new card from deck (%s,%s).\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);//TODO Remove this line after testing
         if (is_playable_card(draw_card))
         {
             memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
