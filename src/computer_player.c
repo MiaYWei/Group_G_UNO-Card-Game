@@ -545,7 +545,7 @@ Deck_t* play_card(Deck_t* cardAddress, Deck_t** head)
         if (temp == NULL)
             return NULL;
         prev->next = temp->next;
-        printf("Successfully deleted WILD card (%s, %s). \n", CARD_COLOR_STRING[temp->card.color], CARD_NAME_STRING[temp->card.name]);
+        //printf("Successfully deleted WILD card (%s, %s). \n", CARD_COLOR_STRING[temp->card.color], CARD_NAME_STRING[temp->card.name]);
         return temp;
 
     }
