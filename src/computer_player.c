@@ -17,16 +17,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <limits.h>
 #include "../include/cards_management.h"
+#include "../include/computer_player.h"
 
 #define hand_MAX 20
 #define plarCardNumber 10
 
-enum casenumber { CASE1, CASE2, CASE3, CASE4 } casenumber_e;
-struct colorInfo {
-    enum CardColor color;
-    int count;
-};
 ///* (not used for now) */
 //struct CARD record_array[MAX]; // array for recording all the cards
 //int record_size = 0, handcard_size = 0;
@@ -319,7 +316,7 @@ Deck_t* find_address(Deck_t** head, Card_t CARD) {
 * @param Card that will be evaluated, pointer to the head of handcard list
 * @return int the case number
 */
-enum casenumber pick_case(Card_t card, Deck_t** hand_card)
+casenumber_e pick_case(Card_t card, Deck_t** hand_card)
 {
     Deck_t* ptr1 = *hand_card, * ptr2 = *hand_card, * ptr3 = *hand_card;
     int commonColor = 0, commonName = 0;
@@ -641,8 +638,7 @@ int computer_take_turn(void)
 
 /*********************** test functions ********************************/
 int test_find_most_color(Deck_t* head) {
-    enum CardColor color;
-    color = find_most_color(&head);
+    CardColor_e color = find_most_color(&head);
 
     if (color == RED) {
         return 1;
