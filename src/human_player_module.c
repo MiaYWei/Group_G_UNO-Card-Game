@@ -227,7 +227,7 @@ ret_type_e human_process_action_wild_card(void)
 }
 
 /**
- * @brief Check if the player input is a action card discarding request
+ * @brief Check if the card discarded by player is an action card
  *
  * @return true on a action card discarding request; otherwise is false.
  *                     
