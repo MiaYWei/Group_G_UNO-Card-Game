@@ -5,6 +5,8 @@
 #include "../include/test.h"
 #include "../include/test_cards_management.h"
 #include "../include/test_game.h"
+#include "../include/test_computer_player.h"
+#include "../include/test_human_player.h"
 #include "../../include/cards_management.h"
 
 Deck_t* g_draw_pile_test = NULL;            /* Draw cards pile */
@@ -18,7 +20,9 @@ void main(void)
     init_test();
     test_cards_mgmt();
     test_game();
+    test_computer_player();
     test_hunman_player();
+
 	return;
 }
 

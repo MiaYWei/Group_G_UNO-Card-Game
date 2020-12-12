@@ -137,6 +137,22 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card);
 * @param card that will be played, pointer to the pointer to the head of handcard list
 * @return 1 for successed, 0 for failed
 */
-Deck_t* play_card(Deck_t* cardAddress, Deck_t** head);
+Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head);
+
+/**
+ * @brief Logic to discard card for computer player,
+ *        1.Firstly search for a playable card in the on hand cards list.
+ *        2.If there is playable card, then remove the first playable card out of player's deck,
+ *        update card_on_table global variable
+ *        then place the discarded card into discard deck, and update player's deck length,
+ *        3.If there is no playable card, draw a card from the draw pile and again check if it's playable.
+ *        If yes, goto step 2. If no, end turn.
+ *        4.Set winner if the last card is discarded from the player
+ *
+ * @return int   0 - Discarding card is successful, end of turn, game continues.
+ *               1 - No playable card to discard, end of turn, game continues.
+ *               2 - Invalid player.
+ */
+int computer_take_turn(void);
 
 #endif

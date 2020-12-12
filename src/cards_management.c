@@ -163,7 +163,7 @@ int add_card_at_end(Deck_t *p_head, Card_t card)
     if (new_card == NULL)
     {
         printf("Unable to allocate memory.");
-        return -1;
+        return 1;
     }
 
     new_card->card.color = card.color;

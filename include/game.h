@@ -39,20 +39,6 @@ bool if_end_game(PlayerType_e player);
 void handle_computer_turn(void);
 
 /**
- * @brief The computer player discards a card,
- *        Firstly to search a playable card in the on hand cards list.
- *        If there is playable card, then cut the first playable card out of player's deck,
- *        update card_on_table globle variable
- *        then place the discarded card into discard deck, and update player's deck length,
- *        setup winner if the last card is discarded from the player
- *
- * @return int   0 - Discarding card is successful, end of turn, game continues.
- *               1 - No playable card to discard, end of turn, game continues.
- *               2 - Invalid player.
- */
-int computer_take_turn(void);
-
-/**
  * @brief Requests Human player's name
  *
  */

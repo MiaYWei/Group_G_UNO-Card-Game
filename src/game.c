@@ -3,6 +3,7 @@
 #include <stdlib.h>   
 #include <string.h>
 #include "../include/cards_management.h"
+#include "../include/computer_player.h"
 #include "../include/human_player_module.h"
 #include "../include/game.h"
 #include "../include/computer_player.h"
@@ -187,65 +188,3 @@ void handle_computer_turn(void)
     return;
 }
 
-/**
- * @brief Logic to discard card for computer player,
- *        1.Firstly search for a  playable card in the on hand cards list.
- *        2.If there is playable card, then remove the first playable card out of player's deck,
- *        update card_on_table global variable
- *        then place the discarded card into discard deck, and update player's deck length,
- *        3.If there is no playable card, draw a card from the draw pile and again check if it's playable.
- *        If yes, goto step 2. If no, end turn.
- *        4.Set winner if the last card is discarded from the player
- *
- * @return int   0 - Discarding card is successful, end of turn, game continues.
- *               1 - No playable card to discard, end of turn, game continues.
- *               2 - Invalid player.
- */
-int computer_take_turn(void)
-{
-    int result = 0;
-    Card_t draw_card;
-    const Deck_t* playable_card;
-
-    if (g_player_on_turn != COMPUTER)
-    {
-        return 2;
-    }
-    //For test only
-    //printf("Computer dect: ");
-    //display_player_deck(COMPUTER);
-    playable_card = pick_card(g_card_on_table, &g_players[COMPUTER].cards_on_hand);
-
-    if (playable_card == NULL)
-    { /* If no playable card on hand */
-        draw_card = draw_one_card();
-
-        printf("Computer draws a new card from the draw pile \n");
-        //printf("No playable card on hand, drawing a new card from deck (%s,%s).\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);//TODO Remove this line after testing
-        if (is_playable_card(draw_card))
-        {
-            memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
-            add_card_at_end(g_discard_pile, g_card_on_table);
-            result = 0;
-        }
-        else
-        {          
-            add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card);
-            result = 1;
-        }
-    }
-    else
-    {   /*If there is playable card, then remove the first playable card from on hand cards list*/
-        Deck_t* discard_card = play_card(playable_card, &g_players[COMPUTER].cards_on_hand);
-        printf("Computer Drops..(%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
-        memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));      
-        add_card_at_end(g_discard_pile, g_card_on_table);
-        result = 0;
-    }
-
-    if (g_players[COMPUTER].cards_on_hand->next == NULL) {
-        printf("Computer Palyer: UNO !!!\n");
-    }
-
-    return result;
-}
