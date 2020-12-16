@@ -47,9 +47,9 @@ $(OBJECTS1): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@echo "Compiled "$<" successfully!"
 	
 #For TARGET   = UNO-Card-Game_Test
-$(BINDIR)/$(TARGET_TEST) :$(OBJECTS2) $(OBJDIR)/cards_management.o $(OBJDIR)/computer_player.o $(OBJDIR)/game.o $(OBJDIR)/human_player_module.o
+$(BINDIR)/$(TARGET_TEST) :$(OBJECTS2) $(OBJDIR)/game.o $(OBJDIR)/cards_management.o $(OBJDIR)/computer_player.o $(OBJDIR)/human_player.o
 	@mkdir -p $(BINDIR)
-	@$(CC) $(OBJECTS2) $(OBJDIR)/cards_management.o $(OBJDIR)/computer_player.o $(OBJDIR)/game.o $(OBJDIR)/human_player_module.o -o $@
+	@$(CC) $(OBJECTS2) $(OBJDIR)/game.o $(OBJDIR)/cards_management.o $(OBJDIR)/computer_player.o $(OBJDIR)/human_player.o -o $@
 	@echo "Test Linking complete!"
 $(OBJECTS2): $(OBJTESTDIR)/%.o : $(SRCTESTDIR)/%.c
 	@$(CC) $(INC) -c $< -o $@

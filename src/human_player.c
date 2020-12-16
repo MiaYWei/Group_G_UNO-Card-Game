@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "../include/cards_management.h"
-#include "../include/human_player_module.h"
+#include "../include/human_player.h"
 #include "../include/game.h"
 
 /* Global variables */
