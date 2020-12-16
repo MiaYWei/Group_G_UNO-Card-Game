@@ -4,7 +4,7 @@
 #include <string.h>
 #include "../include/cards_management.h"
 #include "../include/computer_player.h"
-#include "../include/human_player_module.h"
+#include "../include/human_player.h"
 #include "../include/game.h"
 #include "../include/computer_player.h"
 #define PLAYERS_NAME_LENGTH  20

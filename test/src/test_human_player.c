@@ -1,4 +1,4 @@
-#include "../../include/human_player_module.h"
+#include "../../include/human_player.h"
 #include "../include/test.h"
 
 void test_record_human_input(void);
