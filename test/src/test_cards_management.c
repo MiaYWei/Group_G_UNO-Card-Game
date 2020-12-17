@@ -10,6 +10,7 @@ void test_add_card_at_end(void);
 void test_add_card_at_beginning(void);
 void test_remove_card_from_deck(void);
 void test_remove_first_card_from_deck(void);
+void test_is_playable_card(void);
 
 /*#################################### Test Functions ####################################*/
 void test_cards_mgmt(void)
@@ -21,6 +22,7 @@ void test_cards_mgmt(void)
     test_add_card_at_beginning();
     test_remove_card_from_deck();
     test_remove_first_card_from_deck();
+    test_is_playable_card();
 
     return;
 }
@@ -201,18 +203,18 @@ void test_remove_first_card_from_deck(void)
     const Deck_t* card_removed;
     Deck_t* pile_test = NULL;
 
-    // Empty list
+    // Case 1: Empty list
     card_removed = remove_first_card_from_deck(&pile_test);
     if (card_removed == NULL) {
         write_log("Test --- remove_first_card_from_deck().Case 1......successful!\n");
     } 
     else {
         write_log("Test --- remove_first_card_from_deck().Case 1......failed!\n");
-        write_fail_log("After removing the first card from deck, the expected removed card color:\n", card_removed->card.color, ColorNum);
-        write_fail_log("After removing the first card from deck, the expected removed card name:\n", card_removed->card.name, NameNum);
+        write_fail_log("After removing the first card from deck, the expected removed card color:\n", card_removed->card.color, INVALID_COLOR);
+        write_fail_log("After removing the first card from deck, the expected removed card name:\n", card_removed->card.name, INVALID_NAME);
     }
 
-    // Not empty list
+    // Case 2: Not empty list
     Card_t expected_card = { RED, ZERO };
     bool expected_ret = false;
     pile_test = create_list_test();
@@ -232,3 +234,40 @@ void test_remove_first_card_from_deck(void)
     return;
 }
 
+void test_is_playable_card(void)
+{
+    //Case 1: Playable
+    bool expected_return = true;
+    g_card_on_table.color = YELLOW;
+    g_card_on_table.name = FIVE;
+
+    Card_t test_card = { RED, FIVE };
+    bool actual_return = is_playable_card(test_card);
+
+    if (actual_return == expected_return) {
+        write_log("Test --- test_is_playable_card().Case 1......successful!\n");
+    }
+    else {
+        write_log("Test --- test_is_playable_card().Case 1......failed!\n");
+        write_fail_log("The return value of is_playable_card():\n", actual_return, expected_return);
+    }
+
+
+    //Case 2: Not-Playable
+    expected_return = false;
+    g_card_on_table.color = YELLOW;
+    g_card_on_table.name = FIVE;
+
+    test_card.name = ZERO;
+    actual_return = is_playable_card(test_card);
+
+    if (actual_return == expected_return) {
+        write_log("Test --- test_is_playable_card().Case 2......successful!\n");
+    }
+    else {
+        write_log("Test --- test_is_playable_card().Case 2......failed!\n");
+        write_fail_log("The return value of is_playable_card():\n", actual_return, expected_return);
+    }
+    
+    return;
+}

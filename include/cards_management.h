@@ -14,16 +14,15 @@
 #define DEAL_CARDS_NUM  5
 
 typedef enum { HUMAN, COMPUTER, PlayerTypeNum} PlayerType_e;
-typedef enum { RED, BLUE, GREEN, YELLOW, ACTION, ColorNum } CardColor_e;
-typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, DRAWONE, WILD, NameNum } CardName_e;
+typedef enum { RED, BLUE, GREEN, YELLOW, ACTION, INVALID_COLOR } CardColor_e;
+typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, SKIP, DRAWONE, WILD, INVALID_NAME } CardName_e;
 
 static const char* PLAYER_TYPE_STRING[] = { "HUMAN", "COMPUTER", "INVALID"};
-static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "DRAWONE", "WILD","INVALID" };
+static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "SKIP", "DRAWONE", "WILD","INVALID" };
 static const char* CARD_COLOR_STRING[] = { "RED", "BLUE", "GREEN", "YELLOW", "ACTION", "INVALID" };
-static const char* CARD_VALUES[] = {   "R0", "R1", "R2","R3", "R4", "R5","R6", "R7", "R8","R9",
-                                        "Y0", "Y1", "Y2","Y3", "Y4", "Y5","Y6", "Y7", "Y8","Y9",
-                                        "B0", "B1", "B2","B3", "B4", "B5","B6", "B7", "B8","B9",
-                                        "G0", "G1", "G2","G3", "G4", "G5","G6", "G7", "G8","G9" };
+
+static const int USER_INPUT_COLOR[] = { 'R', 'B', 'G', 'Y', 'A'};
+static const int USER_INPUT_NAME[] = { '0', '1', '2', '3', '4', '5', '6' ,'7', '8', '9', 'S', 'O', 'W'};
 
 /* Card struct */
 typedef struct CARD {
@@ -60,12 +59,6 @@ extern PlayerType_e g_game_winner;              /* game winner*/
 int initialize_game(void);
 
 /**
- * @brief Initializes players global variables
- * 
- */
-void initialize_players(void);
-
-/**
  * @brief Initializes all the cards status and put them in remaining deck iteratively.
  *        Memeory will be allocated to store all the cards informations.
  *        If it can't malloc at any point, we will free the deck and return FAIL.
@@ -89,15 +82,6 @@ int deal_cards(void);
  * @return const Deck_t* pointer type variable, which points to the removed card
  */
 const Deck_t* remove_first_card_from_deck(Deck_t** pp_head);
-
-/**
- * @brief Finds a playable cards from player on hand card list,
- *        which should be has the same color or same name comparing with the on tabe card
- *
- * @param player        enum type variable which indicates the player type
- * @return const Deck_t*  pointer type variable, which points to the playable card.
- */
-const Deck_t* find_playable_card(PlayerType_e player);
 
 /**
  * @brief Displays the detailed card infomation from the card list 
@@ -133,14 +117,6 @@ bool is_playable_card(Card_t card);
  * @return false The card does not exist
  */
 bool is_exist_card(Deck_t* p_pile, Card_t card);
-
-/**
- * @brief remove the fist playable card from the card list
- * 
- * @param pp_head : pointer which points to pointer of the list head of
- * @return Deck_t* pointer which points to the removed the card
- */
-Deck_t *remove_first_playable_card(Deck_t** pp_head);
 
 /**
  * @brief Draws one cards from the remaining deck for the current player

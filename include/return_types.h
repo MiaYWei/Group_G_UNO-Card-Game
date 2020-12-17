@@ -22,6 +22,7 @@ typedef enum {
     RET_INSUFFICIENT_MEM,       //5
     RET_INVALID_CARD,           //6
     RET_EMPTY_LIST,             //7 
+    RET_INVALID_INPUT,          //8
 }
 ret_type_e;
 

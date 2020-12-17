@@ -12,36 +12,18 @@ Card_t g_card_on_table;                /* last played card on the table-discard 
 PlayerType_e g_player_on_turn = HUMAN; /* The current player on turn */
 PlayerType_e g_game_winner = PlayerTypeNum;    /* game winner*/
 
-void initialize_players(void);
 int initialize_cards(void);
 int deal_cards(void);
 int add_card_at_beginning(Deck_t **pp_head, Card_t card);
 int add_card_at_end(Deck_t *p_head, Card_t card);
 const Deck_t *remove_first_card_from_deck(Deck_t **pp_head);
 bool remove_card_from_deck(Deck_t** pp_head, const Card_t card);
-const Deck_t *find_playable_card(PlayerType_e player);
 void display_cards_list(const Deck_t *p_list);
 int get_pile_length(Deck_t *p_pile);
 bool is_playable_card(Card_t card);
 void swap_cards(Card_t *p_a, Card_t *p_b);
-Deck_t *remove_first_playable_card(Deck_t **pp_head);
 Card_t draw_one_card(void);
 int shuffle_cards(void);
-
-/**
- * @brief Initializes players global variables
- *
- */
-void initialize_players(void)
-{
-    for (int i = 0; i < PLAYERS_NUM; i++)
-    {
-        g_players[i].type = (PlayerType_e)i;
-        g_players[i].cards_on_hand = NULL;
-    }
-
-    return;
-}
 
 /**
  * @brief Initializes all the cards status and put them in remaining deck iteratively.
@@ -68,7 +50,7 @@ int initialize_cards(void)
 
     for (i = RED; i <= YELLOW; i++)
     {
-        for (j = ZERO; j <= NINE; j++)
+        for (j = ZERO; j <= SKIP; j++)
         {
             card.color = i;
             card.name = j;
@@ -205,36 +187,6 @@ const Deck_t *remove_first_card_from_deck(Deck_t **pp_head)
 }
 
 /**
- * @brief Finds a playable cards from player on hand card list,
- *        which should be has the same color or same name as the on table card
- *
- * @param player        enum type variable which indicates the player type
- * @return const Deck_t*  pointer type variable, which points to the playable card.
- */
-const Deck_t *find_playable_card(PlayerType_e player)
-{
-    Deck_t *current = g_players[player].cards_on_hand;
-    if (current == NULL)
-    {
-        return NULL;
-    }
-
-    while (!is_playable_card(current->card))
-    {
-        if (current->next == NULL)
-        { /*if it is last node*/
-            return NULL;
-        }
-        else
-        {
-            current = current->next;
-        }
-    }
-
-    return current;
-}
-
-/**
  * @brief Displays the detailed card infomation from the card list
  *
  * @param p_list The pointer which points to the beginning of the cards list
@@ -337,53 +289,6 @@ void swap_cards(Card_t *p_a, Card_t *p_b)
     *p_b = temp;
 
     return;
-}
-
-/**
- * @brief remove the fist playable card from the card list
- * 
- * @param pp_head : pointer which points to pointer of the list head of
- * @return Deck_t* pointer which points to the removed the card
- */
-Deck_t *remove_first_playable_card(Deck_t **pp_head)
-{
-    Deck_t *prev = NULL;
-    Deck_t *cur = *pp_head;
-    Card_t removed_card;
-
-    if (*pp_head == NULL)
-    {
-        printf("List is already empty.\n");
-        return NULL;
-    }
-
-    /* Check if head node contains key */
-    while ((*pp_head != NULL) && (((*pp_head)->card.color == g_card_on_table.color) || ((*pp_head)->card.name == g_card_on_table.name)))
-    {
-        removed_card.color = (*pp_head)->card.color;
-        removed_card.name = (*pp_head)->card.name;
-        prev = *pp_head;             // Get reference of head node
-        *pp_head = (*pp_head)->next; // Adjust head node link
-        return prev; // No need to delete further
-    }
-
-    /* For each node in the list */
-    while (cur != NULL)
-    {
-        if ((cur->card.color == g_card_on_table.color) || (cur->card.name == g_card_on_table.name))
-        { // Current node contains key
-            if (prev != NULL)
-            {
-                prev->next = cur->next; // Adjust links for previous node
-            }
-            return cur;
-        }
-
-        prev = cur;
-        cur = cur->next;
-    }
-
-    return NULL;
 }
 
 /**
