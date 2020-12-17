@@ -129,7 +129,7 @@ ret_type_e human_process_draw_one_card(Card_t human_card_choice)
     {
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
-        player_draw_one_card(COMPUTER);
+        player_process_draw_one_card(HUMAN);
         return RET_SUCCESS;
     }
 

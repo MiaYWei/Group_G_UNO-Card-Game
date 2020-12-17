@@ -129,15 +129,6 @@ bool is_exist_card(Deck_t* p_pile, Card_t card);
 Card_t draw_one_card(void);
 
 /**
- * @brief Draw a new card and add it to the player's cards on hand list.
- *
- * @param player  The player type.
- * @return int 0 - Successful;
- *             1 - Failed due to error in malloc;
- */
-int player_draw_one_card(PlayerType_e player);
-
-/**
  * @brief initialize the global varibale g_card_on_table, which indicates the latest discard card on table.
  *        This function is called when start a new game.
  *

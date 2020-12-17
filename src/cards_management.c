@@ -24,7 +24,6 @@ int get_pile_length(Deck_t *p_pile);
 bool is_playable_card(Card_t card);
 void swap_cards(Card_t *p_a, Card_t *p_b);
 Card_t draw_one_card(void);
-int player_draw_one_card(PlayerType_e player);
 
 /**
  * @brief Initializes all the cards status and put them in remaining deck iteratively.
@@ -317,22 +316,6 @@ Card_t draw_one_card(void)
 
     draw_deck = remove_first_card_from_deck(&g_draw_pile);
     return draw_deck->card;
-}
-
-/**
- * @brief Draw a new card and add it to the player's cards on hand list. 
- *
- * @param player  The player type.
- * @return int 0 - Successful;
- *             1 - Failed due to error in malloc;
- */
-int player_draw_one_card(PlayerType_e player)
-{
-    Card_t draw_card = draw_one_card();
-    int ret = add_card_at_end(g_players[player].cards_on_hand, draw_card);
-    printf("Applied Draw One Card to %s.\n", PLAYER_TYPE_STRING[player]);
-
-    return ret;
 }
 
 /**
