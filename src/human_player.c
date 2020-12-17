@@ -14,18 +14,18 @@ bool g_card_requested = false;
 ret_type_e handle_human_turn(void);
 ret_type_e record_human_input(void);
 Card_t map_user_input(const char* user_input);
+CardType_e get_card_type(Card_t card);
 int request_card(PlayerType_e PlayerType, int no_of_cards);
 void invalid_card_warning(void);
 void show_cards_assigned(Card_t assigned_card);
 bool is_valid_card(Card_t current_card);
 bool is_human_card(Card_t current_card);
-bool is_wild_card(const char* user_input);
-bool is_skip_card(const char* user_input);
+ret_type_e human_process_card(const char* user_input);
 ret_type_e human_process_end_turn_request(void);
 ret_type_e human_process_new_card_request(void);
 ret_type_e human_process_action_wild_card(void);
-ret_type_e human_process_skip_card(const char* user_input);
-ret_type_e human_process_normal_card(const char* user_input);
+ret_type_e human_process_skip_card(Card_t human_card_choice);
+ret_type_e human_process_normal_card(Card_t human_card_choice);
 int quit_game(void);
 
 /**
@@ -87,15 +87,12 @@ ret_type_e human_process_end_turn_request(void)
 /**
  * @brief human player discards a normal card 
  *
- * @param user_input pointer to the user input
+ * @param human_card_choice  the human player card choice
  * @return ret_type_e: RET_SUCCESS on successful;
  *                     RET_INVALID_CARD on invalid input
  */
-ret_type_e human_process_normal_card(const char* user_input)
+ret_type_e human_process_normal_card(Card_t human_card_choice)
 {
-    //To be added if the format of user input is different
-    Card_t human_card_choice = map_user_input(user_input);
-
     //Check if the card is from the human player deck
     if (!is_human_card(human_card_choice))
     {
@@ -105,20 +102,56 @@ ret_type_e human_process_normal_card(const char* user_input)
     }
 
     //If valid add the card to the discard_pile
-    if (is_valid_card(human_card_choice))
-    {
-        remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), human_card_choice);
-        add_card_at_end(g_discard_pile, human_card_choice);
-        memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
-        end_turn(HUMAN);
-        g_card_requested = false;
-        return RET_SUCCESS;
-    }
-    else
+    if (!is_valid_card(human_card_choice))
     {
         invalid_card_warning();
         return RET_INVALID_CARD;
     }
+
+    remove_card_from_deck(&g_players[HUMAN].cards_on_hand, human_card_choice);
+    add_card_at_end(g_discard_pile, human_card_choice);
+    memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
+    end_turn(HUMAN);
+    g_card_requested = false;
+    return RET_SUCCESS;
+}
+
+/**
+ * @brief human player discards a action card - Draw one
+ *
+ * @param user_input pointer to the user input
+ * @return ret_type_e: RET_SUCCESS on success;
+ *                     RET_INVALID_CARD on invalid input
+ */
+ret_type_e human_process_draw_one_card(Card_t human_card_choice)
+{
+    if (RET_SUCCESS == human_process_normal_card(human_card_choice))
+    {
+        //Next turn will be Human turn
+        g_player_on_turn = HUMAN;
+        player_process_draw_one_card(HUMAN);
+        return RET_SUCCESS;
+    }
+
+    return RET_FAILURE;
+}
+
+/**
+ * @brief human player discards a action card - Skip
+ *
+ * @param user_input pointer to the user input
+ * @return ret_type_e: RET_SUCCESS on success;
+ *                     RET_INVALID_CARD on invalid input
+ */
+ret_type_e human_process_skip_card(Card_t human_card_choice)
+{
+    if (RET_SUCCESS == human_process_normal_card(human_card_choice))
+    {
+        //Next turn will be Human turn
+        g_player_on_turn = HUMAN;
+    }
+
+    return RET_SUCCESS;
 }
 
 /**
@@ -194,80 +227,6 @@ ret_type_e human_process_action_wild_card(void)
 }
 
 /**
- * @brief human player discards a action card - Skip
- *
- * @param user_input pointer to the user input
- * @return ret_type_e: RET_SUCCESS on success;
- *                     RET_INVALID_CARD on invalid input
- */
-ret_type_e human_process_skip_card(const char* user_input)
-{
-    Card_t card = map_user_input(user_input);
-    if ((card.color == INVALID_COLOR) || (card.name == INVALID_NAME))
-    {
-        return RET_INVALID_INPUT;
-    }
-
-    if (!is_human_card(card))
-    {
-        printf("Entered Card is [%s, %s]! \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
-        printf("!!Warning!! Please select a card from your deck! \n");
-        return RET_INVALID_CARD;
-    }
-
-    //If the card is valid, then add the card to the discard_pile
-    remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), card);
-    add_card_at_end(g_discard_pile, card);
-
-    //update g_card_on_table
-    g_card_on_table.color = card.color;
-    g_card_on_table.name = card.name;
-
-    //End turn
-    end_turn(HUMAN);
-    g_card_requested = false;
-
-    //Next turn will be Human turn
-    g_player_on_turn = HUMAN;
-    return RET_SUCCESS;
-}
-
-/**
- * @brief Check if the card discarded by player is an action card
- *
- * @param user_input pointer to the user input
- * @return true on a wild action card discarding request; otherwise is false.
- *                     
- */
-bool is_wild_card(const char* user_input)
-{
-    return (user_input[0] == 'a' || user_input[0] == 'A') && (user_input[1] == 'w' || user_input[1] == 'W');
-}
-
-/**
- * @brief Check if the card discarded by player is a skip card
- *
- * @param user_input pointer to the user input
- * @return true on a skip action card discarding request; otherwise is false.
- *
- */
-bool is_skip_card(const char* user_input)
-{
-    for (int i = 0; i < 4; i++)
-    {
-        if (user_input[0] == USER_INPUT_COLOR[i])
-        {
-            if (user_input[1] == 'S')
-            {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-/**
  * @brief Function to map the human player input to Card type structure
  * Should be called only after validation of the user input
  *
@@ -322,6 +281,42 @@ Card_t map_user_input(const char* user_input)
 }
 
 /**
+ * @brief Get the card type by card info
+ *
+ * @param card The specific card info
+ * @return CardType_e the mapped card type.
+ *
+ */
+CardType_e get_card_type(Card_t card)
+{
+    CardType_e card_type = INVALID_TYPE;
+    switch (card.name)
+    {
+        case ZERO:
+        case TWO:
+        case THREE:
+        case FOUR:
+        case FIVE:
+        case SIX:
+        case SEVEN:
+        case EIGHT:
+        case NINE:
+            card_type = NORMAL;
+            break;
+        case SKIP:
+        case DRAW_ONE:
+        case WILD:
+        case WILD_DRAW_TWO:
+            card_type = card.name - 9;
+            break;
+        default:
+            break;
+    }
+
+    return card_type;
+}
+
+/**
  * @brief Records the Human player input during his turn and performs appropriate functions 
  * Called each time when it's the human player's turn 
  * Keyboard Input from Human 
@@ -348,20 +343,44 @@ ret_type_e record_human_input(void)
     {
         return human_process_end_turn_request();
     }
-    else if (is_wild_card(user_input))
-    {
-        return human_process_action_wild_card();
-    }
-    else if (is_skip_card(user_input))
-    {
-        return human_process_skip_card(user_input);
-    }
     else
     {
-        return human_process_normal_card(user_input);
+        return human_process_card(user_input);
     }
 
-    return RET_SUCCESS;
+    return RET_FAILURE;
+}
+
+/**
+ * @brief human player discards a card
+ *
+ * @param human_card_choice  the human player card choice
+ * @return ret_type_e: RET_SUCCESS on successful;
+ *                     RET_INVALID_INPUT on invalid input
+ */
+ret_type_e human_process_card(const char* user_input)
+{
+    Card_t human_card_choice = map_user_input(user_input);
+    if ((human_card_choice.color == INVALID_COLOR) || (human_card_choice.name == INVALID_NAME))
+    {
+        return RET_INVALID_INPUT;
+    }
+
+    CardType_e card_type = get_card_type(human_card_choice);
+    switch (card_type)
+    {
+        case NORMAL:
+            return human_process_normal_card(human_card_choice);
+        case SKIP_T:
+            return human_process_skip_card(human_card_choice);
+        case DRAW_ONE_T:
+            return human_process_draw_one_card(human_card_choice);
+        case WILD_T:
+            return human_process_action_wild_card();
+        case INVALID_TYPE:
+        default:
+            return RET_FAILURE;
+    }
 }
 
 /**

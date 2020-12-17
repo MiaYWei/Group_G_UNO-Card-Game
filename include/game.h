@@ -59,4 +59,13 @@ void handle_computer_turn(void);
  */
 void player_name_inquiry(void);
 
+/**
+ * @brief Draw a new card and add it to another player's cards on hand list.
+ *
+ * @param player  The player who discards a draw one card.
+ * @return int 0 - Successful;
+ *             1 - Failed due to error in malloc;
+ */
+int player_process_draw_one_card(PlayerType_e player);
+
 #endif // __GAME_HEADER__#pragma once

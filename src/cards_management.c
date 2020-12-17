@@ -14,6 +14,7 @@ PlayerType_e g_game_winner = PlayerTypeNum;    /* game winner*/
 
 int initialize_cards(void);
 int deal_cards(void);
+int shuffle_cards(void);
 int add_card_at_beginning(Deck_t **pp_head, Card_t card);
 int add_card_at_end(Deck_t *p_head, Card_t card);
 const Deck_t *remove_first_card_from_deck(Deck_t **pp_head);
@@ -23,7 +24,6 @@ int get_pile_length(Deck_t *p_pile);
 bool is_playable_card(Card_t card);
 void swap_cards(Card_t *p_a, Card_t *p_b);
 Card_t draw_one_card(void);
-int shuffle_cards(void);
 
 /**
  * @brief Initializes all the cards status and put them in remaining deck iteratively.
@@ -50,7 +50,7 @@ int initialize_cards(void)
 
     for (i = RED; i <= YELLOW; i++)
     {
-        for (j = ZERO; j <= SKIP; j++)
+        for (j = ZERO; j <= DRAW_ONE; j++)
         {
             card.color = i;
             card.name = j;
