@@ -240,7 +240,7 @@ int player_process_wild_draw_two_card(PlayerType_e player)
     draw_card = draw_one_card();
     ret += add_card_at_end(g_players[be_applied_player].cards_on_hand, draw_card);
 
-    printf("%s dropped a Wild-Draw-Two card, adding a card to the next player %s.\n", PLAYER_TYPE_STRING[player], PLAYER_TYPE_STRING[be_applied_player]);
+    printf("%s dropped a Wild-Draw-Two card, adding two cards to the next player %s.\n", PLAYER_TYPE_STRING[player], PLAYER_TYPE_STRING[be_applied_player]);
 
     return ret;
 }
