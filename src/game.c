@@ -3,7 +3,6 @@
 #include <stdlib.h>   
 #include <string.h>
 #include "../include/game.h"
-#include "../include/cards_management.h"
 #include "../include/computer_player.h"
 #include "../include/human_player.h"
 
