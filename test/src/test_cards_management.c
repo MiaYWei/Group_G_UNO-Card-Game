@@ -27,6 +27,41 @@ void test_cards_mgmt(void)
     return;
 }
 
+Deck_t* create_test_list(CardColor_e color, CardName_e name_from, CardName_e name_to)
+{
+    int i = 0;
+    Deck_t* newNode, * temp;
+
+    Deck_t* head = (Deck_t*)malloc(sizeof(Deck_t));
+    if (head == NULL) {      /* If unable to allocate memory for head node*/
+        printf("Unable to allocate memory.");
+        return NULL;
+    }
+    head->card.color = color;    // Link data field with data
+    head->card.name = ZERO;
+    head->next = NULL;           // Link address field to NULL
+    temp = head;
+
+    /* Create n nodes and adds to linked list */
+    for (i = name_from; i <= name_to; i++)
+    {
+        newNode = (Deck_t*)malloc(sizeof(Deck_t));
+        if (newNode == NULL) { /* If memory is not allocated for newNode */
+            printf("Unable to allocate memory.");
+            break;
+        }
+
+        newNode->card.color = color;    // Link data field of newNode with data
+        newNode->card.name = i;
+        newNode->next = NULL; // Link address field of newNode with NULL
+
+        temp->next = newNode; // Link previous node i.e. temp to the newNode
+        temp = temp->next;
+    }
+
+    return head;
+}
+
 Deck_t* create_list_test(void)
 {
     int i, j = 0;
