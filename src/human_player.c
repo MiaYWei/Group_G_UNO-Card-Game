@@ -23,9 +23,11 @@ bool is_human_card(Card_t current_card);
 ret_type_e human_process_card(const char* user_input);
 ret_type_e human_process_end_turn_request(void);
 ret_type_e human_process_new_card_request(void);
-ret_type_e human_process_action_wild_card(void);
-ret_type_e human_process_skip_card(Card_t human_card_choice);
 ret_type_e human_process_normal_card(Card_t human_card_choice);
+ret_type_e human_process_skip_card(Card_t human_card_choice);
+ret_type_e human_process_draw_one_card(Card_t human_card_choice);
+ret_type_e human_process_wild_card(Card_t human_card_choice);
+ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice);
 int quit_game(void);
 
 /**
@@ -119,7 +121,7 @@ ret_type_e human_process_normal_card(Card_t human_card_choice)
 /**
  * @brief human player discards a action card - Draw one
  *
- * @param user_input pointer to the user input
+ * @param human_card_choice  the human player card choice
  * @return ret_type_e: RET_SUCCESS on success;
  *                     RET_INVALID_CARD on invalid input
  */
@@ -139,7 +141,7 @@ ret_type_e human_process_draw_one_card(Card_t human_card_choice)
 /**
  * @brief human player discards a action card - Skip
  *
- * @param user_input pointer to the user input
+* @param human_card_choice  the human player card choice
  * @return ret_type_e: RET_SUCCESS on success;
  *                     RET_INVALID_CARD on invalid input
  */
@@ -176,14 +178,14 @@ ret_type_e human_process_new_card_request(void)
 /**
  * @brief human player discards a action card - Wild
  *
+ * @param human_card_choice  the human player card choice
  * @return ret_type_e: RET_SUCCESS on success;
  *                     RET_INVALID_CARD on invalid input
  */
-ret_type_e human_process_action_wild_card(void)
+ret_type_e human_process_wild_card(Card_t human_card_choice)
 {
     CardColor_e color_changed = 0;
     char colornum = ' ';
-    Card_t updated_card = { ACTION, WILD };
 
     printf("Please enter your choice for the color changing. (R/B/G/Y)\n");
     scanf(" %c", &colornum);
@@ -207,18 +209,18 @@ ret_type_e human_process_action_wild_card(void)
     }
 
     //If valid add the card to the discard_pile
-    if (!is_human_card(updated_card))
+    if (!is_human_card(human_card_choice))
     {
         printf("!!Warning!! Please select a card from your deck! \n");
         return RET_INVALID_CARD;
     }
 
-    remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), updated_card);
-    add_card_at_end(g_discard_pile, updated_card);
+    remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), human_card_choice);
+    add_card_at_end(g_discard_pile, human_card_choice);
 
     //update g_card_on_table
     g_card_on_table.color = color_changed;
-    g_card_on_table.name = WILD;
+    g_card_on_table.name = human_card_choice.name;
 
     //End turn
     end_turn(HUMAN);
@@ -226,6 +228,25 @@ ret_type_e human_process_action_wild_card(void)
     return RET_SUCCESS;
 }
 
+/**
+ * @brief human player discards a action card - Wild
+ *
+ * @param human_card_choice  the human player card choice
+ * @return ret_type_e: RET_SUCCESS on success;
+ *                     RET_INVALID_CARD on invalid input
+ */
+ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice)
+{
+    int ret = RET_FAILURE;
+    if (RET_SUCCESS == human_process_wild_card(human_card_choice))
+    {
+        //Next turn will be Human turn
+        g_player_on_turn = HUMAN;
+        ret = player_process_wild_draw_two_card(HUMAN);
+    }
+
+    return ret;
+}
 /**
  * @brief Function to map the human player input to Card type structure
  * Should be called only after validation of the user input
@@ -376,7 +397,9 @@ ret_type_e human_process_card(const char* user_input)
         case DRAW_ONE_T:
             return human_process_draw_one_card(human_card_choice);
         case WILD_T:
-            return human_process_action_wild_card();
+            return human_process_wild_card(human_card_choice);
+        case WILD_DRAW_TWO_T:
+            return human_process_wild_draw_two_card(human_card_choice);
         case INVALID_TYPE:
         default:
             return RET_FAILURE;

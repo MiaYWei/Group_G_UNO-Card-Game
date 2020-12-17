@@ -7,7 +7,7 @@
 /* Totally 52 cards, which includes
 * Release 1: 10 cards per colour;
 * Release 2: 4 Skip cards; 4 Draw One cards; 2 Wild cards; 2 Wild Draw Two cards*/
-#define MAX_CARDS_NUM   40
+#define MAX_CARDS_NUM   52
 #define MALLOC_FAIL     1
 #define SUCCESS         0
 #define PLAYERS_NUM     2
@@ -19,11 +19,11 @@ typedef enum { RED, BLUE, GREEN, YELLOW, ACTION, INVALID_COLOR } CardColor_e;
 typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, SKIP, DRAW_ONE, WILD, WILD_DRAW_TWO, INVALID_NAME } CardName_e;
 
 static const char* PLAYER_TYPE_STRING[] = { "HUMAN", "COMPUTER", "INVALID"};
-static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "SKIP", "DRAWONE", "WILD","INVALID" };
+static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "SKIP", "DRAW-ONE", "WILD", "WILD-DRAW-TWO", "INVALID" };
 static const char* CARD_COLOR_STRING[] = { "RED", "BLUE", "GREEN", "YELLOW", "ACTION", "INVALID" };
 
 static const int USER_INPUT_COLOR[] = { 'R', 'B', 'G', 'Y', 'A'};
-static const int USER_INPUT_NAME[] = { '0', '1', '2', '3', '4', '5', '6' ,'7', '8', '9', 'S', 'O', 'W'};
+static const int USER_INPUT_NAME[] = { '0', '1', '2', '3', '4', '5', '6' ,'7', '8', '9', 'S', 'O', 'W', 'T'};
 
 /* Card struct */
 typedef struct CARD {

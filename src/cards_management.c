@@ -58,9 +58,15 @@ int initialize_cards(void)
         }
     }
 
-    //Added 2 wild cards
+    //Adds 2 wild cards
     card.color = ACTION;
     card.name = WILD;
+    result += add_card_at_beginning(&g_draw_pile, card);
+    result += add_card_at_beginning(&g_draw_pile, card);
+
+    //Adds 2 wild draw two cards
+    card.color = ACTION;
+    card.name = WILD_DRAW_TWO;
     result += add_card_at_beginning(&g_draw_pile, card);
     result += add_card_at_beginning(&g_draw_pile, card);
 

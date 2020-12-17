@@ -20,7 +20,8 @@ void end_turn(PlayerType_e player);
 bool if_end_game(PlayerType_e player);
 void handle_computer_turn(void);
 void player_name_inquiry(void);
-int player_process_draw_one_card(PlayerType_e player);;
+int player_process_draw_one_card(PlayerType_e player);
+int player_process_wild_draw_two_card(PlayerType_e player);
 
 /**
  * @brief Starts a new game
@@ -206,7 +207,7 @@ void handle_computer_turn(void)
 }
 
 /**
- * @brief Draw a new card and add it to another player's cards on hand list.
+ * @brief Draw a new card and add it to the next player's cards on hand list.
  *
  * @param player  The player who discards a draw one card.
  * @return int 0 - Successful;
@@ -217,7 +218,29 @@ int player_process_draw_one_card(PlayerType_e player)
     PlayerType_e be_applied_player = (player + 1) % PLAYERS_NUM;
     Card_t draw_card = draw_one_card();
     int ret = add_card_at_end(g_players[be_applied_player].cards_on_hand, draw_card);
-    printf("Apply Draw One Card to %s.\n", PLAYER_TYPE_STRING[be_applied_player]);
+    printf("%s dropped a Draw-One card, adding a card to the next player %s.\n", PLAYER_TYPE_STRING[player], PLAYER_TYPE_STRING[be_applied_player]);
+
+    return ret;
+}
+
+/**
+ * @brief Draw two new cards and add them to the next player's cards on hand list.
+ *
+ * @param player  The player who discards a wild draw two card.
+ * @return int 0 - Successful;
+ *             1 - Failed due to error in malloc;
+ */
+int player_process_wild_draw_two_card(PlayerType_e player)
+{
+    PlayerType_e be_applied_player = (player + 1) % PLAYERS_NUM;
+
+    Card_t draw_card = draw_one_card();
+    int ret = add_card_at_end(g_players[be_applied_player].cards_on_hand, draw_card);
+
+    draw_card = draw_one_card();
+    ret += add_card_at_end(g_players[be_applied_player].cards_on_hand, draw_card);
+
+    printf("%s dropped a Wild-Draw-Two card, adding two cards to the next player %s.\n", PLAYER_TYPE_STRING[player], PLAYER_TYPE_STRING[be_applied_player]);
 
     return ret;
 }

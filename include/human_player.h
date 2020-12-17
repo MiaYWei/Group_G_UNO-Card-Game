@@ -15,9 +15,11 @@ bool is_human_card(Card_t current_card);
 ret_type_e human_process_card(const char* user_input);
 ret_type_e human_process_end_turn_request(void);
 ret_type_e human_process_new_card_request(void);
-ret_type_e human_process_action_wild_card(void);
-ret_type_e human_process_skip_card(Card_t human_card_choice);
 ret_type_e human_process_normal_card(Card_t human_card_choice);
+ret_type_e human_process_skip_card(Card_t human_card_choice);
+ret_type_e human_process_draw_one_card(Card_t human_card_choice);
+ret_type_e human_process_wild_card(Card_t human_card_choice);
+ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice);
 int quit_game(void);
 
 #endif // __HUMAN_PLAYER_HEADER__
