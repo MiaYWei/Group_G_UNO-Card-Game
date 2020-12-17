@@ -260,7 +260,7 @@ ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
         ret = player_process_wild_draw_two_card(HUMAN);
-        printf("%s discarded a Wild-Draw-Twe card, COMPUTER player will lose turn.\n", g_human_player_name);
+        printf("%s discarded a Wild-Draw-Two card, COMPUTER player will lose turn.\n", g_human_player_name);
     }
 
     return ret;
