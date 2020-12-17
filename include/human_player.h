@@ -9,7 +9,6 @@ CardType_e get_card_type(Card_t card);
 int request_card(PlayerType_e PlayerType, int no_of_cards);
 void invalid_card_warning(void);
 void show_cards_assigned(Card_t assigned_card);
-bool is_valid_card(Card_t current_card);
 bool is_human_card(Card_t current_card);
 ret_type_e human_process_card(const char* user_input);
 ret_type_e human_process_end_turn_request(void);

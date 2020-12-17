@@ -23,6 +23,7 @@ typedef enum {
     RET_INVALID_CARD,           //6
     RET_EMPTY_LIST,             //7 
     RET_INVALID_INPUT,          //8
+    RET_NOT_PLAYABLE_CARD,      //9
 }
 ret_type_e;
 

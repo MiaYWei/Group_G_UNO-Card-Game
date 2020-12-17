@@ -5,8 +5,10 @@
 #include "../include/return_types.h"
 #include "../include/cards_management.h"
 
-extern bool g_end_game;
+#define PLAYERS_NAME_LENGTH  20
 
+extern bool g_end_game;
+extern char g_human_player_name[PLAYERS_NAME_LENGTH];
 /**
  * @brief Initializes game which includes initialize cards and initialize players
  *

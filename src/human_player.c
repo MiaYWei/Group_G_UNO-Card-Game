@@ -17,7 +17,6 @@ CardType_e get_card_type(Card_t card);
 int request_card(PlayerType_e PlayerType, int no_of_cards);
 void invalid_card_warning(void);
 void show_cards_assigned(Card_t assigned_card);
-bool is_valid_card(Card_t current_card);
 bool is_human_card(Card_t current_card);
 ret_type_e human_process_card(const char* user_input);
 ret_type_e human_process_end_turn_request(void);
@@ -91,6 +90,7 @@ ret_type_e human_process_end_turn_request(void)
  * @param human_card_choice  the human player card choice
  * @return ret_type_e: RET_SUCCESS on successful;
  *                     RET_INVALID_CARD on invalid input
+ *                     RET_NOT_PLAYABLE_CARD on not playable card
  */
 ret_type_e human_process_normal_card(Card_t human_card_choice)
 {
@@ -103,10 +103,10 @@ ret_type_e human_process_normal_card(Card_t human_card_choice)
     }
 
     //If valid add the card to the discard_pile
-    if (!is_valid_card(human_card_choice))
+    if (!is_playable_card(human_card_choice))
     {
         invalid_card_warning();
-        return RET_INVALID_CARD;
+        return RET_NOT_PLAYABLE_CARD;
     }
 
     remove_card_from_deck(&g_players[HUMAN].cards_on_hand, human_card_choice);
@@ -126,15 +126,16 @@ ret_type_e human_process_normal_card(Card_t human_card_choice)
  */
 ret_type_e human_process_draw_one_card(Card_t human_card_choice)
 {
+    int ret = RET_FAILURE;
     if (RET_SUCCESS == human_process_normal_card(human_card_choice))
     {
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
-        player_process_draw_one_card(HUMAN);
-        return RET_SUCCESS;
+        ret = player_process_draw_one_card(HUMAN);
+        printf("%s discarded a Draw-One card, COMPUTER player will lose turn.\n", g_human_player_name);
     }
 
-    return RET_FAILURE;
+    return ret;
 }
 
 /**
@@ -150,9 +151,11 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
     {
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
+        printf("%s discarded a Skip card, COMPUTER player will lose turn.\n", g_human_player_name);
+        return RET_SUCCESS;
     }
 
-    return RET_SUCCESS;
+    return RET_FAILURE;  
 }
 
 /**
@@ -242,6 +245,7 @@ ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice)
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
         ret = player_process_wild_draw_two_card(HUMAN);
+        printf("%s discarded a Wild-Draw-Twe card, COMPUTER player will lose turn.\n", g_human_player_name);
     }
 
     return ret;
@@ -439,24 +443,6 @@ bool is_human_card(Card_t current_card)
         }
 
         temp = temp->next;
-    }
-
-    return false;
-}
-
-/**
- * @brief Checks if the card dropped by human player during his turn is valid
- * 
- * @param current_card - Current card dropped by the human player
- * 
- * @return- True if the card is valid
- *          False if the card is invalid
- */
-bool is_valid_card(Card_t current_card)
-{
-    if ((g_card_on_table.color == current_card.color) || (g_card_on_table.name == current_card.name))
-    {
-        return true;
     }
 
     return false;
