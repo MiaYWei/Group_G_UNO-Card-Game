@@ -84,15 +84,6 @@ int deal_cards(void);
 const Deck_t* remove_first_card_from_deck(Deck_t** pp_head);
 
 /**
- * @brief Finds a playable cards from player on hand card list,
- *        which should be has the same color or same name comparing with the on tabe card
- *
- * @param player        enum type variable which indicates the player type
- * @return const Deck_t*  pointer type variable, which points to the playable card.
- */
-const Deck_t* find_playable_card(PlayerType_e player);
-
-/**
  * @brief Displays the detailed card infomation from the card list 
  * 
  * @param p_list The pointer which points to the beginning of the cards list
@@ -126,14 +117,6 @@ bool is_playable_card(Card_t card);
  * @return false The card does not exist
  */
 bool is_exist_card(Deck_t* p_pile, Card_t card);
-
-/**
- * @brief remove the fist playable card from the card list
- * 
- * @param pp_head : pointer which points to pointer of the list head of
- * @return Deck_t* pointer which points to the removed the card
- */
-Deck_t *remove_first_playable_card(Deck_t** pp_head);
 
 /**
  * @brief Draws one cards from the remaining deck for the current player
