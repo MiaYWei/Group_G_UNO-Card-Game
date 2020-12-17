@@ -95,6 +95,10 @@ ret_type_e human_process_normal_card(const char* user_input)
 {
     //To be added if the format of user input is different
     Card_t human_card_choice = map_user_input(user_input);
+    if ((human_card_choice.color == INVALID_COLOR) || (human_card_choice.name == INVALID_NAME))
+    {
+        return RET_INVALID_INPUT;
+    }
 
     //Check if the card is from the human player deck
     if (!is_human_card(human_card_choice))
@@ -105,22 +109,37 @@ ret_type_e human_process_normal_card(const char* user_input)
     }
 
     //If valid add the card to the discard_pile
-    if (is_valid_card(human_card_choice))
-    {
-        remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), human_card_choice);
-        add_card_at_end(g_discard_pile, human_card_choice);
-        memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
-        end_turn(HUMAN);
-        g_card_requested = false;
-        return RET_SUCCESS;
-    }
-    else
+    if (!is_valid_card(human_card_choice))
     {
         invalid_card_warning();
         return RET_INVALID_CARD;
     }
+
+    remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), human_card_choice);
+    add_card_at_end(g_discard_pile, human_card_choice);
+    memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
+    end_turn(HUMAN);
+    g_card_requested = false;
+    return RET_SUCCESS;
 }
 
+/**
+ * @brief human player discards a action card - Skip
+ *
+ * @param user_input pointer to the user input
+ * @return ret_type_e: RET_SUCCESS on success;
+ *                     RET_INVALID_CARD on invalid input
+ */
+ret_type_e human_process_skip_card(const char* user_input)
+{
+    if (RET_SUCCESS == human_process_normal_card(user_input))
+    {
+        //Next turn will be Human turn
+        g_player_on_turn = HUMAN;
+    }
+
+    return RET_SUCCESS;
+}
 /**
  * @brief human player requests a new card
  *
@@ -190,51 +209,6 @@ ret_type_e human_process_action_wild_card(void)
     //End turn
     end_turn(HUMAN);
     g_card_requested = false;
-    return RET_SUCCESS;
-}
-
-/**
- * @brief human player discards a action card - Skip
- *
- * @param user_input pointer to the user input
- * @return ret_type_e: RET_SUCCESS on success;
- *                     RET_INVALID_CARD on invalid input
- */
-ret_type_e human_process_skip_card(const char* user_input)
-{
-    Card_t card = map_user_input(user_input);
-    if ((card.color == INVALID_COLOR) || (card.name == INVALID_NAME))
-    {
-        return RET_INVALID_INPUT;
-    }
-
-    if (!is_human_card(card))
-    {
-        printf("Entered Card is [%s, %s]! \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
-        printf("!!Warning!! Please select a card from your deck! \n");
-        return RET_INVALID_CARD;
-    }
-
-    if (!is_valid_card(card))
-    {
-        invalid_card_warning();
-        return RET_INVALID_CARD;
-    }
-
-    //If the card is valid, then add the card to the discard_pile
-    remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), card);
-    add_card_at_end(g_discard_pile, card);
-
-    //update g_card_on_table
-    g_card_on_table.color = card.color;
-    g_card_on_table.name = card.name;
-
-    //End turn
-    end_turn(HUMAN);
-    g_card_requested = false;
-
-    //Next turn will be Human turn
-    g_player_on_turn = HUMAN;
     return RET_SUCCESS;
 }
 
