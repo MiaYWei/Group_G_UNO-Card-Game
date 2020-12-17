@@ -221,7 +221,7 @@ ret_type_e handle_human_turn(void)
 /**
  * @brief Draw a new card and add it to the next player's cards on hand list.
  *
- * @param player  The player who discards a draw one card.
+ * @param player  The player who discards a draw-one card.
  * @return int 0 - Successful;
  *             1 - Failed due to error in malloc;
  */
@@ -238,7 +238,7 @@ int player_process_draw_one_card(PlayerType_e player)
 /**
  * @brief Draw two new cards and add them to the next player's cards on hand list.
  *
- * @param player  The player who discards a wild draw two card.
+ * @param player  The player who discards a wild-draw-two card.
  * @return int 0 - Successful;
  *             1 - Failed due to error in malloc;
  */
