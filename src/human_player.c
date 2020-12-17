@@ -215,6 +215,12 @@ ret_type_e human_process_skip_card(const char* user_input)
         return RET_INVALID_CARD;
     }
 
+    if (!is_valid_card(card))
+    {
+        invalid_card_warning();
+        return RET_INVALID_CARD;
+    }
+
     //If the card is valid, then add the card to the discard_pile
     remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), card);
     add_card_at_end(g_discard_pile, card);
