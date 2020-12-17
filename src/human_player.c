@@ -108,12 +108,32 @@ ret_type_e human_process_normal_card(Card_t human_card_choice)
         return RET_INVALID_CARD;
     }
 
-    remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), human_card_choice);
+    remove_card_from_deck(&g_players[HUMAN].cards_on_hand, human_card_choice);
     add_card_at_end(g_discard_pile, human_card_choice);
     memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
     end_turn(HUMAN);
     g_card_requested = false;
     return RET_SUCCESS;
+}
+
+/**
+ * @brief human player discards a action card - Draw one
+ *
+ * @param user_input pointer to the user input
+ * @return ret_type_e: RET_SUCCESS on success;
+ *                     RET_INVALID_CARD on invalid input
+ */
+ret_type_e human_process_draw_one_card(Card_t human_card_choice)
+{
+    if (RET_SUCCESS == human_process_normal_card(human_card_choice))
+    {
+        //Next turn will be Human turn
+        g_player_on_turn = HUMAN;
+        player_draw_one_card(COMPUTER);
+        return RET_SUCCESS;
+    }
+
+    return RET_FAILURE;
 }
 
 /**
@@ -133,6 +153,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
 
     return RET_SUCCESS;
 }
+
 /**
  * @brief human player requests a new card
  *
@@ -352,6 +373,8 @@ ret_type_e human_process_card(const char* user_input)
             return human_process_normal_card(human_card_choice);
         case SKIP_T:
             return human_process_skip_card(human_card_choice);
+        case DRAW_ONE_T:
+            return human_process_draw_one_card(human_card_choice);
         case WILD_T:
             return human_process_action_wild_card();
         case INVALID_TYPE:

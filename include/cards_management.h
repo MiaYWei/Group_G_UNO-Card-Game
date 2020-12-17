@@ -13,8 +13,8 @@
 #define PLAYERS_NUM     2
 #define DEAL_CARDS_NUM  5
 
-typedef enum { HUMAN, COMPUTER, PlayerTypeNum} PlayerType_e;
-typedef enum { NORMAL, SKIP_T, DRAW_ONE_T, WILD_T, WILD_DRAW_TWO_T, INVALID_TYPE} CardType_e;
+typedef enum { HUMAN, COMPUTER, PlayerTypeNum } PlayerType_e;
+typedef enum { NORMAL, SKIP_T, DRAW_ONE_T, WILD_T, WILD_DRAW_TWO_T, INVALID_TYPE } CardType_e;
 typedef enum { RED, BLUE, GREEN, YELLOW, ACTION, INVALID_COLOR } CardColor_e;
 typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, SKIP, DRAW_ONE, WILD, WILD_DRAW_TWO, INVALID_NAME } CardName_e;
 
@@ -127,6 +127,15 @@ bool is_exist_card(Deck_t* p_pile, Card_t card);
  * @return Card  the drew card
  */
 Card_t draw_one_card(void);
+
+/**
+ * @brief Draw a new card and add it to the player's cards on hand list.
+ *
+ * @param player  The player type.
+ * @return int 0 - Successful;
+ *             1 - Failed due to error in malloc;
+ */
+int player_draw_one_card(PlayerType_e player);
 
 /**
  * @brief initialize the global varibale g_card_on_table, which indicates the latest discard card on table.
