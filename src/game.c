@@ -226,7 +226,7 @@ int player_process_draw_one_card(PlayerType_e player)
 /**
  * @brief Draw two new cards and add them to the next player's cards on hand list.
  *
- * @param player  The player type.
+ * @param player  The player who discards a wild draw two card.
  * @return int 0 - Successful;
  *             1 - Failed due to error in malloc;
  */
