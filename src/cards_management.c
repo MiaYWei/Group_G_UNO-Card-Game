@@ -58,16 +58,22 @@ int initialize_cards(void)
         }
     }
 
-    //Added 2 wild cards
+    //Adds 2 wild cards
     card.color = ACTION;
     card.name = WILD;
     result += add_card_at_beginning(&g_draw_pile, card);
     result += add_card_at_beginning(&g_draw_pile, card);
 
-    if (0 != shuffle_cards())
-    {
-        printf("Shuffle cards failed in initialization.");
-    }
+    //Adds 2 wild draw two cards
+    card.color = ACTION;
+    card.name = WILD_DRAW_TWO;
+    result += add_card_at_beginning(&g_draw_pile, card);
+    result += add_card_at_beginning(&g_draw_pile, card);
+
+    //if (0 != shuffle_cards())
+    //{
+    //    printf("Shuffle cards failed in initialization.");
+    //}
 
     g_discard_pile = (Deck_t*)malloc(sizeof(Deck_t));
     if (g_discard_pile == NULL)

@@ -68,4 +68,13 @@ void player_name_inquiry(void);
  */
 int player_process_draw_one_card(PlayerType_e player);
 
+/**
+ * @brief Draw two new cards and add them to another player's cards on hand list.
+ *
+ * @param player  The player type.
+ * @return int 0 - Successful;
+ *             1 - Failed due to error in malloc;
+ */
+int player_process_wild_draw_two_card(PlayerType_e player);
+
 #endif // __GAME_HEADER__#pragma once
