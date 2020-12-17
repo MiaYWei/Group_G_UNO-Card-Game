@@ -14,7 +14,7 @@ bool g_card_requested = false;
 ret_type_e record_human_input(void);
 Card_t map_user_input(const char* user_input);
 CardType_e get_card_type(Card_t card);
-int request_card(PlayerType_e PlayerType, int no_of_cards);
+int request_card(PlayerType_e PlayerType);
 void invalid_card_warning(void);
 void show_cards_assigned(Card_t assigned_card);
 bool is_human_card(Card_t current_card);
@@ -30,23 +30,23 @@ ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_
 int quit_game(void);
 
 /**
- * @brief Function called when the human player requests a card during each turn/
- *  Draw1/ Draw2 
+ * @brief Function called when the human player requests a card during each turn
+ * 
  * Assigns the top most card/cards in the draw pile to the user
  *
  * @param PlayerType - Indicates whether user requested is Human or Computer Player
- * @param no_of_cards - Indicates the number of cards requested  
+ * @return int 0 - Successful;
+ *             1 - Failed due to error in malloc;
+ * 
  */
-int request_card(PlayerType_e PlayerType, int no_of_cards)
+int request_card(PlayerType_e PlayerType)
 {
-    Card_t card;
-    int result;
     g_card_requested = true;
-    card = draw_one_card();
+    Card_t card = draw_one_card();
     show_cards_assigned(card);
+
     //Assigning the drawn card to the human player
-    result = add_card_at_end(g_players[HUMAN].cards_on_hand, card);
-    return result;
+    return add_card_at_end(g_players[HUMAN].cards_on_hand, card);
 }
 /**
  * @brief Throws a warning message if the card dropped by the user is invalid
@@ -174,7 +174,7 @@ ret_type_e human_process_new_card_request(void)
     }
     else
     {
-        return request_card(HUMAN, 1);
+        return request_card(HUMAN);
     }
 }
 
@@ -285,6 +285,11 @@ Card_t map_user_input(const char* user_input)
     
     Card_t invalid_card = { INVALID_COLOR, INVALID_NAME };
     Card_t card = { INVALID_COLOR, INVALID_NAME };
+
+    if (user_input == NULL)
+    {
+        return invalid_card;
+    }
 
     //maps the card color
     for (i = 0; i < m; i++)

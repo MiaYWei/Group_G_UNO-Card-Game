@@ -1,28 +1,69 @@
+#include <string.h>
 #include "../../include/human_player.h"
 #include "../include/test.h"
 #include "../include/test_cards_management.h"
 
+void test_map_user_input(void);
 void test_get_card_type(void);
 void test_human_process_normal_card(void);
 void test_human_process_skip_card(void);
 void test_human_process_draw_one_card(void);
 void test_human_process_wild_card(void);
 void test_human_process_wild_draw_two_card(void);
+void test_human_process_end_turn_request(void);
+void test_human_process_new_card_request(void);
 
 int test_hunman_player(void)
 {
     int result = 0;
     write_log("\n--------------- Start Test: Human Player Module ---------------\n");
+    test_map_user_input();
     test_get_card_type();
     test_human_process_normal_card();
     test_human_process_skip_card();
     test_human_process_draw_one_card();
     test_human_process_wild_card();
     test_human_process_wild_draw_two_card();
-
+    test_human_process_end_turn_request();
+    test_human_process_new_card_request();
     write_log("--------------- End of Test: Human Player Module ---------------\n");
 
     return result;
+}
+
+void test_map_user_input(void)
+{
+    // Case 1: Invalid user input
+    char *user_input = NULL;
+    Card_t expected_mapped_card = { INVALID_COLOR, INVALID_NAME };
+    Card_t actual_mapped_card = map_user_input(user_input);
+    int compare_result = memcmp(&expected_mapped_card, &actual_mapped_card, sizeof(Card_t));
+    if (compare_result == 0) {
+        write_log("Test--- map_user_input().Case 1:Invalid User Input ......Successful!\n");
+    }
+    else {
+        write_log("Test--- map_user_input().Case 1:Invalid User Input......failed!\n");
+        write_fail_log(" The card color of map_user_input():\n", actual_mapped_card.color, expected_mapped_card.color);
+        write_fail_log(" The card name of map_user_input():\n", actual_mapped_card.name, expected_mapped_card.name);
+    }
+
+    // Case 2: Valid user input
+    char user_input_2[2] = { 'R','7' };
+    expected_mapped_card.color = RED;
+    expected_mapped_card.name = SEVEN;
+    actual_mapped_card = map_user_input(user_input_2);
+    compare_result = memcmp(&expected_mapped_card, &actual_mapped_card, sizeof(Card_t));
+
+    if (compare_result == 0) {
+        write_log("Test--- map_user_input().Case 2:Valid User Input ......Successful!\n");
+    }
+    else {
+        write_log("Test--- map_user_input().Case 2:Valid User Input......failed!\n");
+        write_fail_log(" The card color of map_user_input():\n", actual_mapped_card.color, expected_mapped_card.color);
+        write_fail_log(" The card name of map_user_input():\n", actual_mapped_card.name, expected_mapped_card.name);
+    }
+
+    return;
 }
 
 void test_get_card_type(void)
@@ -36,7 +77,7 @@ void test_get_card_type(void)
     }
     else {
         write_log("Test--- get_card_type().Case 1:Normal Card Type......failed!\n");
-        write_fail_log("The return value of get_card_type():\n", actual_type, expected_type);
+        write_fail_log(" The return value of get_card_type():\n", actual_type, expected_type);
     }
 
     // Case 2: Skip Card Type
@@ -48,7 +89,7 @@ void test_get_card_type(void)
     }
     else {
         write_log("Test--- get_card_type().Case 2:Skip Card Type......failed!\n");
-        write_fail_log("The return value of get_card_type():\n", actual_type, expected_type);
+        write_fail_log(" The return value of get_card_type():\n", actual_type, expected_type);
     }
 
     // Case 3: Draw-One Card Type
@@ -60,7 +101,7 @@ void test_get_card_type(void)
     }
     else {
         write_log("Test--- get_card_type().Case 3:Draw-One Card Type......failed!\n");
-        write_fail_log("The return value of get_card_type():\n", actual_type, expected_type);
+        write_fail_log(" The return value of get_card_type():\n", actual_type, expected_type);
     }
 
     // Case 4: Wild Card Type
@@ -72,7 +113,7 @@ void test_get_card_type(void)
     }
     else {
         write_log("Test--- get_card_type().Case 4:Wild Card Type......failed!\n");
-        write_fail_log("The return value of get_card_type():\n", actual_type, expected_type);
+        write_fail_log(" The return value of get_card_type():\n", actual_type, expected_type);
     }
 
     // Case 5: Wild-Draw-Two Card Type
@@ -84,7 +125,7 @@ void test_get_card_type(void)
     }
     else {
         write_log("Test--- get_card_type().Case 5:Wild-Draw-Two Card Type......failed!\n");
-        write_fail_log("The return value of get_card_type():\n", actual_type, expected_type);
+        write_fail_log(" The return value of get_card_type():\n", actual_type, expected_type);
     }
 
     // Case 6: Wild-Draw-Two Card Type
@@ -96,7 +137,7 @@ void test_get_card_type(void)
     }
     else {
         write_log("Test--- get_card_type().Case 6:Invalid Card Type......failed!\n");
-        write_fail_log("The return value of get_card_type():\n", actual_type, expected_type);
+        write_fail_log(" The return value of get_card_type():\n", actual_type, expected_type);
     }
         
     return;
@@ -115,7 +156,7 @@ void test_human_process_normal_card(void)
     }
     else {
         write_log("Test--- human_process_normal_card().Case 1:Invalid Card......failed!\n");
-        write_fail_log("The return value of human_process_normal_card():\n", actual_ret, expected_ret);
+        write_fail_log(" The return value of human_process_normal_card():\n", actual_ret, expected_ret);
     }
 
     // Case 2: The human card choice is in human player deck, but not playable.
@@ -130,7 +171,7 @@ void test_human_process_normal_card(void)
     }
     else {
         write_log("Test--- human_process_normal_card().Case 2:Valid Card, but Not Playable......failed!\n");
-        write_fail_log("The return value of human_process_normal_card():\n", actual_ret, expected_ret);
+        write_fail_log(" The return value of human_process_normal_card():\n", actual_ret, expected_ret);
     }
 
     // Case 3: Human player discards a normal card successfully.
@@ -145,7 +186,7 @@ void test_human_process_normal_card(void)
     }
     else {
         write_log("Test--- human_process_normal_card().Case 3:Human Player Discard a Normal Card......failed!\n");
-        write_fail_log("The return value of human_process_normal_card():\n", actual_ret, expected_ret);
+        write_fail_log(" The return value of human_process_normal_card():\n", actual_ret, expected_ret);
     }
 
     return;
@@ -164,7 +205,7 @@ void test_human_process_skip_card(void)
     }
     else {
         write_log("Test--- human_process_skip_card().Case 1:Invalid or Not Playable Card......failed!\n");
-        write_fail_log("The return value of human_process_skip_card():\n", actual_ret, expected_ret);
+        write_fail_log(" The return value of human_process_skip_card():\n", actual_ret, expected_ret);
     }
 
     // Case 2: Human Player Discards a Skip Card Successfully
@@ -178,7 +219,7 @@ void test_human_process_skip_card(void)
     }
     else {
         write_log("Test--- human_process_skip_card().Case 2:Human Player Discard a Skip Card......failed!\n");
-        write_fail_log("The return value of human_process_skip_card():\n", actual_ret, expected_ret);
+        write_fail_log(" The return value of human_process_skip_card():\n", actual_ret, expected_ret);
     }
 
     return;
@@ -197,7 +238,7 @@ void test_human_process_draw_one_card(void)
     }
     else {
         write_log("Test--- human_process_draw_one_card().Case 1:Invalid or Not Playable Card......failed!\n");
-        write_fail_log("The return value of human_process_draw_one_card():\n", actual_ret, expected_ret);
+        write_fail_log(" The return value of human_process_draw_one_card():\n", actual_ret, expected_ret);
     }
 
     // Case 2: Human Player Discards a Draw-One Card Successfully
@@ -211,7 +252,7 @@ void test_human_process_draw_one_card(void)
     }
     else {
         write_log("Test--- human_process_draw_one_card().Case 2:Human Player Discard a Draw-One Card......failed!\n");
-        write_fail_log("The return value of human_process_draw_one_card():\n", actual_ret, expected_ret);
+        write_fail_log(" The return value of human_process_draw_one_card():\n", actual_ret, expected_ret);
     }
 
     return;
@@ -230,7 +271,7 @@ void test_human_process_wild_card(void)
     }
     else {
         write_log("Test--- human_process_wild_card().Case 1:Invalid Card......failed!\n");
-        write_fail_log("The return value of human_process_wild_card():\n", actual_ret, expected_ret);
+        write_fail_log(" The return value of human_process_wild_card():\n", actual_ret, expected_ret);
     }
 
     // Case 2: Human Player Discards a Draw-One Card Successfully 
@@ -242,7 +283,7 @@ void test_human_process_wild_card(void)
     }
     else {
         write_log("Test--- human_process_wild_card().Case 2:Human Player Discard a Wild Card......failed!\n");
-        write_fail_log("The return value of human_process_wild_card():\n", actual_ret, expected_ret);
+        write_fail_log(" The return value of human_process_wild_card():\n", actual_ret, expected_ret);
     }
 
     return;
@@ -261,7 +302,7 @@ void test_human_process_wild_draw_two_card(void)
     }
     else {
         write_log("Test--- human_process_wild_draw_two_card().Case 1:Invalid Card......failed!\n");
-        write_fail_log("The return value of human_process_wild_draw_two_card():\n", actual_ret, expected_ret);
+        write_fail_log(" The return value of human_process_wild_draw_two_card():\n", actual_ret, expected_ret);
     }
 
     // Case 2: Human Player Discards a Draw-One Card Successfully 
@@ -273,7 +314,65 @@ void test_human_process_wild_draw_two_card(void)
     }
     else {
         write_log("Test--- human_process_wild_draw_two_card().Case 2:Human Player Discard a Wild-Draw-Two Card......failed!\n");
-        write_fail_log("The return value of human_process_wild_draw_two_card():\n", actual_ret, expected_ret);
+        write_fail_log(" The return value of human_process_wild_draw_two_card():\n", actual_ret, expected_ret);
+    }
+
+    return;
+}
+
+void test_human_process_end_turn_request(void)
+{
+    // Case 1: End Turn
+    g_card_requested = true;
+    ret_type_e expected_ret = RET_SUCCESS;
+    ret_type_e actual_ret = human_process_end_turn_request();
+    if (expected_ret == actual_ret) {
+        write_log("Test--- human_process_end_turn_request().Case 1:Success on Human Player End Turn Request......Successful!\n");
+    }
+    else {
+        write_log("Test--- human_process_end_turn_request().Case 1:Success on Human Player End Turn Request......failed!\n");
+        write_fail_log(" The return value of human_process_end_turn_request():\n", actual_ret, expected_ret);
+    }
+
+    // Case 2: Need to draw a card before end current turn
+    g_card_requested = false;
+    expected_ret = RET_FAILURE;
+    actual_ret = human_process_end_turn_request();
+    if (expected_ret == actual_ret) {
+        write_log("Test--- human_process_end_turn_request().Case 2:Failed on Human Player End Turn Request......Successful!\n");
+    }
+    else {
+        write_log("Test--- human_process_end_turn_request().Case 2:Failed on Human Player End Turn Request......failed!\n");
+        write_fail_log(" The return value of human_process_end_turn_request():\n", actual_ret, expected_ret);
+    }
+
+    return;
+}
+
+void test_human_process_new_card_request(void)
+{
+    // Case 1: human processes new card request successful
+    g_card_requested = false;
+    ret_type_e expected_ret = RET_SUCCESS;
+    ret_type_e actual_ret = human_process_new_card_request();
+    if (expected_ret == actual_ret) {
+        write_log("Test--- human_process_new_card_request().Case 1:Success on Human Player Request a New Card......Successful!\n");
+    }
+    else {
+        write_log("Test--- human_process_new_card_request().Case 1:Success on Human Player Request a New Card......failed!\n");
+        write_fail_log(" The return value of human_process_new_card_request():\n", actual_ret, expected_ret);
+    }
+
+    // Case 2: human processes new card request failed. Since s/he already requested.
+    g_card_requested = true;
+    expected_ret = RET_FAILURE;
+    actual_ret = human_process_new_card_request();
+    if (expected_ret == actual_ret) {
+        write_log("Test--- human_process_new_card_request().Case 2:Failed on Human Player Request a New Card......Successful!\n");
+    }
+    else {
+        write_log("Test--- human_process_new_card_request().Case 2:Failed on Human Player Request a New Card......failed!\n");
+        write_fail_log(" The return value of human_process_new_card_request():\n", actual_ret, expected_ret);
     }
 
     return;
