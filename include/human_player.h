@@ -3,7 +3,6 @@
 #include "cards_management.h"
 #include "return_types.h"
 
-ret_type_e handle_human_turn(void);
 ret_type_e record_human_input(void);
 Card_t map_user_input(const char* user_input);
 CardType_e get_card_type(Card_t card);

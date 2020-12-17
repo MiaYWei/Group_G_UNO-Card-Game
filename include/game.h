@@ -1,6 +1,10 @@
 #ifndef __GAME_HEADER__
 #define __GAME_HEADER__
 
+#include <stdbool.h>
+#include "../include/return_types.h"
+#include "../include/cards_management.h"
+
 extern bool g_end_game;
 
 /**
@@ -52,6 +56,12 @@ bool if_end_game(PlayerType_e player);
  *
  */
 void handle_computer_turn(void);
+
+/**
+ * @brief This function handles the functionality to support human player's turn
+ *
+ */
+ret_type_e handle_human_turn(void);
 
 /**
  * @brief Requests Human player's name

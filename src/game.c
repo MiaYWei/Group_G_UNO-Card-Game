@@ -2,11 +2,11 @@
 #include <stddef.h>  
 #include <stdlib.h>   
 #include <string.h>
+#include "../include/game.h"
 #include "../include/cards_management.h"
 #include "../include/computer_player.h"
 #include "../include/human_player.h"
-#include "../include/game.h"
-#include "../include/computer_player.h"
+
 #define PLAYERS_NAME_LENGTH  20
 
 bool g_end_game = false;
@@ -204,6 +204,18 @@ void handle_computer_turn(void)
     }
 
     return;
+}
+
+/**
+ * @brief This function handles the functionality to support human player's turn
+ *
+ */
+ret_type_e handle_human_turn(void)
+{
+    display_player_deck(HUMAN);
+    ret_type_e ret = record_human_input();
+
+    return ret;
 }
 
 /**
