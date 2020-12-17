@@ -9,9 +9,9 @@ void test_computer_take_turn(void);
 
 void test_computer_player(void)
 {
-    write_log("\n--------------- Start Test: Computer Player Module  ---------------\n\n");
+    write_log("\n--------------- Start Test: Computer Player Module  ---------------\n");
     test_computer_take_turn();
-    write_log("\n--------------- End of Test: Computer Player Module ---------------\n");
+    write_log("--------------- End of Test: Computer Player Module ---------------\n");
     return;
 }
 

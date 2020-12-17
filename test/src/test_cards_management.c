@@ -15,7 +15,7 @@ void test_is_playable_card(void);
 /*#################################### Test Functions ####################################*/
 void test_cards_mgmt(void)
 {
-    write_log("\n--------------- Start Test: Cards Management Module ---------------\n\n");
+    write_log("\n--------------- Start Test: Cards Management Module ---------------\n");
     test_initialize_cards();
     test_deal_cards();
     test_add_card_at_end();
@@ -23,7 +23,7 @@ void test_cards_mgmt(void)
     test_remove_card_from_deck();
     test_remove_first_card_from_deck();
     test_is_playable_card();
-    write_log("\n--------------- End of Test: Cards Management Module ---------------\n");
+    write_log("--------------- End of Test: Cards Management Module ---------------\n");
 
     return;
 }

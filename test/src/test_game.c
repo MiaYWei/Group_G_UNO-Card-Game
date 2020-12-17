@@ -10,18 +10,16 @@ void test_if_end_game(void);
 void test_player_process_draw_one_card(void);
 void test_player_process_wild_draw_two_card(void);
 void test_handle_computer_turn(void);
-void test_handle_human_turn(void);
 
 void test_game(void)
 {
-    write_log("\n--------------- Start Test: Game Module ---------------\n\n");
+    write_log("\n--------------- Start Test: Game Module ---------------\n");
     test_initialize_players();
     test_if_end_game();
     test_player_process_draw_one_card();
     test_player_process_wild_draw_two_card();
     test_handle_computer_turn();
-    test_handle_human_turn();
-    write_log("\n--------------- End of Test: Game Module ---------------\n");
+    write_log("--------------- End of Test: Game Module ---------------\n");
     
     return;
 }
@@ -174,10 +172,5 @@ void test_handle_computer_turn(void)
         write_fail_log(" The test value of handle_computer_turn():\n", actual, expected);
     }
 
-    return;
-}
-
-void test_handle_human_turn(void)
-{
     return;
 }
