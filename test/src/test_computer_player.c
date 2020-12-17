@@ -32,10 +32,10 @@ void test_computer_take_turn(void)
     g_draw_pile = create_test_list(YELLOW, FIVE, NINE);
     actual_ret = computer_take_turn();
     if (expected_ret == actual_ret) {
-        write_log("Test-- - computer_take_turn().Case 1......Successful!\n");
+        write_log("Test-- - computer_take_turn().Case 1:No Playable card Discarded, End Turn, Game Continues......Successful!\n");
     } 
     else {
-        write_log("Test-- - computer_take_turn().Case 1......failed!\n");
+        write_log("Test-- - computer_take_turn().Case 1:No Playable card Discarded, End Turn, Game Continues......failed!\n");
         write_fail_log("The return value of computer_take_turn():\n", actual_ret, expected_ret);
     }
     
@@ -48,10 +48,10 @@ void test_computer_take_turn(void)
     g_players[COMPUTER].cards_on_hand = create_test_list(RED, ONE, FOUR);
     actual_ret = computer_take_turn();
     if (expected_ret == actual_ret) {
-        write_log("Test-- - computer_take_turn().Case 2......Successful!\n");
+        write_log("Test-- - computer_take_turn().Case 2:Playable card Discarded, End Turn......Successful!\n");
     } 
     else {
-        write_log("Test-- - computer_take_turn().Case 2......failed!\n");
+        write_log("Test-- - computer_take_turn().Case 2:Playable card Discarded, End Turn......failed!\n");
         write_fail_log("The return value of computer_take_turn():\n", actual_ret, expected_ret);
     }
 
@@ -60,10 +60,10 @@ void test_computer_take_turn(void)
     expected_ret = 2;
     actual_ret = computer_take_turn();
     if (expected_ret == actual_ret) {
-        write_log("Test-- - computer_take_turn().Case 3......Successful!\n");
+        write_log("Test-- - computer_take_turn().Case 3:Not Current Player's Turn......Successful!\n");
     }
     else {
-        write_log("Test-- - computer_take_turn().Case 3......failed!\n");
+        write_log("Test-- - computer_take_turn().Case 3:Not Current Player's Turn......failed!\n");
         write_fail_log("The return value of computer_take_turn():\n", actual_ret, expected_ret);
     }
 

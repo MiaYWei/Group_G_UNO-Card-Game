@@ -78,7 +78,7 @@ ret_type_e human_process_end_turn_request(void)
     }
     else
     {
-        printf("!!Warning!! Please draw a card before you can end your turn \n");
+        printf("!!Warning!! Please draw a card before you can end your turn.\n");
         display_player_deck(HUMAN);
     }
 
