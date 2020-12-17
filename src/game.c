@@ -15,6 +15,7 @@ char g_human_player_name[PLAYERS_NAME_LENGTH] = "HumanPlayer";
 void start_new_game(void);
 bool confirm_exit(void);
 int initialize_game(void);
+void initialize_players(void);
 void end_turn(PlayerType_e player);
 bool if_end_game(PlayerType_e player);
 void handle_computer_turn(void);
@@ -125,6 +126,21 @@ int initialize_game(void)
 
     printf("Hi %s! Let's start a new game.\n", g_human_player_name);
     return result;
+}
+
+/**
+ * @brief Initializes players global variables
+ *
+ */
+void initialize_players(void)
+{
+    for (int i = 0; i < PLAYERS_NUM; i++)
+    {
+        g_players[i].type = (PlayerType_e)i;
+        g_players[i].cards_on_hand = NULL;
+    }
+
+    return;
 }
 
 /**

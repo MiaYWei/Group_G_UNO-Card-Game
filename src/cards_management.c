@@ -12,7 +12,6 @@ Card_t g_card_on_table;                /* last played card on the table-discard 
 PlayerType_e g_player_on_turn = HUMAN; /* The current player on turn */
 PlayerType_e g_game_winner = PlayerTypeNum;    /* game winner*/
 
-void initialize_players(void);
 int initialize_cards(void);
 int deal_cards(void);
 int add_card_at_beginning(Deck_t **pp_head, Card_t card);
@@ -27,21 +26,6 @@ void swap_cards(Card_t *p_a, Card_t *p_b);
 Deck_t *remove_first_playable_card(Deck_t **pp_head);
 Card_t draw_one_card(void);
 int shuffle_cards(void);
-
-/**
- * @brief Initializes players global variables
- *
- */
-void initialize_players(void)
-{
-    for (int i = 0; i < PLAYERS_NUM; i++)
-    {
-        g_players[i].type = (PlayerType_e)i;
-        g_players[i].cards_on_hand = NULL;
-    }
-
-    return;
-}
 
 /**
  * @brief Initializes all the cards status and put them in remaining deck iteratively.

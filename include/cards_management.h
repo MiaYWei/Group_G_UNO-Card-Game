@@ -59,12 +59,6 @@ extern PlayerType_e g_game_winner;              /* game winner*/
 int initialize_game(void);
 
 /**
- * @brief Initializes players global variables
- * 
- */
-void initialize_players(void);
-
-/**
  * @brief Initializes all the cards status and put them in remaining deck iteratively.
  *        Memeory will be allocated to store all the cards informations.
  *        If it can't malloc at any point, we will free the deck and return FAIL.

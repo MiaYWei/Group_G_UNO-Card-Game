@@ -2,6 +2,21 @@
 #define __GAME_HEADER__
 
 extern bool g_end_game;
+
+/**
+ * @brief Initializes game which includes initialize cards and initialize players
+ *
+ * @return int 0 - Initialization is successful;
+ *             1 - Initialization is failed, since malloc memory fails
+ */
+int initialize_game(void);
+
+/**
+ * @brief Initializes players global variables
+ *
+ */
+void initialize_players(void);
+
 /**
  * @brief Starts a new game
  *
