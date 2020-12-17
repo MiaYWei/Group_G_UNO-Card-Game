@@ -10,14 +10,15 @@ int request_card(PlayerType_e PlayerType, int no_of_cards);
 void invalid_card_warning(void);
 void show_cards_assigned(Card_t assigned_card);
 bool is_human_card(Card_t current_card);
+ret_type_e card_color_change_inquiry(CardColor_e* color_changed);
 ret_type_e human_process_card(const char* user_input);
 ret_type_e human_process_end_turn_request(void);
 ret_type_e human_process_new_card_request(void);
 ret_type_e human_process_normal_card(Card_t human_card_choice);
 ret_type_e human_process_skip_card(Card_t human_card_choice);
 ret_type_e human_process_draw_one_card(Card_t human_card_choice);
-ret_type_e human_process_wild_card(Card_t human_card_choice);
-ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice);
+ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_changed);
+ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_e color_changed);
 int quit_game(void);
 
 #endif // __HUMAN_PLAYER_HEADER__
