@@ -445,9 +445,9 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
             }
             temp = temp->next;
         }
-        if (colorCount > 2 && ifexists(hand_card, DRAWONE, inputCard.color))
+        if (colorCount > 2 && ifexists(hand_card, DRAW_ONE, inputCard.color))
         {
-            playableCard.name = DRAWONE;
+            playableCard.name = DRAW_ONE;
             playableCard.color = inputCard.color;
             playCard = find_address(hand_card, playableCard);
             return playCard;

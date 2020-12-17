@@ -14,8 +14,9 @@
 #define DEAL_CARDS_NUM  5
 
 typedef enum { HUMAN, COMPUTER, PlayerTypeNum} PlayerType_e;
+typedef enum { NORMAL, SKIP_T, DRAW_ONE_T, WILD_T, WILD_DRAW_TWO_T, INVALID_TYPE} CardType_e;
 typedef enum { RED, BLUE, GREEN, YELLOW, ACTION, INVALID_COLOR } CardColor_e;
-typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, SKIP, DRAWONE, WILD, INVALID_NAME } CardName_e;
+typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, SKIP, DRAW_ONE, WILD, WILD_DRAW_TWO, INVALID_NAME } CardName_e;
 
 static const char* PLAYER_TYPE_STRING[] = { "HUMAN", "COMPUTER", "INVALID"};
 static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "SKIP", "DRAWONE", "WILD","INVALID" };
