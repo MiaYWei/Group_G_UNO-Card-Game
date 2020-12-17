@@ -11,7 +11,6 @@
 /* Global variables */
 bool g_card_requested = false;
 
-ret_type_e handle_human_turn(void);
 ret_type_e record_human_input(void);
 Card_t map_user_input(const char* user_input);
 CardType_e get_card_type(Card_t card);
@@ -79,7 +78,7 @@ ret_type_e human_process_end_turn_request(void)
     }
     else
     {
-        printf("!!Warning!! Please draw a card before you can end your turn \n");
+        printf("!!Warning!! Please draw a card before you can end your turn.\n");
         display_player_deck(HUMAN);
     }
 
@@ -461,18 +460,6 @@ bool is_valid_card(Card_t current_card)
     }
 
     return false;
-}
-
-/**
- * @brief This function handles the functionality to support human player's turn
- * 
- */
-ret_type_e handle_human_turn(void)
-{
-    display_player_deck(HUMAN);
-    ret_type_e ret = record_human_input();
-
-    return ret;
 }
 
 /**
