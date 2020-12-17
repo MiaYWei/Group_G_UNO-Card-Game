@@ -10,22 +10,22 @@
 
 /* Global variables */
 bool g_card_requested = false;
-bool is_action_card = false;
 
 int request_card(PlayerType_e PlayerType, int no_of_cards);
 void invalid_card_warning(void);
-PlayerType_e determine_next_player(Card_t *previous_card, PlayerType_e current_player); //Release 2
-bool validate_card(const char *entered_value);
-Card_t map_user_input(const char *input);
-Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched); //Can be included in Card management
+Card_t map_user_input(const char* user_input);
 ret_type_e record_human_input(void);
 void show_cards_assigned(Card_t assigned_card);
-bool check_is_valid_card(Card_t *current_card);
-bool is_human_card(Card_t *current_card);
-void display_player_turn(PlayerType_e next_player);
+bool is_valid_card(Card_t current_card);
+bool is_human_card(Card_t current_card);
 int quit_game(void);
-bool is_wild_card_played = false;
-ret_type_e handle_human_turn(void);
+bool is_wild_card(const char* user_input);
+bool is_skip_card(const char* user_input);
+ret_type_e human_process_end_turn_request(void);
+ret_type_e human_process_new_card_request(void);
+ret_type_e human_process_action_wild_card(void);
+ret_type_e human_process_skip_card(const char* user_input);
+ret_type_e human_process_normal_card(const char* user_input);
 
 /**
  * @brief Function called when the human player requests a card during each turn/
@@ -58,33 +58,6 @@ void invalid_card_warning(void)
     return;
 }
 
-/**
- * @brief Validates if the input entered during the human player's turn by
- * comparing it with the predefined card values array
- * 
- * @param entered_value Value entered by the human player
- * @return true - Entered value is right
- * @return false - Value does not match the card values defined previously
- */
-bool validate_card(const char *entered_value)
-{
-    int size = sizeof CARD_VALUES / sizeof *CARD_VALUES;
-
-    int i = 0;
-    while (i < size)
-    {
-        if (0 != strcmp(CARD_VALUES[i], entered_value)) //strcmp returns 0, if both strings are identical (equal)
-        {
-            i++;
-        }
-        else
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
  /**
   * @brief  human player processes end turn request
   *
@@ -113,39 +86,32 @@ ret_type_e human_process_end_turn_request(void)
 /**
  * @brief human player discards a normal card 
  *
+ * @param user_input pointer to the user input
  * @return ret_type_e: RET_SUCCESS on successful;
  *                     RET_INVALID_CARD on invalid input
- *                     RET_INVALID_TURN
  */
 ret_type_e human_process_normal_card(const char* user_input)
 {
-    if (validate_card(user_input))
+    //To be added if the format of user input is different
+    Card_t human_card_choice = map_user_input(user_input);
+
+    //Check if the card is from the human player deck
+    if (!is_human_card(human_card_choice))
     {
-        //To be added if the format of user input is different
-        Card_t human_card_choice = map_user_input(user_input);
+        printf("!!Warning!! Please select a card from your deck! \n");
+        invalid_card_warning();
+        return RET_INVALID_CARD;
+    }
 
-        //Check if the card is from the human player deck
-        if (!is_human_card(&human_card_choice))
-        {
-            printf("!!Warning!! Please select a card from your deck! \n");
-            return RET_INVALID_CARD;
-        }
-
-        //If valid add the card to the discard_pile
-        if (check_is_valid_card(&human_card_choice))
-        {
-            remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), human_card_choice);
-            add_card_at_end(g_discard_pile, human_card_choice);
-            memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
-            end_turn(HUMAN);
-            g_card_requested = false;
-            return RET_SUCCESS;
-        }
-        else
-        {
-            invalid_card_warning();
-            return RET_INVALID_CARD;
-        }
+    //If valid add the card to the discard_pile
+    if (is_valid_card(human_card_choice))
+    {
+        remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), human_card_choice);
+        add_card_at_end(g_discard_pile, human_card_choice);
+        memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
+        end_turn(HUMAN);
+        g_card_requested = false;
+        return RET_SUCCESS;
     }
     else
     {
@@ -155,7 +121,7 @@ ret_type_e human_process_normal_card(const char* user_input)
 }
 
 /**
- * @brief human player discards a normal card
+ * @brief human player requests a new card
  *
  * @return ret_type_e: RET_SUCCESS on success;
  *                     RET_FAILURE on fail
@@ -207,7 +173,7 @@ ret_type_e human_process_action_wild_card(void)
     }
 
     //If valid add the card to the discard_pile
-    if (!is_human_card(&updated_card))
+    if (!is_human_card(updated_card))
     {
         printf("!!Warning!! Please select a card from your deck! \n");
         return RET_INVALID_CARD;
@@ -227,14 +193,131 @@ ret_type_e human_process_action_wild_card(void)
 }
 
 /**
+ * @brief human player discards a action card - Skip
+ *
+ * @param user_input pointer to the user input
+ * @return ret_type_e: RET_SUCCESS on success;
+ *                     RET_INVALID_CARD on invalid input
+ */
+ret_type_e human_process_skip_card(const char* user_input)
+{
+    Card_t card = map_user_input(user_input);
+    if ((card.color == INVALID_COLOR) || (card.name == INVALID_NAME))
+    {
+        return RET_INVALID_INPUT;
+    }
+
+    if (!is_human_card(card))
+    {
+        printf("Entered Card is [%s, %s]! \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
+        printf("!!Warning!! Please select a card from your deck! \n");
+        return RET_INVALID_CARD;
+    }
+
+    //If the card is valid, then add the card to the discard_pile
+    remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), card);
+    add_card_at_end(g_discard_pile, card);
+
+    //update g_card_on_table
+    g_card_on_table.color = card.color;
+    g_card_on_table.name = card.name;
+
+    //End turn
+    end_turn(HUMAN);
+    g_card_requested = false;
+
+    //Next turn will be Human turn
+    g_player_on_turn = HUMAN;
+    return RET_SUCCESS;
+}
+
+/**
  * @brief Check if the card discarded by player is an action card
  *
- * @return true on a action card discarding request; otherwise is false.
+ * @param user_input pointer to the user input
+ * @return true on a wild action card discarding request; otherwise is false.
  *                     
  */
-bool is_action_wild_card(const char* user_input)
+bool is_wild_card(const char* user_input)
 {
     return (user_input[0] == 'a' || user_input[0] == 'A') && (user_input[1] == 'w' || user_input[1] == 'W');
+}
+
+/**
+ * @brief Check if the card discarded by player is a skip card
+ *
+ * @param user_input pointer to the user input
+ * @return true on a skip action card discarding request; otherwise is false.
+ *
+ */
+bool is_skip_card(const char* user_input)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        if (user_input[0] == USER_INPUT_COLOR[i])
+        {
+            if (user_input[1] == 'S')
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
+ * @brief Function to map the human player input to Card type structure
+ * Should be called only after validation of the user input
+ *
+ * If user input is 3R, It will be mapped as follows
+ *  card.color=Red, card.name=3
+ *
+ * @param user_input: pointer to the value entered by the human during his turn
+ *
+ * @return Card_t the mapped card name and color values
+ *         
+ */
+Card_t map_user_input(const char* user_input)
+{
+    int i = 0;
+    int m = sizeof(USER_INPUT_COLOR) / sizeof(USER_INPUT_COLOR[0]);
+    int n = sizeof(USER_INPUT_NAME) / sizeof(USER_INPUT_NAME[0]);
+    
+    Card_t invalid_card = { INVALID_COLOR, INVALID_NAME };
+    Card_t card = { INVALID_COLOR, INVALID_NAME };
+
+    //maps the card color
+    for (i = 0; i < m; i++)
+    {
+        if (user_input[0] == USER_INPUT_COLOR[i])
+        {
+            card.color = i;
+            break;
+        }
+    }
+
+    if (card.color == INVALID_COLOR)
+    {
+        return invalid_card;
+    }
+
+    //maps the card name only if the card color is valid.
+    for (i = 0; i < n; i++)
+    {
+        if (user_input[1] == USER_INPUT_NAME[i])
+        {
+            card.name = i;
+            break;
+        }
+    }
+
+    if (card.name == INVALID_NAME)
+    {
+        return invalid_card;
+    }
+    
+    return card;
 }
 
 /**
@@ -264,9 +347,13 @@ ret_type_e record_human_input(void)
     {
         return human_process_end_turn_request();
     }
-    else if (is_action_wild_card(user_input))
+    else if (is_wild_card(user_input))
     {
         return human_process_action_wild_card();
+    }
+    else if (is_skip_card(user_input))
+    {
+        return human_process_skip_card(user_input);
     }
     else
     {
@@ -274,78 +361,6 @@ ret_type_e record_human_input(void)
     }
 
     return RET_SUCCESS;
-}
-
-/**
- * @brief Function to map the human player input to Card type structure
- * Should be called only after validation of the user input
- * 
- * If user input is 3R, It will be mapped as follows
- *  card.color=Red, card.name=3
- * 
- * @param input Value entered by the human during his turn
- * 
- * @return Card_t the mapped card name and color values
- *         NULL If the input is invalid
- */
-Card_t map_user_input(const char *input)
-{
-    Card_t temp_card = {ColorNum, NameNum};
-
-    //To map the number part of the User input to the card name field
-    temp_card.name = input[1] - '0';
-
-    if (input[0] == 'R')
-    {
-        temp_card.color = RED;
-    }
-    else if (input[0] == 'G')
-    {
-        temp_card.color = GREEN;
-    }
-    else if (input[0] == 'B')
-    {
-        temp_card.color = BLUE;
-    }
-    else if (input[0] == 'Y')
-    {
-        temp_card.color = YELLOW;
-    }
-    else if (input[0] == 'A')
-    {
-        temp_card.color = ACTION;
-        temp_card.name = WILD;
-    }
-
-    return temp_card;
-}
-
-//TODO Remove this function if unused
-/**
- * @brief Function picks a particular card from the current human deck of cards
- * Called when a particular card has to be selected for removing from a deck
- * Frees the menory allocated to he temporary selected drop card input parameter
- * Note: Function  must be called only if the card to be selected is VALID
- * 
- * @param pp_head :Pointer which points to the address of head of card list in the Deck
- * @param card_to_be_matched :Card which has to be matched from the deck
- * 
- * @return Card_t* Card that has been matched with the given card value
- *         NULL - Returns NULL if the given card does not match with any of the cards in the deck
- */
-Card_t *pick_card_from_deck(Deck_t **pp_head, Card_t *card_to_be_matched)
-{
-    Deck_t *temp = *pp_head;
-    while (temp->next != NULL)
-    {
-        if (temp->card.color == card_to_be_matched->color && temp->card.name == card_to_be_matched->name)
-        {
-            return &temp->card;
-        }
-        temp = temp->next;
-    }
-    //free(card_to_be_matched); //Check if it can be freed here
-    return NULL;
 }
 
 /**
@@ -369,16 +384,15 @@ void show_cards_assigned(Card_t assigned_card)
  * @return- True if the card is valid
  *          False if the card is invalid
  */
-bool is_human_card(Card_t* current_card)
+bool is_human_card(Card_t current_card)
 {
     bool is_valid = false;
     Deck_t* temp = g_players[HUMAN].cards_on_hand;
 
     while (temp != NULL)
     {
-        if (temp->card.color == current_card->color && temp->card.name == current_card->name)
+        if (temp->card.color == current_card.color && temp->card.name == current_card.name)
         {
-
             return true;
         }
 
@@ -396,41 +410,14 @@ bool is_human_card(Card_t* current_card)
  * @return- True if the card is valid
  *          False if the card is invalid
  */
-bool check_is_valid_card(Card_t *current_card)
+bool is_valid_card(Card_t current_card)
 {
-    bool is_valid = false;
-    if ((g_card_on_table.color == current_card->color) || (g_card_on_table.name == current_card->name))
+    if ((g_card_on_table.color == current_card.color) || (g_card_on_table.name == current_card.name))
     {
-        is_valid = true;
+        return true;
     }
-    return is_valid;
-}
 
-/**
- * @brief Determines next player based on the previous card dropped on the discard pile
- *
- * @param previous_card - Last dropped card on the pile
- * @param current_player - Indicates the current player who dropped the card  
- */
-
-PlayerType_e determine_next_player(Card_t *previous_card, PlayerType_e current_player)
-{
-    PlayerType_e next_player;
-    if (current_player == 0 && !is_action_card)
-    {
-        next_player = COMPUTER;
-        //call function to execute the computer's turn
-    }
-    else if (current_player == 1 && !is_action_card)
-    {
-        next_player = HUMAN;
-        handle_human_turn();
-    }
-    else
-    {
-        /* Action card functionality in Release 2 */
-    }
-    return next_player;
+    return false;
 }
 
 /**
@@ -443,16 +430,6 @@ ret_type_e handle_human_turn(void)
     ret_type_e ret = record_human_input();
 
     return ret;
-}
-
-/**
- * @brief Displays whose turn it is- Human/Computer to play on the terminal
- *
- * @param next_player - Player to take turn next *  
- */
-void display_player_turn(PlayerType_e next_player)
-{
-    printf("%s Player's Turn now", PLAYER_TYPE_STRING[next_player]);
 }
 
 /**

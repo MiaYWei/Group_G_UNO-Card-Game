@@ -68,7 +68,7 @@ int initialize_cards(void)
 
     for (i = RED; i <= YELLOW; i++)
     {
-        for (j = ZERO; j <= NINE; j++)
+        for (j = ZERO; j <= SKIP; j++)
         {
             card.color = i;
             card.name = j;
