@@ -18,14 +18,15 @@ int request_card(PlayerType_e PlayerType, int no_of_cards);
 void invalid_card_warning(void);
 void show_cards_assigned(Card_t assigned_card);
 bool is_human_card(Card_t current_card);
+ret_type_e card_color_change_inquiry(CardColor_e* color_changed);
 ret_type_e human_process_card(const char* user_input);
 ret_type_e human_process_end_turn_request(void);
 ret_type_e human_process_new_card_request(void);
 ret_type_e human_process_normal_card(Card_t human_card_choice);
 ret_type_e human_process_skip_card(Card_t human_card_choice);
 ret_type_e human_process_draw_one_card(Card_t human_card_choice);
-ret_type_e human_process_wild_card(Card_t human_card_choice);
-ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice);
+ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_changed);
+ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_e color_changed);
 int quit_game(void);
 
 /**
@@ -178,38 +179,51 @@ ret_type_e human_process_new_card_request(void)
 }
 
 /**
- * @brief human player discards a action card - Wild
- *
- * @param human_card_choice  the human player card choice
+ * @brief Inquire a card color change when player discards a Wild card or Wild-Draw-Two card
+ * 
+ * @param color_changed pointer which points to choose the color to be changed
  * @return ret_type_e: RET_SUCCESS on success;
- *                     RET_INVALID_CARD on invalid input
+ *                     RET_INVALID_INPUT on invalid input
  */
-ret_type_e human_process_wild_card(Card_t human_card_choice)
+ret_type_e card_color_change_inquiry(CardColor_e* color_changed)
 {
-    CardColor_e color_changed = 0;
     char colornum = ' ';
+    *color_changed = INVALID_COLOR;
 
     printf("Please enter your choice for the color changing. (R/B/G/Y)\n");
     scanf(" %c", &colornum);
 
     if (colornum == 'R') {
-        color_changed = RED;
+        *color_changed = RED;
     }
     else if (colornum == 'G') {
-        color_changed = GREEN;
+        *color_changed = GREEN;
     }
     else if (colornum == 'B') {
-        color_changed = BLUE;
+        *color_changed = BLUE;
     }
     else if (colornum == 'Y') {
-        color_changed = YELLOW;
+        *color_changed = YELLOW;
     }
     else
     {
         printf("!!Warning!! Choose a valid color (R/B/G/Y) \n");
-        return RET_INVALID_CARD;
+        return RET_INVALID_INPUT;
     }
+    return RET_SUCCESS;
+}
 
+/**
+ * @brief human player discards a action card - Wild
+ *
+ * @param human_card_choice  the human player card choice
+ * @param color_changed human play choose the color to be changed
+ * @return ret_type_e: RET_SUCCESS on success;
+ *                     RET_INVALID_INPUT on invalid input
+ *                     RET_INVALID_CARD on the card is unavailbe in player deck
+ */
+ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_changed)
+{
     //If valid add the card to the discard_pile
     if (!is_human_card(human_card_choice))
     {
@@ -231,16 +245,17 @@ ret_type_e human_process_wild_card(Card_t human_card_choice)
 }
 
 /**
- * @brief human player discards a action card - Wild
+ * @brief human player discards a action card - Wild-Draw-Two
  *
  * @param human_card_choice  the human player card choice
+ * @param color_changed human play choose the color to be changed
  * @return ret_type_e: RET_SUCCESS on success;
  *                     RET_INVALID_CARD on invalid input
  */
-ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice)
+ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_e color_changed)
 {
     int ret = RET_FAILURE;
-    if (RET_SUCCESS == human_process_wild_card(human_card_choice))
+    if (RET_SUCCESS == human_process_wild_card(human_card_choice, color_changed))
     {
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
@@ -384,6 +399,8 @@ ret_type_e record_human_input(void)
  */
 ret_type_e human_process_card(const char* user_input)
 {
+    CardColor_e color_changed;
+
     Card_t human_card_choice = map_user_input(user_input);
     if ((human_card_choice.color == INVALID_COLOR) || (human_card_choice.name == INVALID_NAME))
     {
@@ -400,9 +417,18 @@ ret_type_e human_process_card(const char* user_input)
         case DRAW_ONE_T:
             return human_process_draw_one_card(human_card_choice);
         case WILD_T:
-            return human_process_wild_card(human_card_choice);
+            if (RET_SUCCESS == card_color_change_inquiry(&color_changed)) {
+                return human_process_wild_card(human_card_choice, color_changed);
+            } else {
+                return RET_INVALID_INPUT;
+            }
         case WILD_DRAW_TWO_T:
-            return human_process_wild_draw_two_card(human_card_choice);
+            if (RET_SUCCESS == card_color_change_inquiry(&color_changed)) {
+                return human_process_wild_draw_two_card(human_card_choice, color_changed);
+            }
+            else {
+                return RET_INVALID_INPUT;
+            }
         case INVALID_TYPE:
         default:
             return RET_FAILURE;
