@@ -45,9 +45,17 @@ int initialize_cards(void)
         printf("Unable to allocate memory to initialize draw_pile.");
         return -1;
     }
-    g_draw_pile->next = NULL;
+    g_draw_pile->card.color = RED;    // Link data field with data
+    g_draw_pile->card.name = ZERO;
+    g_draw_pile->next = NULL;         // Link address field to NULL
 
-    for (i = RED; i <= YELLOW; i++){
+    for (j = ONE; j <= DRAW_ONE; j++){
+        card.color = RED;
+        card.name = j;
+        result += add_card_at_beginning(&g_draw_pile, card);
+    }
+
+    for (i = BLUE; i <= YELLOW; i++){
         for (j = ZERO; j <= DRAW_ONE; j++){
             card.color = i;
             card.name = j;

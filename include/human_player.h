@@ -21,6 +21,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice);
 ret_type_e human_process_draw_one_card(Card_t human_card_choice);
 ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_changed);
 ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_e color_changed);
+void print_warning(const char* string);
 int quit_game(void);
 
 #endif // __HUMAN_PLAYER_HEADER__
