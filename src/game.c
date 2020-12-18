@@ -47,11 +47,8 @@ void start_new_game(void)
         if (g_player_on_turn == HUMAN){
             handle_human_turn();
         }
-
-        else
-        {
-            computer_take_turn();
-
+        else{
+            handle_computer_turn();
         }
 
         if (g_end_game){
@@ -182,9 +179,16 @@ bool if_end_game(PlayerType_e player)
 ret_type_e handle_human_turn(void)
 {
     display_player_deck(HUMAN);
-    ret_type_e ret = record_human_input();
+    return record_human_input();
+}
 
-    return ret;
+/**
+ * @brief This function handles the functionality to support computer player's turn
+ *
+ */
+void handle_computer_turn(void)
+{
+    computer_take_turn();
 }
 
 /**

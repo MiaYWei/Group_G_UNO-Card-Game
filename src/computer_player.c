@@ -489,13 +489,13 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
 
     return playCard;
 }
+
 /*
 * @brief: after play a card, computer will check if the drawed card is playable
 *
 * @param card color, hand card list 
 * @return 1 for successed, 0 for failed
 */
-
 bool check_after_action(CardColor_e color, Deck_t** hand_card) {
     if (find_occurence_of_color(hand_card, color) != 0) {
         return true;
@@ -515,57 +515,50 @@ Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head)
 {
     Deck_t* temp = *head;
     Deck_t* prev = *head;
-    if (*head == NULL)
-    {
+    if (*head == NULL){
         printf("List is already empty.\n");
         return NULL;
     }
 
-    if (cardAddress == NULL) {
+    if (cardAddress == NULL){
         printf("Drawed One card \n");
         return NULL;
     }
 
-    if (cardAddress->card.name == WILD) {
-        // head node
-        while ((temp != NULL) && (temp->card.name == WILD))
-        {
+    if (cardAddress->card.name == WILD){         
+        while ((temp != NULL) && (temp->card.name == WILD)){
             *head = temp->next;
 
             return temp;
         }
         /* For each node in the list */
-        while ((temp != NULL) && ((temp->card.name != WILD)))
-        {
+        while ((temp != NULL) && ((temp->card.name != WILD))){
             prev = temp;
             temp = temp->next;
         }
 
-        if (temp == NULL)
+        if (temp == NULL) {
             return NULL;
+        }
         prev->next = temp->next;
         //printf("Successfully deleted WILD card (%s, %s). \n", CARD_COLOR_STRING[temp->card.color], CARD_NAME_STRING[temp->card.name]);
         return temp;
-
     }
     else {
         // head node
-        while ((temp != NULL) && (temp->card.name == cardAddress->card.name) && (temp->card.color == cardAddress->card.color))
-        {
-
+        while ((temp != NULL) && (temp->card.name == cardAddress->card.name) && (temp->card.color == cardAddress->card.color)){
             *head = temp->next;
-
             return temp;
         }
         /* For each node in the list */
-        while ((temp != NULL) && ((temp->card.name != cardAddress->card.name) || (temp->card.color != cardAddress->card.color)))
-        {
+        while ((temp != NULL) && ((temp->card.name != cardAddress->card.name) || (temp->card.color != cardAddress->card.color))){
             prev = temp;
             temp = temp->next;
         }
 
-        if (temp == NULL)
+        if (temp == NULL) {
             return NULL;
+        }
         prev->next = temp->next;
         //printf("Successfully deleted  card (%s, %s). \n", CARD_COLOR_STRING[temp->card.color], CARD_NAME_STRING[temp->card.name]);
         return temp;
@@ -585,14 +578,12 @@ int computer_process_request_card(void)
     Card_t draw_card = draw_one_card();
     printf("Conputer draws a new card from the draw pile \n");
     printf("No playable card on hand, drawing a new card from deck (%s,%s).\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);//TODO Remove this line after testing
-    if (is_playable_card(draw_card))
-    {
+    if (is_playable_card(draw_card)){
         memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
         add_card_at_end(g_discard_pile, g_card_on_table);
         result = 0;
     }
-    else
-    {
+    else{
         add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card);
         result = 1;
     }
@@ -615,24 +606,21 @@ void computer_process_playable_card(Deck_t * playable_card, Deck_t ** handcard)
     memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
     add_card_at_end(g_discard_pile, g_card_on_table);
     end_turn(COMPUTER);
-    if (discard_card->card.name == SKIP)
-    {
+    if (discard_card->card.name == SKIP){
         g_player_on_turn = COMPUTER;
         return;
     }
-    else if (discard_card->card.name == DRAW_ONE)
-    {
+    else if (discard_card->card.name == DRAW_ONE){
         g_player_on_turn = COMPUTER;
         player_process_draw_one_card(COMPUTER);
         return;
     }
-    else if (discard_card->card.name == WILD_DRAW_TWO) {
+    else if (discard_card->card.name == WILD_DRAW_TWO){
         g_player_on_turn = COMPUTER;
         player_process_wild_draw_two_card(COMPUTER);
         return;
     }
 }
-
 
 /**
  * @brief Logic to discard card for computer player,
@@ -651,31 +639,24 @@ void computer_process_playable_card(Deck_t * playable_card, Deck_t ** handcard)
 int computer_take_turn(void)
 {
     int result = 0;
-    const Deck_t* playable_card;
-    Card_t DrawCard;
+    Deck_t* playable_card;
 
     //For test only
     //printf("Computer dect: ");
     //display_player_deck(COMPUTER);
     playable_card = pick_card(g_card_on_table, &g_players[COMPUTER].cards_on_hand);
 
-    if (g_players[COMPUTER].cards_on_hand->next == NULL) {
+    if (g_players[COMPUTER].cards_on_hand->next == NULL){
         printf("Computer Palyer: UNO !!!\n");
     }
 
-    if (playable_card == NULL)
-    { /* If no playable card on hand */
-        return computer_process_request_card();
-        
+    if (playable_card == NULL){ /* If no playable card on hand */
+        return computer_process_request_card();  
     }
-    else
-    {   /*If there is playable card, then remove playable card from on hand cards list*/
+    else{   /*If there is playable card, then remove playable card from on hand cards list*/
         computer_process_playable_card(playable_card, &g_players[COMPUTER].cards_on_hand);
         return 0;
-
     }
-
-
 
     return result;
 }
