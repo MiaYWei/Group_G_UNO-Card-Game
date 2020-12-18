@@ -8,19 +8,19 @@
 
 ## Application Overview
 
-UNO Express is a fun and interesting game, traditionally played by a group of 2 to 4 people with a  deck of printed cards. We are proposing to develop this interactive game in C programming  language which supports a single player competing against a computer opponent. Playing games online  with computers could speed up our responses and develop logic skills. 
+UNO Express is a fun and interesting game, traditionally played by a group of 2 to 4 people with a deck of printed cards. We are proposing to develop this interactive game in C programming language which supports a single player competing against a computer opponent. Playing games online  with computers could speed up our responses and develop logic skills. 
 
-And during the COVID-19  pandemic, we can use this game to keep ourselves entertained while maintaining our social circle.  What’s more, this game will keep you engaged and help reduce stress. This time you neither need to  fret over saying UNO before you drop your penultimate card nor wait until the deck is shuffled.
+And during the COVID-19  pandemic, we can use this game to keep ourselves entertained while maintaining our social circle. What’s more, this game will keep you engaged and help reduce stress. This time you neither need to  fret over saying UNO before you drop your penultimate card nor wait until the deck is shuffled.
 
-By  this project, we intend to develop a UNO game engine that can make choices xadhering  to the rules of the game. 
+By  this project, we intend to develop a UNO game engine that can make choices adhering to the rules of the game. 
 This game is similar to the well known UNO game but following modifications are made to deliver this game efficiently as a single player game with a computer opponent.
 
-* UNO Express card game has 56 cards, we removed the 'Reverse' action card as it doesn't make much of a sense in a two player game.So,
+* UNO Express card game has 56 cards, we removed the 'Reverse' action card as it doesn't make much sense in a two-player game.So,
   the total card count is 52.
 * Human player always starts the game first.
-* When the Draw two action card is played, the next player automatically loses his turn, gets two cards added to his current set 
+* When the Wild Draw two action card is played, the next player automatically loses his turn, gets two cards added to his current set 
   set of cards and the current player can choose the color to continue the game (same as a normal UNO game).
-* When the draw one action card is played, the next player by default loses his turn and a card will be added to his set of cards.
+* When the Draw one action card is played, the next player by default loses his turn and a card will be added to his set of cards.
 
 
 ## Group Information
@@ -61,8 +61,8 @@ Following are the rules with which the game has been designed
    * To discard action cards, 
      * Skip cards- Combine the first letter of the color with 'S', so if you want to discard(RED,SKIP), Press RS.
      * Draw one cards- Combine the first letter of the color with 'O', so if you want to discard(RED,DRAW-ONE), Press R0.
-     * Wild cards- Press AW.
-     * Wild cards- Press AT.
+     * Wild card- Press AW.
+     * Wild Draw two cards- Press AT.
      (A above stands for Action cards, W stands for Wild, T stands for draw Two)
    * To quit the game, Press Q or q. (This can happen at any point of time).
 
@@ -71,14 +71,14 @@ Following are the rules with which the game has been designed
 
 The following file structure is used to organize files in this repository:
 
-* doc - Includes the designed flowhcart for the application.  The main documentation can be found on the [UNO Express Card Game Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/User-Manual).
-* include - The main header files are listed below:
-  *  All Header files are included here that are used throughout the application.
-* src - Contains the definition for all functions.
-* test
-  * include - Contains the declarations for all unit tests.
+* /bin - Includes the files created after executing the make file.
+* /doc - Includes the designed flowchart for the application.  The main documentation can be found on the [UNO Express Card Game Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/User-Manual).
+* /include -  All Header files are included here that are used throughout the application.
+* /src - Contains the definition for all functions.
+* /test
+  * /include - Contains the declarations for all unit tests.
     * Includes the header files for the test files.       
-  * src - Contains the definitions for all unit tests.  
+  * /src - Contains the definitions for all unit tests.  
     * test.c - Main file that calls the test functions in other files.
 
 ## Installation
