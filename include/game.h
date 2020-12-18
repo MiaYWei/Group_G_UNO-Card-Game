@@ -1,8 +1,14 @@
 #ifndef __GAME_HEADER__
 #define __GAME_HEADER__
 
-extern bool g_end_game;
+#include <stdbool.h>
+#include "../include/return_types.h"
+#include "../include/cards_management.h"
 
+#define PLAYERS_NAME_LENGTH  20
+
+extern bool g_end_game;
+extern char g_human_player_name[PLAYERS_NAME_LENGTH];
 /**
  * @brief Initializes game which includes initialize cards and initialize players
  *
@@ -10,6 +16,12 @@ extern bool g_end_game;
  *             1 - Initialization is failed, since malloc memory fails
  */
 int initialize_game(void);
+
+/**
+ * @brief Requests Human player's name
+ *
+ */
+void player_name_inquiry(void);
 
 /**
  * @brief Initializes players global variables
@@ -54,15 +66,15 @@ bool if_end_game(PlayerType_e player);
 void handle_computer_turn(void);
 
 /**
- * @brief Requests Human player's name
+ * @brief This function handles the functionality to support human player's turn
  *
  */
-void player_name_inquiry(void);
+ret_type_e handle_human_turn(void);
 
 /**
  * @brief Draw a new card and add it to the next player's cards on hand list.
  *
- * @param player  The player who discards a draw one card.
+ * @param player  The player who discards a draw-one card.
  * @return int 0 - Successful;
  *             1 - Failed due to error in malloc;
  */
@@ -71,7 +83,7 @@ int player_process_draw_one_card(PlayerType_e player);
 /**
  * @brief Draw two new cards and add them to the next player's cards on hand list.
  *
- * @param player  The player who discards a wild draw two card.
+ * @param player  The player who discards a wild-draw-two card.
  * @return int 0 - Successful;
  *             1 - Failed due to error in malloc;
  */

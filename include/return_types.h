@@ -12,17 +12,13 @@
  * 
  */
 
-
 typedef enum {
     RET_SUCCESS,                //0
     RET_FAILURE,                //1 - Generic failure
-    RET_BUSY,                   //2
-    RET_INVALID_LEN,            //3
-    RET_ARG_NULL,               //4
-    RET_INSUFFICIENT_MEM,       //5
-    RET_INVALID_CARD,           //6
-    RET_EMPTY_LIST,             //7 
-    RET_INVALID_INPUT,          //8
+    RET_INVALID_CARD,           //2
+    RET_EMPTY_LIST,             //3 
+    RET_INVALID_INPUT,          //4
+    RET_NOT_PLAYABLE_CARD,      //5
 }
 ret_type_e;
 

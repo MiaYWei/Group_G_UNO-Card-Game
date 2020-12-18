@@ -2,12 +2,9 @@
 #include <stddef.h>  
 #include <stdlib.h>   
 #include <string.h>
-#include "../include/cards_management.h"
-#include "../include/computer_player.h"
-#include "../include/human_player.h"
 #include "../include/game.h"
 #include "../include/computer_player.h"
-#define PLAYERS_NAME_LENGTH  20
+#include "../include/human_player.h"
 
 bool g_end_game = false;
 char g_human_player_name[PLAYERS_NAME_LENGTH] = "HumanPlayer";
@@ -207,9 +204,21 @@ void handle_computer_turn(void)
 }
 
 /**
+ * @brief This function handles the functionality to support human player's turn
+ *
+ */
+ret_type_e handle_human_turn(void)
+{
+    display_player_deck(HUMAN);
+    ret_type_e ret = record_human_input();
+
+    return ret;
+}
+
+/**
  * @brief Draw a new card and add it to the next player's cards on hand list.
  *
- * @param player  The player who discards a draw one card.
+ * @param player  The player who discards a draw-one card.
  * @return int 0 - Successful;
  *             1 - Failed due to error in malloc;
  */
@@ -218,7 +227,7 @@ int player_process_draw_one_card(PlayerType_e player)
     PlayerType_e be_applied_player = (player + 1) % PLAYERS_NUM;
     Card_t draw_card = draw_one_card();
     int ret = add_card_at_end(g_players[be_applied_player].cards_on_hand, draw_card);
-    printf("%s dropped a Draw-One card, adding a card to the next player %s.\n", PLAYER_TYPE_STRING[player], PLAYER_TYPE_STRING[be_applied_player]);
+    printf("%s discarded a Draw-One card, adding a card to the next player %s.\n", PLAYER_TYPE_STRING[player], PLAYER_TYPE_STRING[be_applied_player]);
 
     return ret;
 }
@@ -226,7 +235,7 @@ int player_process_draw_one_card(PlayerType_e player)
 /**
  * @brief Draw two new cards and add them to the next player's cards on hand list.
  *
- * @param player  The player who discards a wild draw two card.
+ * @param player  The player who discards a wild-draw-two card.
  * @return int 0 - Successful;
  *             1 - Failed due to error in malloc;
  */
@@ -240,7 +249,7 @@ int player_process_wild_draw_two_card(PlayerType_e player)
     draw_card = draw_one_card();
     ret += add_card_at_end(g_players[be_applied_player].cards_on_hand, draw_card);
 
-    printf("%s dropped a Wild-Draw-Two card, adding two cards to the next player %s.\n", PLAYER_TYPE_STRING[player], PLAYER_TYPE_STRING[be_applied_player]);
+    printf("%s discarded a Wild-Draw-Two card, adding two cards to the next player %s.\n", PLAYER_TYPE_STRING[player], PLAYER_TYPE_STRING[be_applied_player]);
 
     return ret;
 }
