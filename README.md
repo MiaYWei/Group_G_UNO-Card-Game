@@ -58,7 +58,12 @@ Following are the rules with which the game has been designed
    * To request a card from the Draw pile, Press N or n.
    * To end turn, Press E or e.
    * To discard a normal card - Say you want to discard(RED,3), Press R3.
-   * To discard action cards,
+   * To discard action cards, 
+     * Skip cards- Combine the first letter of the color with 'S', so if you want to discard(RED,SKIP), Press RS.
+     * Draw one cards- Combine the first letter of the color with 'O', so if you want to discard(RED,DRAW-ONE), Press R0.
+     * Wild cards- Press AW.
+     * Wild cards- Press AT.
+     (A above stands for Action cards, W stands for Wild, T stands for draw Two)
    * To quit the game, Press Q or q. (This can happen at any point of time).
 
 
