@@ -9,7 +9,7 @@
 #define hand_MAX 20
 #define plarCardNumber 10
 
-typedef enum casenumber { CASE1, CASE2, CASE3, CASE4, CASE5, CASE6, CASE7 } casenumber_e;
+typedef enum casenumber { CASE1, CASE2, CASE3, CASE4 } casenumber_e;
 typedef struct colorInfo {
     CardColor_e color;
     int count;
@@ -169,9 +169,6 @@ int computer_process_request_card(void);
  */
 void computer_process_playable_card(Deck_t* playable_card, Deck_t** handcard);
 
-
-
-bool check_after_action(CardColor_e color, Deck_t** hand_card);
 
 /**
  * @brief Logic to discard card for computer player,

@@ -26,14 +26,6 @@
 #define plarCardNumber 10
 
 
-//struct CARD record_array[MAX]; // array for recording all the cards
-//int record_size = 0, handcard_size = 0;
-//
-//void record(struct CARD card)
-//{
-//    record_size++;
-//    record_array[record_size - 1] = card;
-//}
 
 /*
 * @brief: variadic function that returns the max of given numbers
@@ -321,27 +313,6 @@ casenumber_e pick_case(Card_t card, Deck_t** hand_card)
 {
     Deck_t* ptr1 = *hand_card, * ptr2 = *hand_card, * ptr3 = *hand_card;
     int commonColor = 0, commonName = 0;
-    //if (card.name == WILD ) {
-    //    while (ptr3 != NULL) {
-    //        if (ptr3->card.color == card.color) {
-    //            return CASE2;
-    //        }
-    //        ptr3 = ptr3->next;
-    //    }
-    //    return CASE1;
-    //}
-    // draw one card, if it is draw one (CASE5)
-    //if (card.name == DRAW_ONE) {
-    //    return CASE5;
-    //}
-    //// draw two card if it is WILD DRAW TWO 
-    //else if (card.name == WILD_DRAW_TWO) {
-    //    return CASE6;
-    //}
-    //else if (card.name == SKIP) {
-    //    return CASE7;
-    //}
-
     while (ptr1 != NULL) {
         if (ptr1->card.color == card.color) {
             commonColor = 1;
@@ -518,6 +489,12 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
 
     return playCard;
 }
+/*
+* @brief: after play a card, computer will check if the drawed card is playable
+*
+* @param card color, hand card list 
+* @return 1 for successed, 0 for failed
+*/
 
 bool check_after_action(CardColor_e color, Deck_t** hand_card) {
     if (find_occurence_of_color(hand_card, color) != 0) {
@@ -531,7 +508,7 @@ bool check_after_action(CardColor_e color, Deck_t** hand_card) {
 /*
 * @brief: function that play card from handcard list
 *
-* @param card that will be played, pointer to the pointer to the head of handcard list
+* @param card address, reference to the hand card list
 * @return 1 for successed, 0 for failed
 */
 Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head)
@@ -597,7 +574,7 @@ Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head)
 }
 
 /**
- * @brief No playable card, computer player reuqests a new card
+ * @brief Computer requests a new card when it has no playable card on hand
  *
  * @return int 0 - The new drawn card is playable;
  *             1 - The new drawn card is not playable, and be added to player cards on hand list;
@@ -628,6 +605,8 @@ int computer_process_request_card(void)
 /**
  * @brief Computer player discards a playable card, which include Skip and DRAW_ONE card.
  *
+ * @param   reference to the playable card in th list, reference to hand card list
+ * 
  */
 void computer_process_playable_card(Deck_t * playable_card, Deck_t ** handcard)
 {
