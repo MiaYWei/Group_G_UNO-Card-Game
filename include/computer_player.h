@@ -152,7 +152,26 @@ Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head);
  *               1 - No playable card to discard, end of turn, game continues.
  *               2 - Invalid player.
  */
-int computer_draw_card(int n);
+bool check_after_action(CardColor_e color, Deck_t** hand_card);
+/**
+ * @brief No playable card, computer player reuqests a new card
+ *
+ * @return int 0 - The new drawn card is playable;
+ *             1 - The new drawn card is not playable, and be added to player cards on hand list;
+ */
+int computer_process_request_card(void);
+
+
+
+/**
+ * @brief Computer player discards a playable card, which include Skip and DRAW_ONE card.
+ *
+ */
+void computer_process_playable_card(Deck_t* playable_card, Deck_t** handcard);
+
+
+
+bool check_after_action(CardColor_e color, Deck_t** hand_card);
 
 /**
  * @brief Logic to discard card for computer player,

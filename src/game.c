@@ -191,14 +191,14 @@ bool if_end_game(PlayerType_e player)
 void handle_computer_turn(void)
 {
     int ret = computer_take_turn();
-    if ((0 == ret) || (1 == ret))
-    {
-        end_turn(COMPUTER);
-    }
-    else
-    {
-        printf("Error: Not Computer's turn now.\n");
-    }
+    //if ((0 == ret) || (1 == ret))
+    //{
+    //    end_turn(COMPUTER);
+    //}
+    //else
+    //{
+    //    printf("Error: Not Computer's turn now.\n");
+    //}
 
     return;
 }
