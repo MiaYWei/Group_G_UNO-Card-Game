@@ -41,8 +41,7 @@ int initialize_cards(void)
     int result = 0;
 
     g_draw_pile = (Deck_t*)malloc(sizeof(Deck_t));
-    if (g_draw_pile == NULL)
-    {
+    if (g_draw_pile == NULL){
         printf("Unable to allocate memory to initialize draw_pile.");
         return -1;
     }
@@ -56,10 +55,8 @@ int initialize_cards(void)
         result += add_card_at_beginning(&g_draw_pile, card);
     }
 
-    for (i = BLUE; i <= YELLOW; i++)
-    {
-        for (j = ZERO; j <= DRAW_ONE; j++)
-        {
+    for (i = BLUE; i <= YELLOW; i++){
+        for (j = ZERO; j <= DRAW_ONE; j++){
             card.color = i;
             card.name = j;
             result += add_card_at_beginning(&g_draw_pile, card);
@@ -78,14 +75,13 @@ int initialize_cards(void)
     result += add_card_at_beginning(&g_draw_pile, card);
     result += add_card_at_beginning(&g_draw_pile, card);
 
-    if (0 != shuffle_cards())
-    {
+
+    if (0 != shuffle_cards()){
         printf("Shuffle cards failed in initialization.");
     }
 
     g_discard_pile = (Deck_t*)malloc(sizeof(Deck_t));
-    if (g_discard_pile == NULL)
-    {
+    if (g_discard_pile == NULL){
         printf("Unable to allocate memory to initialize discard pile.");
         return -1;
     }
@@ -107,10 +103,8 @@ int deal_cards(void)
     const Deck_t *dealt_card;
     int result = SUCCESS;
 
-    for (i = 0; i < DEAL_CARDS_NUM; i++)
-    {
-        for (j = 0; j < PLAYERS_NUM; j++)
-        {
+    for (i = 0; i < DEAL_CARDS_NUM; i++){
+        for (j = 0; j < PLAYERS_NUM; j++){
             dealt_card = remove_first_card_from_deck(&g_draw_pile);
             result += add_card_at_beginning(&g_players[(PlayerType_e)j].cards_on_hand, dealt_card->card);
         }
@@ -131,8 +125,7 @@ int deal_cards(void)
 int add_card_at_beginning(Deck_t **pp_head, Card_t card)
 {
     Deck_t* new_card = (Deck_t*)malloc(sizeof(Deck_t));
-    if (new_card == NULL)
-    {
+    if (new_card == NULL){
         printf("Fail to malloc memory when insert the card.\n");
         return MALLOC_FAIL;
     }
@@ -156,8 +149,7 @@ int add_card_at_beginning(Deck_t **pp_head, Card_t card)
 int add_card_at_end(Deck_t *p_head, Card_t card)
 {
     Deck_t *new_card = (Deck_t *)malloc(sizeof(Deck_t));
-    if (new_card == NULL)
-    {
+    if (new_card == NULL){
         printf("Unable to allocate memory.");
         return 1;
     }
@@ -166,13 +158,11 @@ int add_card_at_end(Deck_t *p_head, Card_t card)
     new_card->card.name = card.name;
     new_card->next = NULL;
 
-    while (p_head != NULL && p_head->next != NULL)
-    {
+    while (p_head != NULL && p_head->next != NULL){
         p_head = p_head->next;
     }
 
-    if (p_head != NULL && p_head->next == NULL)
-    {
+    if (p_head != NULL && p_head->next == NULL){
         p_head->next = new_card; /* Add the new node at end */
     }
     
@@ -188,8 +178,7 @@ int add_card_at_end(Deck_t *p_head, Card_t card)
 const Deck_t *remove_first_card_from_deck(Deck_t **pp_head)
 {
     Deck_t *to_delete;
-    if (*pp_head == NULL)
-    {
+    if (*pp_head == NULL){
         printf("List is already empty.");
         return NULL;
     }
@@ -211,8 +200,7 @@ void display_cards_list(const Deck_t *p_list)
 
     printf("[ ");
 
-    while (temp_list_ptr != NULL)
-    {
+    while (temp_list_ptr != NULL){
         printf("(%s,%s) ", CARD_COLOR_STRING[temp_list_ptr->card.color], CARD_NAME_STRING[temp_list_ptr->card.name]);
         temp_list_ptr = temp_list_ptr->next;
     }
@@ -233,8 +221,7 @@ int get_pile_length(Deck_t *p_pile)
     int length = 0;
     Deck_t *temp_deck = p_pile;
 
-    while (temp_deck != NULL)
-    {
+    while (temp_deck != NULL){
         temp_deck = temp_deck->next;
         length++;
     }
@@ -252,8 +239,7 @@ int get_pile_length(Deck_t *p_pile)
  */
 bool is_playable_card(Card_t card)
 {
-    if ((card.color == g_card_on_table.color) || (card.name == g_card_on_table.name))
-    {
+    if ((card.color == g_card_on_table.color) || (card.name == g_card_on_table.name)){
         return true;
     }
     return false;
@@ -271,17 +257,14 @@ bool is_exist_card(Deck_t* p_pile, Card_t card)
 {
     bool is_exist = false;
     Deck_t* cur_element = p_pile;
-    if (p_pile == NULL) 
-    {
+    if (p_pile == NULL){
         printf("List is empty.\n");
         return false;
     }
 
     /* Iterate till last element until key is not found*/
-    while (cur_element != NULL) 
-    {
-        if ((cur_element->card.color == card.color) && (cur_element->card.name == card.name))
-        {
+    while (cur_element != NULL){
+        if ((cur_element->card.color == card.color) && (cur_element->card.name == card.name)){
             return true;
         }
         cur_element = cur_element->next;
@@ -319,8 +302,7 @@ Card_t draw_one_card(void)
     const Deck_t *temp_deck;
     int result = 1;
 
-    if (g_draw_pile == NULL)
-    {
+    if (g_draw_pile == NULL){
         while (g_discard_pile != NULL)
         {
             temp_deck = remove_first_card_from_deck(&g_discard_pile);
@@ -336,9 +318,9 @@ Card_t draw_one_card(void)
  * @brief Recursively free the given deck
  * @param d deck to be freed
  */
-void free_deck(Deck_t* d) {
+void free_deck(Deck_t* d){
     // Recursively free the deck
-    if (d != NULL) {
+    if (d != NULL){
         free_deck(d->next);
         free(d);
     }
@@ -358,17 +340,17 @@ int shuffle_cards(void)
     // copy the cards in remaining pile into a Card array
     Deck_t* current = g_draw_pile;
     Card_t* array = malloc(sizeof(Card_t) * length);
-    if (array == NULL) {
+    if (array == NULL){
         free_deck(g_draw_pile);
         return 1;
     }
-    for (i = 0; i < length; i++) {
+    for (i = 0; i < length; i++){
         array[i] = current->card;
         current = current->next;
     }
 
     // loop through the cards array and swap them randomly, using Fisher-Yates shuffle
-    for (i = 0; i < length; i++) {
+    for (i = 0; i < length; i++){
         // find a random index to swap with the current one
         int random_index = rand() % (length - i) + i;
         swap_cards(&array[random_index], &array[i]);
@@ -376,7 +358,7 @@ int shuffle_cards(void)
 
     // Put cards in array back to the remaining pile in the shuffled order
     current = g_draw_pile;
-    for ( i = 0; i < length - 1; i++) {
+    for (i = 0; i < length - 1; i++){
         current->card = array[i];
         current = current->next;
     }
@@ -418,8 +400,7 @@ bool remove_card_from_deck(Deck_t** pp_head, const Card_t card)
     Deck_t* prev = *pp_head;
 
     // If head node itself holds the key or multiple occurrences of key
-    while ((temp != NULL) && (temp->card.name == card.name) && (temp->card.color == card.color))
-    {
+    while ((temp != NULL) && (temp->card.name == card.name) && (temp->card.color == card.color)){
         *pp_head = temp->next; // Changed head
         free(temp);             // free old head
         return true;
@@ -427,15 +408,13 @@ bool remove_card_from_deck(Deck_t** pp_head, const Card_t card)
 
     // To delete key if it's not present in head 
     // Search for the key to be deleted, keep track of the previous node as we need to change 'prev->next'
-    while ((temp != NULL) && ((temp->card.name != card.name) || (temp->card.color != card.color)))
-    {
+    while ((temp != NULL) && ((temp->card.name != card.name) || (temp->card.color != card.color))){
         prev = temp;
         temp = temp->next;
     }
 
     // If key was not present in linked list
-    if (temp == NULL)
-    {
+    if (temp == NULL){
         return false;
     }
 

@@ -18,14 +18,12 @@ void start_screen(void)
     printf("1. Game Rules\n");
     printf("2. Start New Game\n");
     printf("3. Exit Game\n");
-    // printf("4. Score Board (Release 2)\n\n"); 
     printf("Enter your choice:\n");
 }
 
 void display_rules(void)
 {
     char choice[5] = {0};
-
     printf("************************************************************************\n");
     printf("*                                                                      *\n");
     printf("*                           GAME RULES                                 *\n");
@@ -37,7 +35,6 @@ void display_rules(void)
     printf("  10 Green cards - 0 to 9\n");
     printf("  10 Red cards - 0 to 9\n");
     printf("  10 Yellow cards - 0 to 9\n\n");  
-
     printf(" Action Cards (Release 2): \n");
     printf("  4 Draw One cards - 1 each in blue, green, red and yellow.\n");
     printf("  4 Skip cards - 1 each in blue, green, red and yellow.\n");
@@ -95,13 +92,11 @@ void invalid_choice(void)
 void main_menu(void)
 {   
     int int_choice;
-
-    while(1)
-    {    
+    while(true){    
         system("clear"); //clear screen      
         start_screen();
         scanf("%d", &int_choice);
-        switch (int_choice) {
+        switch (int_choice){
             case 1:
                 display_rules();
                 break;
@@ -111,9 +106,6 @@ void main_menu(void)
             case 3:
                 confirm_exit();
                 break;
-            //case 4:                 //Release 2
-            //    display_score_board();
-            //    break;
             default:
                 invalid_choice();
                 break;

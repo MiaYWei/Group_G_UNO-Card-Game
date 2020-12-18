@@ -141,6 +141,33 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card);
 */
 Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head);
 
+/*
+* @brief: after play a card, computer will check if the drawed card is playable
+*
+* @param card color, hand card list
+* @return 1 for successed, 0 for failed
+*/
+
+bool check_after_action(CardColor_e color, Deck_t** hand_card);
+
+
+/**
+ * @brief No playable card, computer player reuqests a new card
+ *
+ * @return int 0 - The new drawn card is playable;
+ *             1 - The new drawn card is not playable, and be added to player cards on hand list;
+ */
+int computer_process_request_card(void);
+
+
+
+/**
+ * @brief Computer player discards a playable card, which include Skip and DRAW_ONE card.
+ *
+ */
+void computer_process_playable_card(Deck_t* playable_card, Deck_t** handcard);
+
+
 /**
  * @brief Logic to discard card for computer player,
  *        1.Firstly search for a playable card in the on hand cards list.
