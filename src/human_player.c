@@ -120,7 +120,7 @@ ret_type_e human_process_normal_card(Card_t human_card_choice)
     //If valid add the card to the discard_pile
     if (!is_playable_card(human_card_choice))
     {
-        invalid_card_warning();
+        unplayable_card_warning();
         return RET_NOT_PLAYABLE_CARD;
     }
 
