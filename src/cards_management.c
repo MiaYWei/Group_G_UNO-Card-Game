@@ -69,7 +69,7 @@ int initialize_cards(void)
     card.name = WILD_DRAW_TWO;
     result += add_card_at_beginning(&g_draw_pile, card);
     result += add_card_at_beginning(&g_draw_pile, card);
- /*   shuffle_cards();*/
+
 
     if (0 != shuffle_cards())
     {
