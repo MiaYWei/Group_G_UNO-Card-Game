@@ -320,7 +320,7 @@ casenumber_e pick_case(Card_t card, Deck_t** hand_card)
 {
     Deck_t* ptr1 = *hand_card, * ptr2 = *hand_card, * ptr3 = *hand_card;
     int commonColor = 0, commonName = 0;
-    if (card.name == WILD) {
+    if (card.name == WILD ) {
         while (ptr3 != NULL) {
             if (ptr3->card.color == card.color) {
                 return CASE2;
@@ -328,8 +328,19 @@ casenumber_e pick_case(Card_t card, Deck_t** hand_card)
             ptr3 = ptr3->next;
         }
         return CASE1;
-
     }
+    // draw one card, if it is draw one (CASE5)
+    if (card.name == DRAW_ONE) {
+        return CASE5;
+    }
+    // draw two card if it is WILD DRAW TWO 
+    else if (card.name == WILD_DRAW_TWO) {
+        return CASE6;
+    }
+    else if (card.name == SKIP) {
+        return CASE7;
+    }
+
     while (ptr1 != NULL) {
         if (ptr1->card.color == card.color) {
             commonColor = 1;
@@ -377,6 +388,7 @@ casenumber_e pick_case(Card_t card, Deck_t** hand_card)
  *              - choose the largest number on that color to make opponent lose more point
  *              - if matched color > 2, use match draw/draw2/skip card based on the color with
  *                the most occurence
+ *              - if card on table is Draw/Draw2, draw card 
  *          case 3 : no matched color, but have matched number
  *              - if have multiple matched number, choose the color with the most occurence
  *                or corresponding action card
@@ -390,12 +402,24 @@ casenumber_e pick_case(Card_t card, Deck_t** hand_card)
  *
  *  @return A best cooresponding card from hand cards, or call an action (draw card)
  */
-Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
+Deck_t pick_card(Card_t inputCard, Deck_t** hand_card)
 {
     int wildCount = 0, colorCount = 0, numberCount = 0;
     CardColor_e most_color;
     Deck_t* playCard = NULL, * NULLCARD = NULL;
     Card_t playableCard;
+    Deck_t* WILDTWO_REF = (Deck_t*)malloc(sizeof(Deck_t)), * SKIP_REF = (Deck_t*)malloc(sizeof(Deck_t)), * DRAWONE_REF = (Deck_t*)malloc(sizeof(Deck_t));
+    WILDTWO_REF->card.name = WILD_DRAW_TWO;
+    WILDTWO_REF->card.color = INVALID_COLOR;
+    WILDTWO_REF->next = NULL;
+
+    SKIP_REF->card.name = SKIP;
+    SKIP_REF->card.color = INVALID_COLOR;
+    SKIP_REF->next = NULL;
+
+    DRAWONE_REF->card.name = DRAW_ONE;
+    DRAWONE_REF->card.name = INVALID_COLOR;
+    DRAWONE_REF->next = NULL;
 
     Deck_t* temp = *hand_card;
     enum casenumber caseNum = pick_case(inputCard, hand_card);
@@ -407,8 +431,8 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
     //}
     switch (caseNum)
     {
-    case CASE1:
-        /* no matched color or number, check if wild is > */
+    case CASE1: /* no matched color or number, check if wild is > 1*/
+        
         while (temp != NULL)
         {
             if (temp->card.name == WILD)
@@ -421,19 +445,15 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
         /* if wild card >1, play the WILD with color with the most occurence */
         if (wildCount > 1)
         {
-
             playableCard.name = WILD;
             playCard = find_address(hand_card, playableCard);
             playCard->card.color = most_color;
-
             return playCard;
         }
         else
         {
-
             return NULL;
         }
-        break;
     case CASE2:
         /* check if occurence of the color > 2, play DRAW if true*/
         colorCount = 0;
@@ -460,7 +480,6 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
             playCard = find_address(hand_card, playableCard);
             return playCard;
         }
-        break;
     case CASE3:
         /* no matched color, but have matched number */
         numberCount = find_occurence_of_number(hand_card, inputCard.name);
@@ -480,7 +499,6 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
             playCard = find_address(hand_card, playableCard);
             return playCard;
         }
-        break;
     case CASE4:
         /* have matched color, and have matched number */
 
@@ -496,13 +514,52 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
             playCard = find_address(hand_card, playableCard);
             return playCard;
         }
-        break;
+    case CASE5: //DRAWONE
+        
+        playCard = DRAWONE_REF;
+        return playCard;
+
+    case CASE6: //WILDTWO
+
+        playCard = WILDTWO_REF;
+        return playCard;
+
+    case CASE7: //SKIP
+
+        playCard = SKIP_REF;
+        return playCard;
+
+
     default:
         printf("entered default!\n");
         break;
     }
 
     return playCard;
+}
+
+Deck_t* pick_card_after_action(CardColor_e color, Deck_t** hand_card) {
+
+    
+    Deck_t* current = * hand_card;
+    if (current == NULL)
+    {
+        return NULL;
+
+    }
+    while (!is_playable_card(current->card))
+    {
+            if (current->next == NULL)
+             { /*if it is last node*/
+                return NULL;
+            }
+            else
+            {
+                current = current->next;
+            }
+     }
+
+        return current;
 }
 
 /*
@@ -574,6 +631,57 @@ Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head)
 }
 
 /**
+ * @brief Logic to draw card for computer player,
+ * 
+ * @param        0 - draw one card and evalue if it's a valid card to play 
+ *               1 - draw one card and end turn directly 
+ *               2 - draw two card and end turn directly
+ *
+ * @return int   0 - Discarding card is successful, end of turn, game continues.
+ *               1 - No playable card to discard, end of turn, game continues.
+ *               2 - Invalid player.
+ */
+int computer_draw_card(int n) {
+    Card_t draw_card1, draw_card2;
+    int result = 0;
+
+    if (n == 2) {
+        draw_card1 = draw_one_card();
+        draw_card2 = draw_one_card();
+        printf("Computer draws two cards from the draw pile \n");
+        printf("Computer draws [(%s,%s), (%s, %s)] \n", CARD_COLOR_STRING[draw_card1.color], CARD_NAME_STRING[draw_card1.name], CARD_COLOR_STRING[draw_card2.color], CARD_NAME_STRING[draw_card2.name]);
+        add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card1);
+        add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card2);
+        result = 1;
+    }
+    else if (n == 1) {
+        draw_card1 = draw_one_card();
+        printf("Computer draws a new card from the draw pile \n");
+        add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card1);
+        result = 1;
+    }
+    else if (n == 0){
+        draw_card1 = draw_one_card();
+
+        printf("Computer draws a new card from the draw pile \n");
+        printf("No playable card on hand, drawing a new card from deck (%s,%s).\n", CARD_COLOR_STRING[draw_card1.color], CARD_NAME_STRING[draw_card1.name]);//TODO Remove this line after testing
+        if (is_playable_card(draw_card1))
+        {
+            memcpy(&g_card_on_table, &draw_card1, sizeof(Card_t));
+            add_card_at_end(g_discard_pile, g_card_on_table);
+            result = 0;
+        }
+        else
+        {
+            add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card1);
+            result = 1;
+        }
+    
+    }
+    return result;
+
+}
+/**
  * @brief Logic to discard card for computer player,
  *        1.Firstly search for a playable card in the on hand cards list.
  *        2.If there is playable card, then remove the first playable card out of player's deck,
@@ -590,42 +698,54 @@ Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head)
 int computer_take_turn(void)
 {
     int result = 0;
-    Card_t draw_card;
     const Deck_t* playable_card;
 
-    if (g_player_on_turn != COMPUTER)
-    {
-        return 2;
-    }
     //For test only
-    //printf("Computer dect: ");
-    //display_player_deck(COMPUTER);
+    printf("Computer dect: ");
+    display_player_deck(COMPUTER);
     playable_card = pick_card(g_card_on_table, &g_players[COMPUTER].cards_on_hand);
 
     if (playable_card == NULL)
     { /* If no playable card on hand */
-        draw_card = draw_one_card();
-
-        printf("Computer draws a new card from the draw pile \n");
-        //printf("No playable card on hand, drawing a new card from deck (%s,%s).\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);//TODO Remove this line after testing
-        if (is_playable_card(draw_card))
-        {
-            memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
-            add_card_at_end(g_discard_pile, g_card_on_table);
-            result = 0;
-        }
-        else
-        {
-            add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card);
-            result = 1;
-        }
+        result = computer_draw_card(0);
+    }
+    else if (playable_card->card.name == DRAW_ONE && playable_card->card.color == INVALID_COLOR) {
+        result = computer_draw_card(1);
+    }
+    else if (playable_card->card.name == WILD_DRAW_TWO && playable_card->card.color == INVALID_COLOR) {
+        result = computer_draw_card(2);
+    }
+    else if (playable_card->card.name == SKIP && playable_card->card.color == INVALID_COLOR) {
+        printf("computer's turn is skipped, computer's turn end ...  \n\n");
+        result = 1;
     }
     else
-    {   /*If there is playable card, then remove the first playable card from on hand cards list*/
+    {   /*If there is playable card, then remove playable card from on hand cards list*/
         Deck_t* discard_card = play_card(playable_card, &g_players[COMPUTER].cards_on_hand);
         printf("Computer Drops..(%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
         memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
         add_card_at_end(g_discard_pile, g_card_on_table);
+
+        if (discard_card->card.name == SKIP) {
+            printf("player's turn is skipped, Computer continues to draw ...");
+            playable_card = pick_card_after_action(discard_card->card.color, &g_players[COMPUTER].cards_on_hand);
+            if (playable_card == NULL) {
+                computer_draw_card(0);
+            }
+            else {
+                discard_card = play_card(playable_card, &g_players[COMPUTER].cards_on_hand);
+                printf("Computer Drops..(%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
+                memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
+                add_card_at_end(g_discard_pile, g_card_on_table);
+                result = 0;
+            }
+        
+        }
+        printf("Computer Drops..(%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
+        memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
+        add_card_at_end(g_discard_pile, g_card_on_table);
+
+        
         result = 0;
     }
 

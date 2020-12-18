@@ -9,7 +9,7 @@
 #define hand_MAX 20
 #define plarCardNumber 10
 
-typedef enum casenumber { CASE1, CASE2, CASE3, CASE4 } casenumber_e;
+typedef enum casenumber { CASE1, CASE2, CASE3, CASE4, CASE5, CASE6, CASE7 } casenumber_e;
 typedef struct colorInfo {
     CardColor_e color;
     int count;
@@ -140,6 +140,19 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card);
 * @return 1 for successed, 0 for failed
 */
 Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head);
+
+/**
+ * @brief Logic to draw card for computer player,
+ *
+ * @param        0 - draw one card and evalue if it's a valid card to play
+ *               1 - draw one card and end turn directly
+ *               2 - draw two card and end turn directly
+ *
+ * @return int   0 - Discarding card is successful, end of turn, game continues.
+ *               1 - No playable card to discard, end of turn, game continues.
+ *               2 - Invalid player.
+ */
+int computer_draw_card(int n);
 
 /**
  * @brief Logic to discard card for computer player,
