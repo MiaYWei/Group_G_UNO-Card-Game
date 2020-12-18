@@ -141,18 +141,16 @@ Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card);
 */
 Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head);
 
-/**
- * @brief Logic to draw card for computer player,
- *
- * @param        0 - draw one card and evalue if it's a valid card to play
- *               1 - draw one card and end turn directly
- *               2 - draw two card and end turn directly
- *
- * @return int   0 - Discarding card is successful, end of turn, game continues.
- *               1 - No playable card to discard, end of turn, game continues.
- *               2 - Invalid player.
- */
+/*
+* @brief: after play a card, computer will check if the drawed card is playable
+*
+* @param card color, hand card list
+* @return 1 for successed, 0 for failed
+*/
+
 bool check_after_action(CardColor_e color, Deck_t** hand_card);
+
+
 /**
  * @brief No playable card, computer player reuqests a new card
  *
