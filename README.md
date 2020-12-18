@@ -51,9 +51,9 @@ Following are the rules with which the game has been designed
 2. These are 10 cards in each color - red,green,yellow and blue and action cards are - 4 Draw One cards, 4 Skip cards, 2 Wild cards,
    2 Wild Draw two cards.
 3. To be declared as the winner of the game, you have to be the first player to exhaust all the cards assigned to you.
-4. During the start of the game 5 random cards are assigned to each player - human player and the computer in this case.
+4. During the start of the game, 5 random cards are assigned to each player - human player and the computer, in this case.
 5. One card is placed on the table with which you have to start matching your cards.
-6. To simplify things, the human player always starts the game first.
+6. To keep things simple, the human player always starts the game first.
 7. These are the keyboard inputs with which human can play the game
    * To request a card from the Draw pile, Press N or n.
    * To end turn, Press E or e.
