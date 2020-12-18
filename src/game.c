@@ -37,8 +37,8 @@ void start_new_game(void)
     printf("Human Player Deck: ");
     display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
     //For Testing only
-    //printf("Computer Player Deck: ");
-    //display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
+   /* printf("Computer Player Deck: ");
+    display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);*/
     printf("\n\n");
 
     while (true){
@@ -47,8 +47,11 @@ void start_new_game(void)
         if (g_player_on_turn == HUMAN){
             handle_human_turn();
         }
-        else{
-            handle_computer_turn();
+
+        else
+        {
+            computer_take_turn();
+
         }
 
         if (g_end_game){
@@ -170,23 +173,6 @@ bool if_end_game(PlayerType_e player)
         ret = true;
     }
     return ret;
-}
-
-/**
- * @brief This function handles the functionality to support computer player's turn 
- * 
- */
-void handle_computer_turn(void)
-{
-    int ret = computer_take_turn();
-    if ((0 == ret) || (1 == ret)){
-        end_turn(COMPUTER);
-    }
-    else{
-        printf("Error: Not Computer's turn now.\n");
-    }
-
-    return;
 }
 
 /**
