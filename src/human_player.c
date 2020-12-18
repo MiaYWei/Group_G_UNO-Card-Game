@@ -16,6 +16,7 @@ Card_t map_user_input(const char* user_input);
 CardType_e get_card_type(Card_t card);
 int request_card(PlayerType_e PlayerType);
 void invalid_card_warning(void);
+void unplayable_card_warning(void);
 void show_cards_assigned(Card_t assigned_card);
 bool is_human_card(Card_t current_card);
 ret_type_e card_color_change_inquiry(CardColor_e* color_changed);
@@ -48,13 +49,26 @@ int request_card(PlayerType_e PlayerType)
     //Assigning the drawn card to the human player
     return add_card_at_end(g_players[HUMAN].cards_on_hand, card);
 }
+
 /**
  * @brief Throws a warning message if the card dropped by the user is invalid
  * 
  */
 void invalid_card_warning(void)
 {
-    printf("!!Warning!! Invalid card - Please choose a valid card \n");
+    printf("!!Warning!! Invalid card - Please choose a valid card. \n");
+    display_player_deck(HUMAN);
+
+    return;
+}
+
+/**
+ * @brief Throws a warning message if the card dropped by the user is unplayable
+ *
+ */
+void unplayable_card_warning(void)
+{
+    printf("!!Warning!! Unplayable card - Please choose a playable card. \n");
     display_player_deck(HUMAN);
 
     return;
