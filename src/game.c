@@ -28,8 +28,7 @@ void start_new_game(void)
 {
     player_name_inquiry();
 
-    if (0 != initialize_game())
-    {
+    if (0 != initialize_game()){
         printf("Initialize game failed.\n ");
         return;
     }
@@ -42,24 +41,19 @@ void start_new_game(void)
     //display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
     printf("\n\n");
 
-    while (1)
-    {
+    while (true){
         printf("Card on the table now: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
         printf("Current player is %s.\n", PLAYER_TYPE_STRING[g_player_on_turn]);
-        if (g_player_on_turn == HUMAN) 
-        {
+        if (g_player_on_turn == HUMAN){
             handle_human_turn();
         }
-        else
-        {
+        else{
             handle_computer_turn();
         }
 
-        if (g_end_game)
-        {
+        if (g_end_game){
             printf("Game over. The winner is %s", PLAYER_TYPE_STRING[g_game_winner]);
-            if (g_game_winner == HUMAN) 
-            {
+            if (g_game_winner == HUMAN){
                 printf(": %s", g_human_player_name);
             }
             printf("\n");
@@ -100,13 +94,11 @@ bool confirm_exit(void)
     scanf("%s", char_choice);
     printf("Entered choice is %s \n", char_choice);
 
-    if (0 == strcmp(char_choice, exit_string)) 
-    {
+    if (0 == strcmp(char_choice, exit_string)){
         printf("Exit the game...\n");
         exit(0);
     } 
-    else 
-    {
+    else{
         return false;
     }
 }
@@ -133,8 +125,7 @@ int initialize_game(void)
  */
 void initialize_players(void)
 {
-    for (int i = 0; i < PLAYERS_NUM; i++)
-    {
+    for (int i = 0; i < PLAYERS_NUM; i++){
         g_players[i].type = (PlayerType_e)i;
         g_players[i].cards_on_hand = NULL;
     }
@@ -154,13 +145,11 @@ void end_turn(PlayerType_e player)
     printf(". \n");
     printf(". \n");
 
-    if (if_end_game(player))
-    {
+    if (if_end_game(player)){
         g_end_game = true;
         g_game_winner = player;   
     } 
-    else 
-    {
+    else{
         g_player_on_turn = next_turn_type;
     }
     
@@ -177,8 +166,7 @@ void end_turn(PlayerType_e player)
 bool if_end_game(PlayerType_e player)
 {
     bool ret = false;
-    if (0 == get_pile_length(g_players[player].cards_on_hand)) 
-    {
+    if (0 == get_pile_length(g_players[player].cards_on_hand)){
         ret = true;
     }
     return ret;
@@ -191,12 +179,10 @@ bool if_end_game(PlayerType_e player)
 void handle_computer_turn(void)
 {
     int ret = computer_take_turn();
-    if ((0 == ret) || (1 == ret))
-    {
+    if ((0 == ret) || (1 == ret)){
         end_turn(COMPUTER);
     }
-    else
-    {
+    else{
         printf("Error: Not Computer's turn now.\n");
     }
 
