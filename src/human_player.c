@@ -96,16 +96,14 @@ ret_type_e human_process_end_turn_request(void)
 ret_type_e human_process_normal_card(Card_t human_card_choice)
 {
     //Check if the card is from the human player deck
-    if (!is_human_card(human_card_choice))
-    {
+    if (!is_human_card(human_card_choice)){
         printf("!!Warning!! Please select a card from your deck! \n");
         invalid_card_warning();
         return RET_INVALID_CARD;
     }
 
     //If valid add the card to the discard_pile
-    if (!is_playable_card(human_card_choice))
-    {
+    if (!is_playable_card(human_card_choice)){
         invalid_card_warning();
         return RET_NOT_PLAYABLE_CARD;
     }
@@ -128,8 +126,7 @@ ret_type_e human_process_normal_card(Card_t human_card_choice)
 ret_type_e human_process_draw_one_card(Card_t human_card_choice)
 {
     int ret = RET_FAILURE;
-    if (RET_SUCCESS == human_process_normal_card(human_card_choice))
-    {
+    if (RET_SUCCESS == human_process_normal_card(human_card_choice)){
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
         ret = player_process_draw_one_card(HUMAN);
@@ -148,8 +145,7 @@ ret_type_e human_process_draw_one_card(Card_t human_card_choice)
  */
 ret_type_e human_process_skip_card(Card_t human_card_choice)
 {
-    if (RET_SUCCESS == human_process_normal_card(human_card_choice))
-    {
+    if (RET_SUCCESS == human_process_normal_card(human_card_choice)){
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
         printf("%s discarded a Skip card, COMPUTER player will lose turn.\n", g_human_player_name);
@@ -167,13 +163,11 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
  */
 ret_type_e human_process_new_card_request(void)
 {
-    if (g_card_requested)
-    {
+    if (g_card_requested){
         printf("!!Warning!! You've already drawn a card from the pile. Please discard card or end turn now \n");
         return RET_FAILURE;
     }
-    else
-    {
+    else{
         return request_card(HUMAN);
     }
 }
@@ -193,20 +187,19 @@ ret_type_e card_color_change_inquiry(CardColor_e* color_changed)
     printf("Please enter your choice for the color changing. (R/B/G/Y)\n");
     scanf(" %c", &colornum);
 
-    if (colornum == 'R') {
+    if (colornum == 'R'){
         *color_changed = RED;
     }
-    else if (colornum == 'G') {
+    else if (colornum == 'G'){
         *color_changed = GREEN;
     }
-    else if (colornum == 'B') {
+    else if (colornum == 'B'){
         *color_changed = BLUE;
     }
-    else if (colornum == 'Y') {
+    else if (colornum == 'Y'){
         *color_changed = YELLOW;
     }
-    else
-    {
+    else{
         printf("!!Warning!! Choose a valid color (R/B/G/Y) \n");
         return RET_INVALID_INPUT;
     }
@@ -255,8 +248,7 @@ ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_c
 ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_e color_changed)
 {
     int ret = RET_FAILURE;
-    if (RET_SUCCESS == human_process_wild_card(human_card_choice, color_changed))
-    {
+    if (RET_SUCCESS == human_process_wild_card(human_card_choice, color_changed)){
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
         ret = player_process_wild_draw_two_card(HUMAN);
@@ -286,38 +278,31 @@ Card_t map_user_input(const char* user_input)
     Card_t invalid_card = { INVALID_COLOR, INVALID_NAME };
     Card_t card = { INVALID_COLOR, INVALID_NAME };
 
-    if (user_input == NULL)
-    {
+    if (user_input == NULL){
         return invalid_card;
     }
 
     //maps the card color
-    for (i = 0; i < m; i++)
-    {
-        if (user_input[0] == USER_INPUT_COLOR[i])
-        {
+    for (i = 0; i < m; i++){
+        if (user_input[0] == USER_INPUT_COLOR[i]){
             card.color = i;
             break;
         }
     }
 
-    if (card.color == INVALID_COLOR)
-    {
+    if (card.color == INVALID_COLOR){
         return invalid_card;
     }
 
     //maps the card name only if the card color is valid.
-    for (i = 0; i < n; i++)
-    {
-        if (user_input[1] == USER_INPUT_NAME[i])
-        {
+    for (i = 0; i < n; i++){
+        if (user_input[1] == USER_INPUT_NAME[i]){
             card.name = i;
             break;
         }
     }
 
-    if (card.name == INVALID_NAME)
-    {
+    if (card.name == INVALID_NAME){
         return invalid_card;
     }
     
@@ -334,8 +319,7 @@ Card_t map_user_input(const char* user_input)
 CardType_e get_card_type(Card_t card)
 {
     CardType_e card_type = INVALID_TYPE;
-    switch (card.name)
-    {
+    switch (card.name){
         case ZERO:
         case TWO:
         case THREE:
@@ -375,20 +359,16 @@ ret_type_e record_human_input(void)
     printf("Please enter your choice \n");
     scanf("%s", user_input);
 
-    if (user_input[0] == 'q' || user_input[0] == 'Q')
-    {
+    if (user_input[0] == 'q' || user_input[0] == 'Q'){
         quit_game();
     }
-    else if (user_input[0] == 'n' || user_input[0] == 'N')
-    {
+    else if (user_input[0] == 'n' || user_input[0] == 'N'){
         return human_process_new_card_request();
     }
-    else if (user_input[0] == 'e' || user_input[0] == 'E')
-    {
+    else if (user_input[0] == 'e' || user_input[0] == 'E'){
         return human_process_end_turn_request();
     }
-    else
-    {
+    else{
         return human_process_card(user_input);
     }
 
@@ -405,16 +385,13 @@ ret_type_e record_human_input(void)
 ret_type_e human_process_card(const char* user_input)
 {
     CardColor_e color_changed;
-
     Card_t human_card_choice = map_user_input(user_input);
-    if ((human_card_choice.color == INVALID_COLOR) || (human_card_choice.name == INVALID_NAME))
-    {
+    if ((human_card_choice.color == INVALID_COLOR) || (human_card_choice.name == INVALID_NAME)){
         return RET_INVALID_INPUT;
     }
 
     CardType_e card_type = get_card_type(human_card_choice);
-    switch (card_type)
-    {
+    switch (card_type){
         case NORMAL:
             return human_process_normal_card(human_card_choice);
         case SKIP_T:
@@ -422,16 +399,15 @@ ret_type_e human_process_card(const char* user_input)
         case DRAW_ONE_T:
             return human_process_draw_one_card(human_card_choice);
         case WILD_T:
-            if (RET_SUCCESS == card_color_change_inquiry(&color_changed)) {
+            if (RET_SUCCESS == card_color_change_inquiry(&color_changed)){
                 return human_process_wild_card(human_card_choice, color_changed);
-            } else {
+            } else{
                 return RET_INVALID_INPUT;
             }
         case WILD_DRAW_TWO_T:
-            if (RET_SUCCESS == card_color_change_inquiry(&color_changed)) {
+            if (RET_SUCCESS == card_color_change_inquiry(&color_changed)){
                 return human_process_wild_draw_two_card(human_card_choice, color_changed);
-            }
-            else {
+            } else{
                 return RET_INVALID_INPUT;
             }
         case INVALID_TYPE:
@@ -466,10 +442,8 @@ bool is_human_card(Card_t current_card)
     bool is_valid = false;
     Deck_t* temp = g_players[HUMAN].cards_on_hand;
 
-    while (temp != NULL)
-    {
-        if (temp->card.color == current_card.color && temp->card.name == current_card.name)
-        {
+    while (temp != NULL){
+        if (temp->card.color == current_card.color && temp->card.name == current_card.name){
             return true;
         }
 
