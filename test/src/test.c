@@ -13,7 +13,7 @@ Deck_t* g_draw_pile_test = NULL;            /* Draw cards pile */
 Deck_t* g_discard_pile_test = NULL;         /* discarded cards */
 
 void init_log(void);
-
+#if 0
 void main(void)
 {
     init_log();
@@ -21,10 +21,11 @@ void main(void)
     test_cards_mgmt();
     test_game();
     test_computer_player();
-    test_hunman_player();
+    test_human_player();
 
 	return;
 }
+#endif
 
 void init_log(void)
 {
