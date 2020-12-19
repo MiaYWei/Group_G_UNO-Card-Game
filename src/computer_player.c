@@ -487,28 +487,38 @@ Deck_t* play_card(const Deck_t* card_address, Deck_t** head)
     }
 }
 
-void process_playable_card(Card_t playable_card)
+/**
+ * @brief Computer player discards a playable card
+ *
+ * @param card the card to be process by computer
+ */
+void process_playable_card(Card_t card)
 {
-    memcpy(&g_card_on_table, &playable_card, sizeof(Card_t));
-    add_card_at_end(g_discard_pile, g_card_on_table);
-    if ((playable_card.name == WILD) || (playable_card.name == WILD_DRAW_TWO))
+    Card_t original_card;
+    memcpy(&g_card_on_table, &card, sizeof(Card_t));
+    
+    if ((card.name == WILD) || (card.name == WILD_DRAW_TWO))
     {
-        printf("COMPUTER dropped..(%s,%s). ", CARD_COLOR_STRING[ACTION], CARD_NAME_STRING[playable_card.name]);
-        printf("Color changed to %s\n", CARD_COLOR_STRING[playable_card.color]);
+        original_card.color = ACTION;
+        original_card.name = card.name;
+        printf("COMPUTER dropped..(%s,%s). ", CARD_COLOR_STRING[ACTION], CARD_NAME_STRING[card.name]);
+        printf("Color changed to %s\n", CARD_COLOR_STRING[card.color]);
+        add_card_at_end(g_discard_pile, original_card);
     }
     else{
-        printf("COMPUTER dropped..(%s,%s)\n", CARD_COLOR_STRING[playable_card.color], CARD_NAME_STRING[playable_card.name]);
+        printf("COMPUTER dropped..(%s,%s)\n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
+        add_card_at_end(g_discard_pile, g_card_on_table);
     }
     
     end_turn(COMPUTER);
-    if (playable_card.name == SKIP) {
+    if (card.name == SKIP) {
         g_player_on_turn = COMPUTER;
     }
-    else if (playable_card.name == DRAW_ONE) {
+    else if (card.name == DRAW_ONE) {
         g_player_on_turn = COMPUTER;
         player_process_draw_one_card(COMPUTER);
     }
-    else if (playable_card.name == WILD_DRAW_TWO) {
+    else if (card.name == WILD_DRAW_TWO) {
         g_player_on_turn = COMPUTER;
         player_process_wild_draw_two_card(COMPUTER);
     }
@@ -540,7 +550,7 @@ int computer_process_request_card(void)
 }
 
 /**
- * @brief Computer player discards a playable card, which include Skip and DRAW_ONE card.
+ * @brief Computer player discards a playable card
  *
  * @param   reference to the playable card in th list, reference to hand card list
  * 
