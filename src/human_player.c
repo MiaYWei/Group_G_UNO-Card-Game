@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <windows.h>
 #include "../include/cards_management.h"
 #include "../include/human_player.h"
 #include "../include/game.h"
+#include "../include/console_print.h"
 
 /* Global variables */
 bool g_card_requested = false;
@@ -27,8 +27,6 @@ ret_type_e human_process_skip_card(Card_t human_card_choice);
 ret_type_e human_process_draw_one_card(Card_t human_card_choice);
 ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_changed);
 ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_e color_changed);
-void print_warning(const char* string);
-void print_info(const char* string_1, const char* string_2);
 int quit_game(void);
 
 /**
@@ -133,7 +131,6 @@ ret_type_e human_process_draw_one_card(Card_t human_card_choice)
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
         ret = player_process_draw_one_card(HUMAN);
-        print_info("%s discarded a Draw-One card, COMPUTER player will lose turn.\n", g_human_player_name);
     }
 
     return ret;
@@ -151,7 +148,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
     if (RET_SUCCESS == human_process_normal_card(human_card_choice)){
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
-        print_info("%s discarded a Skip card, COMPUTER player will lose turn.\n", g_human_player_name);
+        print_info("HUMAN player discarded a Skip card, COMPUTER player will lose turn.\n");
         return RET_SUCCESS;
     }
 
@@ -255,7 +252,6 @@ ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
         ret = player_process_wild_draw_two_card(HUMAN);
-        print_info("%s discarded a Wild-Draw-Two card, COMPUTER player will lose turn.\n", g_human_player_name);
     }
 
     return ret;
@@ -387,6 +383,7 @@ ret_type_e record_human_input(void)
  */
 ret_type_e human_process_card(const char* user_input)
 {
+    ret_type_e ret = RET_FAILURE;
     CardColor_e color_changed;
     Card_t human_card_choice = map_user_input(user_input);
     if ((human_card_choice.color == INVALID_COLOR) || (human_card_choice.name == INVALID_NAME)){
@@ -403,17 +400,15 @@ ret_type_e human_process_card(const char* user_input)
         case DRAW_ONE_T:
             return human_process_draw_one_card(human_card_choice);
         case WILD_T:
-            if (RET_SUCCESS == card_color_change_inquiry(&color_changed)){
-                return human_process_wild_card(human_card_choice, color_changed);
-            } else{
-                return RET_INVALID_INPUT;
+            while (ret != RET_SUCCESS){
+                ret = card_color_change_inquiry(&color_changed);
             }
+            return human_process_wild_card(human_card_choice, color_changed);
         case WILD_DRAW_TWO_T:
-            if (RET_SUCCESS == card_color_change_inquiry(&color_changed)){
-                return human_process_wild_draw_two_card(human_card_choice, color_changed);
-            } else{
-                return RET_INVALID_INPUT;
+            while (ret != RET_SUCCESS) {
+                ret = card_color_change_inquiry(&color_changed);
             }
+            return human_process_wild_draw_two_card(human_card_choice, color_changed);
         case INVALID_TYPE:
         default:
             return RET_FAILURE;
@@ -454,34 +449,4 @@ int quit_game(void)
 {
     printf("Exiting the game..");
     exit(0);
-}
-
-void set_console_colour(WORD* attributes, WORD color)
-{
-    CONSOLE_SCREEN_BUFFER_INFO Info;
-    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-    GetConsoleScreenBufferInfo(hStdout, &Info);
-    *attributes = Info.wAttributes;
-    SetConsoleTextAttribute(hStdout, color);
-}
-
-void reset_console_colour(WORD attributes)
-{
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), attributes);
-}
-
-void print_warning(const char* string)
-{
-    WORD attributes = 0;
-    set_console_colour(&attributes, FOREGROUND_INTENSITY | FOREGROUND_RED);
-    printf("%s\n", string);
-    reset_console_colour(attributes);
-}
-
-void print_info(const char* string_1, const char* string_2)
-{
-    WORD attributes = 0;
-    set_console_colour(&attributes, FOREGROUND_INTENSITY | FOREGROUND_BLUE);
-    printf("%s%s\n", string_1, string_2);
-    reset_console_colour(attributes);
 }

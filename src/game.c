@@ -5,6 +5,7 @@
 #include "../include/game.h"
 #include "../include/computer_player.h"
 #include "../include/human_player.h"
+#include "../include/console_print.h"
 
 bool g_end_game = false;
 char g_human_player_name[PLAYERS_NAME_LENGTH] = "HumanPlayer";
@@ -198,7 +199,12 @@ int player_process_draw_one_card(PlayerType_e player)
     PlayerType_e be_applied_player = (player + 1) % PLAYERS_NUM;
     Card_t draw_card = draw_one_card();
     int ret = add_card_at_end(g_players[be_applied_player].cards_on_hand, draw_card);
-    printf("%s discarded a Draw-One card, adding a card to the next player %s.\n", PLAYER_TYPE_STRING[player], PLAYER_TYPE_STRING[be_applied_player]);
+    if (player == HUMAN) {
+        print_info("HUMAN discarded a Draw-One card, COMPUTER loses turn, and a new card is added to COMPUTER card list.\n");
+    }
+    else {
+        print_info("COMPUTER discarded a Draw-One card, HUMAN loses turn, and a new card is added to HUMAN card list.\n");
+    }
 
     return ret;
 }
@@ -220,7 +226,12 @@ int player_process_wild_draw_two_card(PlayerType_e player)
     draw_card = draw_one_card();
     ret += add_card_at_end(g_players[be_applied_player].cards_on_hand, draw_card);
 
-    printf("%s discarded a Wild-Draw-Two card, adding two cards to the next player %s.\n", PLAYER_TYPE_STRING[player], PLAYER_TYPE_STRING[be_applied_player]);
-
+    if (player == HUMAN) {
+        print_info("HUMAN discarded a Wild-Draw-Two card, COMPUTER loses turn, and two new cards are added to COMPUTER card list.\n");
+    }
+    else {
+        print_info("COMPUTER discarded a Wild-Draw-Two card, HUMAN loses turn, and two new cards are added to HUMAN card list.\n");
+    }
+  
     return ret;
 }
