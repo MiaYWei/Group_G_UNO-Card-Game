@@ -3,6 +3,7 @@
 # Makefile
 #
 # Authors: Mia Wei 
+#          krithigasr
 #	   
 #
 # Changelog :
@@ -22,6 +23,7 @@ SRCDIR     	 = src
 INCDIR	  	 = include
 SRCTESTDIR	 = test/src
 INCTESTDIR	 = test/include
+OBJTESTDIR       = obj
 
 CC       = gcc
 
@@ -47,9 +49,9 @@ $(OBJECTS1): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@echo "Compiled "$<" successfully!"
 	
 #For TARGET   = UNO-Card-Game_Test
-$(BINDIR)/$(TARGET_TEST) :$(OBJDIR)/test.o $(OBJDIR)/test_game.o $(OBJDIR)/test_cards_management.o $(OBJDIR)/test_computer_player.o $(OBJDIR)/test_human_player.o $(OBJDIR)/game.o $(OBJDIR)/cards_management.o $(OBJDIR)/computer_player.o $(OBJDIR)/human_player.o
+$(BINDIR)/$(TARGET_TEST) :$(OBJDIR)/test.o $(OBJDIR)/test_game.o $(OBJDIR)/test_cards_management.o $(OBJDIR)/test_computer_player.o $(OBJDIR)/test_human_player.o $(OBJDIR)/game.o $(OBJDIR)/cards_management.o $(OBJDIR)/computer_player.o $(OBJDIR)/human_player.o $(OBJDIR)/console_print.o 
 	@mkdir -p $(BINDIR)
-	@$(CC) $(OBJDIR)/test.o $(OBJDIR)/test_game.o $(OBJDIR)/test_cards_management.o $(OBJDIR)/test_computer_player.o $(OBJDIR)/test_human_player.o $(OBJDIR)/game.o $(OBJDIR)/cards_management.o $(OBJDIR)/computer_player.o $(OBJDIR)/human_player.o -o $@
+	@$(CC) $(OBJDIR)/test.o $(OBJDIR)/test_game.o $(OBJDIR)/test_cards_management.o $(OBJDIR)/test_computer_player.o $(OBJDIR)/test_human_player.o $(OBJDIR)/game.o $(OBJDIR)/cards_management.o $(OBJDIR)/computer_player.o $(OBJDIR)/human_player.o $(OBJDIR)/console_print.o -o $@
 	@echo "Test Linking complete!"
 $(OBJECTS2): $(OBJDIR)/%.o : $(SRCTESTDIR)/%.c
 	@$(CC) $(INC) -c $< -o $@
