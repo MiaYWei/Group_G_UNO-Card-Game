@@ -108,12 +108,16 @@ ret_type_e human_process_normal_card(Card_t human_card_choice)
         return RET_NOT_PLAYABLE_CARD;
     }
 
-    remove_card_from_deck(&g_players[HUMAN].cards_on_hand, human_card_choice);
-    add_card_at_end(g_discard_pile, human_card_choice);
-    memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
-    end_turn(HUMAN);
-    g_card_requested = false;
-    return RET_SUCCESS;
+    if (remove_card_from_deck(&g_players[HUMAN].cards_on_hand, human_card_choice)){
+        add_card_at_end(g_discard_pile, human_card_choice);
+        memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
+        end_turn(HUMAN);
+        g_card_requested = false;
+        return RET_SUCCESS;
+    }
+    else{
+        return RET_FAILURE;
+    }
 }
 
 /**
