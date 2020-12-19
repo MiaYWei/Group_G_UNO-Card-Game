@@ -4,6 +4,8 @@
 #include "../include/game.h"
 #include "../include/console_print.h"
 
+#define CHOICE_MAX_LENGTH  20
+
 void start_screen(void)
 {
     printf("***********************************************************************\n");
@@ -24,7 +26,7 @@ void start_screen(void)
 
 void display_rules(void)
 {
-    char choice[5] = {0};
+    char choice[CHOICE_MAX_LENGTH] = { 0 };
     printf("************************************************************************\n");
     printf("*                                                                      *\n");
     printf("*                           GAME RULES                                 *\n");
@@ -87,7 +89,7 @@ void display_rules(void)
 
 void display_score_board(void)
 {
-    char choice[5] = { 0 };
+    char choice[CHOICE_MAX_LENGTH] = { 0 };
     printf("Will be available in Release 2\n");
     printf("Press any key to go back to Main Menu...");
     scanf("%s", choice);
@@ -95,18 +97,21 @@ void display_score_board(void)
 
 void invalid_choice(void)
 {
-    char choice[5] = {0,0,0,0,0};
+    char choice[CHOICE_MAX_LENGTH] = { 0 };
     print_warning("Warning: Invalid choice. Press any key to go back to Main Menu...\n");
     scanf("%s", choice);
 }
 
 void main_menu(void)
 {   
-    int int_choice;
+    char choice[CHOICE_MAX_LENGTH] = { 0 };
+    int int_choice = 0;
     while(true){    
         system("clear"); //clear screen      
         start_screen();
-        scanf("%d", &int_choice);
+        scanf("%s", &choice);
+        int_choice = choice[0] - '0';
+
         switch (int_choice){
             case 1:
                 display_rules();
@@ -126,7 +131,7 @@ void main_menu(void)
 
 int main(void) 
 {
-    char choice[5] = {0};
+    char choice[CHOICE_MAX_LENGTH] = {0};
     main_menu();
     printf("Press any key to exit console display...\n");
     scanf("%s", choice);
