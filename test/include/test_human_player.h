@@ -2,4 +2,4 @@
 #define __TEST_HUMAN_PLAYER_HEADER__
 
 int test_hunman_player(void);
-#endif // __TEST_HUMAN_PLAYER_HEADER__
+#endif //__TEST_HUMAN_PLAYER_HEADER__

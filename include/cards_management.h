@@ -183,4 +183,4 @@ void display_player_deck(PlayerType_e player);
  */
 int shuffle_cards(void);
 
-#endif // __CARDS_MANAGEMENT_HEADER__#pragma once
+#endif //__CARDS_MANAGEMENT_HEADER__

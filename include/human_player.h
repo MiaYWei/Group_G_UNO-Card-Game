@@ -24,4 +24,4 @@ ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_
 void print_warning(const char* string);
 int quit_game(void);
 
-#endif // __HUMAN_PLAYER_HEADER__
+#endif //__HUMAN_PLAYER_HEADER__

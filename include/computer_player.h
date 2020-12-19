@@ -1,5 +1,5 @@
-#ifndef __COMPUTER_HEADER__
-#define __COMPUTER_HEADER__
+#ifndef __COMPUTER_PLAYER_HEADER__
+#define __COMPUTER_PLAYER_HEADER__
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -166,4 +166,4 @@ void computer_process_playable_card(Deck_t* playable_card);
  */
 int computer_take_turn(void);
 
-#endif
+#endif //__COMPUTER_PLAYER_HEADER__
