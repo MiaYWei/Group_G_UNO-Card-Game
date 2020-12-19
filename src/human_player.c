@@ -42,7 +42,7 @@ int request_card(PlayerType_e PlayerType)
 {
     g_card_requested = true;
     Card_t card = draw_one_card();
-    printf("The card from the draw pile is (%s,%s) \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
+    printf("The card from the draw pile is (%s,%s), it's added to HUMAN card list. \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
 
     //Assigning the drawn card to the human player
     return add_card_at_end(g_players[HUMAN].cards_on_hand, card);
@@ -409,6 +409,6 @@ bool is_human_card(Card_t current_card)
  */
 int quit_game(void)
 {
-    printf("Exiting the game..");
+    print_info("HUMAN player requested to quit the current. Exiting the game..");
     exit(0);
 }

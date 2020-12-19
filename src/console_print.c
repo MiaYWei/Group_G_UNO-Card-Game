@@ -40,3 +40,21 @@ void print_info(const char* string)
     printf("%s\n", string);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), attributes);
 }
+
+/**
+ * @brief wraped print function for info print. The color is blue.
+ *
+ * @param string string pointer to the specific string to print
+ */
+void print_winner(const char* string, const char* name)
+{
+    WORD attributes = 0;
+    set_console_colour(&attributes, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
+    if (name == NULL){
+        printf("%s\n", string);
+    }
+    else {
+        printf("%s %s\n", string, name);
+    }
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), attributes);
+}
