@@ -12,7 +12,6 @@
 // - Play higher number cards first to get more points      (x)                                         (x)
 // - Note the last card color when players have one card left and avoid to play it.
 
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -124,12 +123,12 @@ CardName_e find_largest_number(Deck_t** handcard, CardColor_e inputCardColor)
 * @param pointer to the pointer to the head of handcard list, number that needs to be checked
 * @return int number count for occruence
 */
-int find_occurence_of_number(Deck_t** handcard, CardName_e inputCardNumber)
+int find_occurence_of_number(Deck_t** hand_card, CardName_e input_card_number)
 {
-    Deck_t* temp = *handcard;
+    Deck_t* temp = *hand_card;
     int count = 0;
     while (temp != NULL){
-        if (temp->card.name == inputCardNumber){
+        if (temp->card.name == input_card_number){
             count++;
         }
         temp = temp->next;
@@ -143,12 +142,12 @@ int find_occurence_of_number(Deck_t** handcard, CardName_e inputCardNumber)
 * @param pointer to the pointer to the head of handcard list, color that needs to be checked
 * @return int number count for occruence
 */
-int find_occurence_of_color(Deck_t** handcard, CardColor_e inputCardcolor)
+int find_occurence_of_color(Deck_t** hand_card, CardColor_e input_card_color)
 {
-    Deck_t* temp = *handcard;
+    Deck_t* temp = *hand_card;
     int count = 0;
     while (temp != NULL){
-        if (temp->card.color == inputCardcolor){
+        if (temp->card.color == input_card_color){
             count++;
         }
         temp = temp->next;
@@ -164,9 +163,9 @@ int find_occurence_of_color(Deck_t** handcard, CardColor_e inputCardcolor)
 * @return CardColor  most color occruence of a given number
 *
 */
-CardColor_e find_color_with_most_occurence(Deck_t** handcard, CardName_e input_card_name)
+CardColor_e find_color_with_most_occurence(Deck_t** hand_card, CardName_e input_card_name)
 {
-    Deck_t* temp = *handcard;
+    Deck_t* temp = *hand_card;
     CardColor_e most_color_with_number = INVALID_COLOR;
     struct colorInfo colors[4];
     int i = 0,max = INT_MIN;
@@ -174,7 +173,7 @@ CardColor_e find_color_with_most_occurence(Deck_t** handcard, CardName_e input_c
     while (temp != NULL){
         if (temp->card.name == input_card_name){
             colors[i].color = temp->card.color;
-            colors[i].count = find_occurence_of_color(handcard, temp->card.color);
+            colors[i].count = find_occurence_of_color(hand_card, temp->card.color);
             i = i + 1;
         }
         temp = temp->next;
@@ -196,8 +195,9 @@ CardColor_e find_color_with_most_occurence(Deck_t** handcard, CardName_e input_c
 * @return CardColor  the matched color
 *
 */
-CardColor_e find_matched_color(Deck_t** handcard, CardName_e card_name){
-    Deck_t* temp = *handcard;
+CardColor_e find_matched_color(Deck_t** hand_card, CardName_e card_name)
+{
+    Deck_t* temp = *hand_card;
     while (temp != NULL) {
         if (temp->card.name == card_name) {
             return temp->card.color;
@@ -429,7 +429,7 @@ bool check_after_action(CardColor_e color, Deck_t** hand_card)
 * @param card address, reference to the hand card list
 * @return 1 for successed, 0 for failed
 */
-Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head)
+Deck_t* play_card(const Deck_t* card_address, Deck_t** head)
 {
     Deck_t* temp = *head;
     Deck_t* prev = *head;
@@ -438,12 +438,12 @@ Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head)
         return NULL;
     }
 
-    if (cardAddress == NULL){
+    if (card_address == NULL){
         printf("Drawed One card \n");
         return NULL;
     }
 
-    if (cardAddress->card.name == WILD){         
+    if (card_address->card.name == WILD){
         while ((temp != NULL) && (temp->card.name == WILD)){
             *head = temp->next;
             return temp;
@@ -462,12 +462,12 @@ Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head)
     }
     else{
         // head node
-        while ((temp != NULL) && (temp->card.name == cardAddress->card.name) && (temp->card.color == cardAddress->card.color)){
+        while ((temp != NULL) && (temp->card.name == card_address->card.name) && (temp->card.color == card_address->card.color)){
             *head = temp->next;
             return temp;
         }
         /* For each node in the list */
-        while ((temp != NULL) && ((temp->card.name != cardAddress->card.name) || (temp->card.color != cardAddress->card.color))){
+        while ((temp != NULL) && ((temp->card.name != card_address->card.name) || (temp->card.color != card_address->card.color))){
             prev = temp;
             temp = temp->next;
         }
@@ -511,7 +511,7 @@ int computer_process_request_card(void)
  * @param   reference to the playable card in th list, reference to hand card list
  * 
  */
-void computer_process_playable_card(Deck_t * playable_card, Deck_t ** handcard)
+void computer_process_playable_card(Deck_t* playable_card)
 {
     Deck_t* discard_card = play_card(playable_card, &g_players[COMPUTER].cards_on_hand);
     printf("Computer Drops..(%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
@@ -565,7 +565,7 @@ int computer_take_turn(void)
         return computer_process_request_card();  
     }
     else{   /*If there is playable card, then remove playable card from on hand cards list*/
-        computer_process_playable_card(playable_card, &g_players[COMPUTER].cards_on_hand);
+        computer_process_playable_card(playable_card);
         return 0;
     }
 

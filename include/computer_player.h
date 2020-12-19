@@ -29,21 +29,13 @@ int get_max(int n, ...);
 CardColor_e  find_most_color(Deck_t** cards_on_hand);
 
 /*
-* @brief: function that check if a card exist in the handcard deck
-*
-*
-* @param: pointer to the pointer to the head of handcard list, card that needs to be checked
-* @return 1 exist, 0 not exist
-*/
-int ifexists(Deck_t** handcard, CardName_e inputCardName, CardColor_e inputCardColor);
-/*
 * @brief: function that find the largest number of given color
 *
 *
 * @param pointer to the pointer to the head of handcard list, color that need to be checked
 * @return CardName the largest number
 */
-CardName_e find_largest_number(Deck_t** handcard, CardColor_e inputCardColor);
+CardName_e find_largest_number(Deck_t** hand_card, CardColor_e input_card_color);
 
 /*
 * @brief: function that find the occruence of a number
@@ -51,8 +43,7 @@ CardName_e find_largest_number(Deck_t** handcard, CardColor_e inputCardColor);
 * @param pointer to the pointer to the head of handcard list, number that needs to be checked
 * @return int number count for occruence
 */
-int find_occurence_of_number(Deck_t** handcard, CardName_e inputCardNumber);
-
+int find_occurence_of_number(Deck_t** hand_card, CardName_e input_card_number);
 
 /*
 * @brief: function that find the occruence of a color
@@ -60,7 +51,7 @@ int find_occurence_of_number(Deck_t** handcard, CardName_e inputCardNumber);
 * @param pointer to the pointer to the head of handcard list, color that needs to be checked
 * @return int number count for occruence
 */
-int find_occurence_of_color(Deck_t** handcard, CardColor_e inputCardcolor);
+int find_occurence_of_color(Deck_t** hand_card, CardColor_e input_card_color);
 
 /*
 * @brief: function that find the most color occruence of a given number
@@ -70,7 +61,8 @@ int find_occurence_of_color(Deck_t** handcard, CardColor_e inputCardcolor);
 * @return CardColor  most color occruence of a given number
 *
 */
-CardColor_e find_color_with_most_occurence(Deck_t** handcard, CardName_e inputCardNumber);
+CardColor_e find_color_with_most_occurence(Deck_t** hand_card, CardName_e input_card_name);
+
 /*
 * @brief: function that get the matched color in the list for the given number
 *
@@ -79,8 +71,7 @@ CardColor_e find_color_with_most_occurence(Deck_t** handcard, CardName_e inputCa
 * @return CardColor  the matched color
 *
 */
-CardColor_e find_matched_color(Deck_t** handcard, CardName_e number);
-
+CardColor_e find_matched_color(Deck_t** hand_card, CardName_e card_name);
 
 /*
 * @brief: function that find address within the list of a given card
@@ -90,8 +81,7 @@ CardColor_e find_matched_color(Deck_t** handcard, CardName_e number);
 * @return DECK * the address of that card
 *
 */
-Deck_t* find_address(Deck_t** head, Card_t CARD);
-
+Deck_t* find_address(Deck_t** head, Card_t card);
 
 /* function that choose the right card to draw */
 /*
@@ -120,7 +110,7 @@ Deck_t* find_address(Deck_t** head, Card_t CARD);
 * @param Card that will be evaluated, pointer to the head of handcard list
 * @return int the case number
 */
-enum casenumber pick_case(Card_t card, Deck_t** hand_card);
+casenumber_e pick_case(Card_t card, Deck_t** hand_card);
 
 /** @brief Pick the best card to discard from hand cards based on
  *         the newest card on the table.
@@ -128,15 +118,15 @@ enum casenumber pick_case(Card_t card, Deck_t** hand_card);
  *	@param card need to be evalued, reference to the header of the hand card list
  *  @return A best cooresponding card from hand cards
  */
+Deck_t* pick_card(Card_t input_card, Deck_t** hand_card);
 
-Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card);
 /*
 * @brief: function that play card from handcard list
 *
 * @param card that will be played, pointer to the pointer to the head of handcard list
 * @return 1 for successed, 0 for failed
 */
-Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head);
+Deck_t* play_card(const Deck_t* card_address, Deck_t** head);
 
 /*
 * @brief: after play a card, computer will check if the drawed card is playable
@@ -144,9 +134,7 @@ Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head);
 * @param card color, hand card list
 * @return 1 for successed, 0 for failed
 */
-
 bool check_after_action(CardColor_e color, Deck_t** hand_card);
-
 
 /**
  * @brief No playable card, computer player reuqests a new card
@@ -156,14 +144,11 @@ bool check_after_action(CardColor_e color, Deck_t** hand_card);
  */
 int computer_process_request_card(void);
 
-
-
 /**
  * @brief Computer player discards a playable card, which include Skip and DRAW_ONE card.
  *
  */
-void computer_process_playable_card(Deck_t* playable_card, Deck_t** handcard);
-
+void computer_process_playable_card(Deck_t* playable_card);
 
 /**
  * @brief Logic to discard card for computer player,
