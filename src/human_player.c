@@ -351,7 +351,7 @@ ret_type_e human_process_card(const char* user_input)
     CardColor_e color_changed;
     Card_t human_card_choice = map_user_input(user_input);
     if ((human_card_choice.color == INVALID_COLOR) || (human_card_choice.name == INVALID_NAME)){
-        print_warning("!!Warning!! Invalid Input - Please enter a valid choice. (See Game Rules) \n");            
+        print_warning("!!Warning!! Invalid Input - Please enter a valid choice. \n");            
         return RET_INVALID_INPUT;
     }
 
