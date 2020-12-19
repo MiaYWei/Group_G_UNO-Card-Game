@@ -20,6 +20,7 @@
 #include "../include/cards_management.h"
 #include "../include/computer_player.h"
 #include "../include/game.h"
+#include "../include/console_print.h"
 
 /*
 * @brief: variadic function that returns the max of given numbers
@@ -512,6 +513,7 @@ void process_playable_card(Card_t card)
     
     end_turn(COMPUTER);
     if (card.name == SKIP) {
+        print_info("COMPUTER discarded a Skip card, HUMAN will lose turn.\n");
         g_player_on_turn = COMPUTER;
     }
     else if (card.name == DRAW_ONE) {
