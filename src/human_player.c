@@ -42,7 +42,7 @@ int request_card(PlayerType_e PlayerType)
 {
     g_card_requested = true;
     Card_t card = draw_one_card();
-    printf("The requested card assigned to HUMAN is (%s,%s) \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
+    printf("The card from the draw pile is (%s,%s) \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
 
     //Assigning the drawn card to the human player
     return add_card_at_end(g_players[HUMAN].cards_on_hand, card);
