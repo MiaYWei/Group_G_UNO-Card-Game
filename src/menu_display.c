@@ -51,7 +51,7 @@ void display_rules(void)
     printf("    EXAMPLE: If the card on the top of the DISCARD pile is a blue 7, the player must put down a blue card OR 7 in any color.\n\n");
     //printf(" Alternatively, the player can put down a Wild card(See FUNCTIONS OF ACTION CARDS");
     printf("************************************************************************\n\n");
-    // printf(" Win the Game\n");
+    printf(" Win the Game\n");
     printf("  Once a player has no cards left, the game is over. The player who exhausts all of his cards quickly is the winner of the game.\n");
     printf("  If no player is out of cards by the time the DRAW pile is depleted, the DISCARD pile is reshuffled and set as the draw pile. \n\n");
     printf("************************************************************************\n\n");
@@ -59,15 +59,25 @@ void display_rules(void)
     printf(" Inputs to play the game\n");
     printf("  To request a card from the Draw pile, Press N or n. \n");
     printf("  To end turn, Press E or e. \n");
-    printf("  To discard a card - Say you want to discard(RED,3), Press R3.\n");
-    printf("  To quit the game, Press Q or q.\n\n");
+    printf("  To quit the game, Press Q or q.\n");
+    printf("  To discard a normal card - Say you want to discard(RED,3), enter R3.\n");
+    printf("  To discard a action card - Eg:(RED, SKIP), enter RS\n");
+    printf("                                (BLUE, DRAW-ONE), enter BO\n");
+    printf("                                (ACTION, WILD), enter AW\n");
+    printf("                                (ACTION, WILD), enter AT\n");
     printf("************************************************************************\n\n");
 
-    printf(" Functions of Action Cards (Release 2)\n");
-    printf("  Draw One card - When you play this card, the next player must draw 1 card and miss their turn. This card may only be played on a matching color. \n");
+    printf(" Functions of Action Cards\n");
     printf("  Skip card - When you play this card, the next player is skipped (loses their turn). This card may only be played on a matching color. \n");
-    printf("  Wild card - When you play this card, you get to choose the color that continues play (any color including the color in play before the Wild card was laid down).\n");
-    printf("  Wild Draw TWO card - When you play this card, you get to choose the color that continues play PLUS the next player must draw 2 cards from the DRAW pile and lose their turn.\n\n");
+    printf("              * The next player loses their turn.\n");
+    printf("  Draw-One card - When you play this card, this card may only be played on a matching color. \n");
+    printf("                  * The next player loses their turn.\n");
+    printf("                  * PLUS, a new card will be added to the next player on hand card list from the DRAW pile automatically.\n");
+    printf("  Wild card - When you play this card, you get to choose the color that continues play" 
+              "(any color including the color in play before the Wild card was laid down).\n");
+    printf("  Wild-Draw-TWO card - When you play this card, you get to choose the color that continues play.\n");
+    printf("                  * The next player loses their turn.\n");
+    printf("                  * PLUS, two new card will be added to the next player on hand card list from the DRAW pile automatically.\n\n");
     printf("************************************************************************\n\n");
 
     printf("\nPress any key to go back to Main Menu...");
