@@ -147,7 +147,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
     if (RET_SUCCESS == human_process_normal_card(human_card_choice)){
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
-        print_info("HUMAN player discarded a Skip card, COMPUTER player will lose turn.\n");
+        print_info("HUMAN discarded a Skip card, COMPUTER will lose turn.\n");
         return RET_SUCCESS;
     }
 
