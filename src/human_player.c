@@ -115,6 +115,7 @@ ret_type_e human_process_normal_card(Card_t human_card_choice)
         return RET_SUCCESS;
     }
     else{
+        print_warning("!!Warning!! Remove Card Failed! \n");
         return RET_FAILURE;
     }
 }
