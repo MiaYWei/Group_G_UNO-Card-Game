@@ -28,6 +28,7 @@ ret_type_e human_process_draw_one_card(Card_t human_card_choice);
 ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_changed);
 ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_e color_changed);
 void print_warning(const char* string);
+void print_info(const char* string_1, const char* string_2);
 int quit_game(void);
 
 /**
@@ -132,7 +133,7 @@ ret_type_e human_process_draw_one_card(Card_t human_card_choice)
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
         ret = player_process_draw_one_card(HUMAN);
-        printf("%s discarded a Draw-One card, COMPUTER player will lose turn.\n", g_human_player_name);
+        print_info("%s discarded a Draw-One card, COMPUTER player will lose turn.\n", g_human_player_name);
     }
 
     return ret;
@@ -150,7 +151,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
     if (RET_SUCCESS == human_process_normal_card(human_card_choice)){
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
-        printf("%s discarded a Skip card, COMPUTER player will lose turn.\n", g_human_player_name);
+        print_info("%s discarded a Skip card, COMPUTER player will lose turn.\n", g_human_player_name);
         return RET_SUCCESS;
     }
 
@@ -166,7 +167,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
 ret_type_e human_process_new_card_request(void)
 {
     if (g_card_requested){
-        print_warning("!!Warning!! You've already drawn a card from the pile. Please discard card or end turn now \n");
+        print_warning("!!Warning!! You've already drawn a card from the pile. Please discard card or end turn now. \n");
         return RET_FAILURE;
     }
     else{
@@ -254,7 +255,7 @@ ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
         ret = player_process_wild_draw_two_card(HUMAN);
-        printf("%s discarded a Wild-Draw-Two card, COMPUTER player will lose turn.\n", g_human_player_name);
+        print_info("%s discarded a Wild-Draw-Two card, COMPUTER player will lose turn.\n", g_human_player_name);
     }
 
     return ret;
@@ -389,7 +390,7 @@ ret_type_e human_process_card(const char* user_input)
     CardColor_e color_changed;
     Card_t human_card_choice = map_user_input(user_input);
     if ((human_card_choice.color == INVALID_COLOR) || (human_card_choice.name == INVALID_NAME)){
-        print_warning("!!Warning!! Invalid Input - Please entry a valid choice. (See Game Rules) \n");            
+        print_warning("!!Warning!! Invalid Input - Please enter a valid choice. (See Game Rules) \n");            
         return RET_INVALID_INPUT;
     }
 
@@ -474,5 +475,13 @@ void print_warning(const char* string)
     WORD attributes = 0;
     set_console_colour(&attributes, FOREGROUND_INTENSITY | FOREGROUND_RED);
     printf("%s\n", string);
+    reset_console_colour(attributes);
+}
+
+void print_info(const char* string_1, const char* string_2)
+{
+    WORD attributes = 0;
+    set_console_colour(&attributes, FOREGROUND_INTENSITY | FOREGROUND_BLUE);
+    printf("%s%s\n", string_1, string_2);
     reset_console_colour(attributes);
 }
