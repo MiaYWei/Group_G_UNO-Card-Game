@@ -40,7 +40,9 @@ void start_new_game(void)
 
     while (true){
         printf("Card on the table now: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
-        printf("Current player is %s.\n", PLAYER_TYPE_STRING[g_player_on_turn]);
+        printf("Current player is ");
+        print_info(PLAYER_TYPE_STRING[g_player_on_turn]);
+
         if (g_player_on_turn == HUMAN){
             handle_human_turn();
         }
