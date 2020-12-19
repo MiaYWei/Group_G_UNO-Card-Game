@@ -52,10 +52,10 @@ void start_new_game(void)
 
         if (g_end_game){
             if (g_game_winner == COMPUTER) {
-                print_winner("Game over. The winner is COMPUTER player ", NULL);
+                print_winner("Game over. The winner is COMPUTER player", NULL);
             }
             else {
-                print_winner("Game over. The winner is HUMAN player:", PLAYER_TYPE_STRING[g_game_winner]);
+                print_winner("Game over. The winner is HUMAN player:", g_human_player_name);
             }
 
             printf("\n");

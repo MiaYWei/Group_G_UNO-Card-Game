@@ -50,6 +50,11 @@ void print_winner(const char* string, const char* name)
 {
     WORD attributes = 0;
     set_console_colour(&attributes, FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-    printf("%s %s\n", string, name);
+    if (name == NULL){
+        printf("%s\n", string);
+    }
+    else {
+        printf("%s %s\n", string, name);
+    }
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), attributes);
 }
