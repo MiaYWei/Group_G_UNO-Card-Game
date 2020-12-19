@@ -6,9 +6,6 @@
 #include <stdarg.h>
 #include "../include/cards_management.h"
 
-#define hand_MAX 20
-#define plarCardNumber 10
-
 typedef enum casenumber { CASE1, CASE2, CASE3, CASE4 } casenumber_e;
 typedef struct colorInfo {
     CardColor_e color;
