@@ -1,0 +1,58 @@
+
+--------------- Start Test: Cards Management Module ---------------
+Test --- initialize_cards()......successful!
+Test --- deal_cards()......successful!
+Test --- add_card_at_end()......successful!
+Test --- add_card_at_beginning()......successful!
+Test --- remove_card_from_deck().Case 1:Remove Card at Beginning of List......successful!
+Test --- remove_card_from_deck().Case 2:Remove Card in Middle of List......successful!
+Test --- remove_card_from_deck().Case 3:Remove Card at End of List......successful!
+Test --- remove_first_card_from_deck().Case 1:Empty List......successful!
+Test --- remove_first_card_from_deck().Case 2:Not Empty List......successful!
+Test --- test_is_playable_card().Case 1:Playable Card......successful!
+Test --- test_is_playable_card().Case 2:Not Playable Card......successful!
+--------------- End of Test: Cards Management Module ---------------
+
+--------------- Start Test: Game Module ---------------
+Test--- test_initialize_players().Case 1:Player Type......Successful!
+Test--- test_initialize_players().Case 2:Player Card List Pointer......Successful!
+Test--- if_end_game().Case 1:Not End Game......Successful!
+Test--- if_end_game().Case 2:End Game......Successful!
+Test--- player_process_draw_one_card().......Successful!
+Test--- player_process_wild_draw_two_card().......Successful!
+Test--- handle_computer_turn().Case 1:No Playable Card Discarded, End Turn.......Successful!
+Test--- handle_computer_turn().Case 2:Playable Card Discarded, End Turn.......Successful!
+Test--- handle_computer_turn().Case 3:Invalid Player.......Successful!
+--------------- End of Test: Game Module ---------------
+
+--------------- Start Test: Computer Player Module  ---------------
+Test-- - computer_take_turn().Case 1:No Playable Card Discarded, End Turn, Game Continues......Successful!
+Test-- - computer_take_turn().Case 2:Playable Card Discarded, End Turn......Successful!
+Test-- - computer_take_turn().Case 3:Invalid Player......Successful!
+--------------- End of Test: Computer Player Module ---------------
+
+--------------- Start Test: Human Player Module ---------------
+Test--- map_user_input().Case 1:Invalid User Input ......Successful!
+Test--- map_user_input().Case 2:Valid User Input ......Successful!
+Test--- get_card_type().Case 1:Normal Card Type......Successful!
+Test--- get_card_type().Case 2:Skip Card Type......Successful!
+Test--- get_card_type().Case 3:Draw-One Card Type......Successful!
+Test--- get_card_type().Case 4:Wild Card Type......Successful!
+Test--- get_card_type().Case 5:Wild-Draw-Two Card Type......Successful!
+Test--- get_card_type().Case 6:Invalid Card Type......Successful!
+Test--- human_process_normal_card().Case 1:Invalid Card......Successful!
+Test--- human_process_normal_card().Case 2:Valid Card, but Not Playable......Successful!
+Test--- human_process_normal_card().Case 3:Human Player Discard a Normal Card......Successful!
+Test--- human_process_skip_card().Case 1:Inalid or Not Playable Card......Successful!
+Test--- human_process_skip_card().Case 2:Human Player Discard a Skip Card......Successful!
+Test--- human_process_draw_one_card().Case 1:Invalid or Not Playable Card......Successful!
+Test--- human_process_draw_one_card().Case 2:Human Player Discard a Draw-One Card......Successful!
+Test--- human_process_wild_card().Case 1:Invalid Card......Successful!
+Test--- human_process_wild_card().Case 2:Human Player Discard a Wild Card......Successful!
+Test--- human_process_wild_draw_two_card().Case 1:Invalid Card......Successful!
+Test--- human_process_wild_draw_two_card().Case 2:Human Player Discard a Wild-Draw-Two Card......Successful!
+Test--- human_process_end_turn_request().Case 1:Success on Human Player End Turn Request......Successful!
+Test--- human_process_end_turn_request().Case 2:Failed on Human Player End Turn Request......Successful!
+Test--- human_process_new_card_request().Case 1:Success on Human Player Request a New Card......Successful!
+Test--- human_process_new_card_request().Case 2:Failed on Human Player Request a New Card......Successful!
+--------------- End of Test: Human Player Module ---------------
