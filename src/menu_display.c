@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "../include/cards_management.h"
 #include "../include/game.h"
+#include "../include/console_print.h"
 
 void start_screen(void)
 {
@@ -95,7 +96,7 @@ void display_score_board(void)
 void invalid_choice(void)
 {
     char choice[5] = {0,0,0,0,0};
-    printf("Wrong choice. Press any key to go back to Main Menu...\n");
+    print_warning("Warning: Invalid choice. Press any key to go back to Main Menu...\n");
     scanf("%s", choice);
 }
 
