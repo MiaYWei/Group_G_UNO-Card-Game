@@ -493,6 +493,7 @@ int computer_process_request_card(void)
     if (is_playable_card(draw_card)){
         memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
         add_card_at_end(g_discard_pile, g_card_on_table);
+        printf("COMPUTER dropped..(%s, %s)\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);
         result = 0;
     }
     else{
@@ -513,7 +514,7 @@ int computer_process_request_card(void)
 void computer_process_playable_card(Deck_t* playable_card)
 {
     Deck_t* discard_card = play_card(playable_card, &g_players[COMPUTER].cards_on_hand);
-    printf("Computer Drops..(%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
+    printf("COMPUTER dropped..(%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
     memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
     add_card_at_end(g_discard_pile, g_card_on_table);
     end_turn(COMPUTER);
