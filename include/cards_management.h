@@ -5,7 +5,7 @@
 #include <stdio.h> 
 
 /* Totally 52 cards, which includes
-* Release 1: 10 cards per colour;
+* Release 1: 10 cards in each colour;
 * Release 2: 4 Skip cards; 4 Draw One cards; 2 Wild cards; 2 Wild Draw Two cards*/
 #define MAX_CARDS_NUM   52
 #define MALLOC_FAIL     1
@@ -27,20 +27,20 @@ static const int USER_INPUT_NAME[] = { '0', '1', '2', '3', '4', '5', '6' ,'7', '
 
 /* Card struct */
 typedef struct CARD {
-    CardColor_e color;               /* Color code for card */
-    CardName_e name;                 /* Name code for card */
+    CardColor_e color;               /* Color code for the card */
+    CardName_e name;                 /* Name code for the card */
 } Card_t;
 
 /* Deck struct, which is a Linked-list */
 typedef struct DECK {
-    Card_t card;                  /* The current card this deck holds */
+    Card_t card;                       /* The current card this deck holds */
     struct DECK* next;                 /* Pointer to the next deck item */
 } Deck_t;
 
 /* Player struct */
 typedef struct Player {
     PlayerType_e type;            /* The player type*/
-    Deck_t* cards_on_hand;      /* Pointer to the player's deck on hand */
+    Deck_t* cards_on_hand;       /* Pointer to the player's deck on hand */
 } Player_t;
 
 /* Global variables */
