@@ -409,6 +409,6 @@ bool is_human_card(Card_t current_card)
  */
 int quit_game(void)
 {
-    printf("Exiting the game..");
+    print_info("HUMAN player requested to quit the current. Exiting the game..");
     exit(0);
 }
