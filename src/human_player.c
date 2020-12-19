@@ -95,25 +95,23 @@ ret_type_e human_process_end_turn_request(void)
  */
 ret_type_e human_process_normal_card(Card_t human_card_choice)
 {
-    //Check if the card is from the human player deck
-    if (!is_human_card(human_card_choice)){
-        print_warning("!!Warning!! Please select a card from your deck! \n");
-        invalid_card_warning();
-        return RET_INVALID_CARD;
-    }
-
     //If valid add the card to the discard_pile
     if (!is_playable_card(human_card_choice)){
         invalid_card_warning();
         return RET_NOT_PLAYABLE_CARD;
     }
 
-    remove_card_from_deck(&g_players[HUMAN].cards_on_hand, human_card_choice);
-    add_card_at_end(g_discard_pile, human_card_choice);
-    memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
-    end_turn(HUMAN);
-    g_card_requested = false;
-    return RET_SUCCESS;
+    if (remove_card_from_deck(&g_players[HUMAN].cards_on_hand, human_card_choice)){
+        add_card_at_end(g_discard_pile, human_card_choice);
+        memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
+        end_turn(HUMAN);
+        g_card_requested = false;
+        return RET_SUCCESS;
+    }
+    else{
+        print_warning("!!Warning!! Remove Card Failed! \n");
+        return RET_FAILURE;
+    }
 }
 
 /**
@@ -163,7 +161,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
 ret_type_e human_process_new_card_request(void)
 {
     if (g_card_requested){
-        print_warning("!!Warning!! You've already drawn a card from the pile. Please discard card or end turn now. \n");
+        print_warning("!!Warning!! You've already requested a new card. Please discard card or end turn now. \n");
         return RET_FAILURE;
     }
     else{
@@ -216,13 +214,6 @@ ret_type_e card_color_change_inquiry(CardColor_e* color_changed)
  */
 ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_changed)
 {
-    //If valid add the card to the discard_pile
-    if (!is_human_card(human_card_choice))
-    {
-        print_warning("!!Warning!! Please select a card from your deck! \n");
-        return RET_INVALID_CARD;
-    }
-
     remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), human_card_choice);
     add_card_at_end(g_discard_pile, human_card_choice);
 
@@ -350,12 +341,19 @@ ret_type_e human_process_card(const char* user_input)
     ret_type_e ret = RET_FAILURE;
     CardColor_e color_changed;
     Card_t human_card_choice = map_user_input(user_input);
+    printf("You selected: (%s, %s).\n", CARD_COLOR_STRING[human_card_choice.color], CARD_NAME_STRING[human_card_choice.name]);
     if ((human_card_choice.color == INVALID_COLOR) || (human_card_choice.name == INVALID_NAME)){
         print_warning("!!Warning!! Invalid Input - Please enter a valid choice. \n");            
         return RET_INVALID_INPUT;
     }
 
     CardType_e card_type = get_card_type(human_card_choice);
+    //Check if the card is from the human player deck
+    if (!is_human_card(human_card_choice)){
+        print_warning("!!Warning!! Please select a card from your deck! \n");
+        return RET_INVALID_CARD;
+    }
+
     switch (card_type){
         case NORMAL:
             return human_process_normal_card(human_card_choice);
