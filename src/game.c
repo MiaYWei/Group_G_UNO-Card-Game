@@ -87,11 +87,11 @@ void player_name_inquiry(void)
  */
 bool confirm_exit(void)
 {
-    char char_choice[4] = {0,0,0,0};
+    char char_choice[10] = {0,0,0,0};
     char exit_string[] = "Yes";
 
-    printf("Exit Game?\n");
-    printf("Please enter 'Yes' to confirm the Exit. Press any other key to cancel Exit.\n");
+    print_info("Exit Game?");
+    print_info("Please enter 'Yes' to confirm the Exit. Press any other key to cancel Exit. \n");
 
     scanf("%s", char_choice);
     printf("Entered choice is %s \n", char_choice);
