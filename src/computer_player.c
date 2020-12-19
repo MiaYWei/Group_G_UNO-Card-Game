@@ -499,21 +499,7 @@ int computer_process_request_card(void)
     Card_t draw_card = draw_one_card();
     printf("COMPUTER draws a new card from the pile. \n");
     if (is_playable_card(draw_card)){
-        memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
-        add_card_at_end(g_discard_pile, g_card_on_table);
-        printf("COMPUTER dropped..(%s,%s)\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);
-        end_turn(COMPUTER);
-        if (draw_card.name == SKIP) { 
-            g_player_on_turn = COMPUTER;
-        }
-        else if (draw_card.name == DRAW_ONE) {
-            g_player_on_turn = COMPUTER;
-            player_process_draw_one_card(COMPUTER);
-        }
-        else if (draw_card.name == WILD_DRAW_TWO) {
-            g_player_on_turn = COMPUTER;
-            player_process_wild_draw_two_card(COMPUTER);
-        }
+        process_playable_card(draw_card);
         result = 0;
     }
     else{
@@ -525,6 +511,33 @@ int computer_process_request_card(void)
     return result;
 }
 
+void process_playable_card(Card_t playable_card)
+{
+    memcpy(&g_card_on_table, &playable_card, sizeof(Card_t));
+    add_card_at_end(g_discard_pile, g_card_on_table);
+    if ((playable_card.name == WILD) || (playable_card.name == WILD_DRAW_TWO))
+    {
+        printf("COMPUTER dropped..(%s,%s). ", CARD_COLOR_STRING[ACTION], CARD_NAME_STRING[playable_card.name]);
+        printf("Color changed to %s\n", CARD_COLOR_STRING[playable_card.color]);
+    }
+    else{
+        printf("COMPUTER dropped..(%s,%s)\n", CARD_COLOR_STRING[playable_card.color], CARD_NAME_STRING[playable_card.name]);
+    }
+    
+    end_turn(COMPUTER);
+    if (playable_card.name == SKIP) {
+        g_player_on_turn = COMPUTER;
+    }
+    else if (playable_card.name == DRAW_ONE) {
+        g_player_on_turn = COMPUTER;
+        player_process_draw_one_card(COMPUTER);
+    }
+    else if (playable_card.name == WILD_DRAW_TWO) {
+        g_player_on_turn = COMPUTER;
+        player_process_wild_draw_two_card(COMPUTER);
+    }
+    return;
+}
 /**
  * @brief Computer player discards a playable card, which include Skip and DRAW_ONE card.
  *
@@ -534,24 +547,9 @@ int computer_process_request_card(void)
 void computer_process_playable_card(Deck_t* playable_card)
 {
     Deck_t* discard_card = play_card(playable_card, &g_players[COMPUTER].cards_on_hand);
-    printf("COMPUTER dropped..(%s,%s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
-    memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));
-    add_card_at_end(g_discard_pile, g_card_on_table);
-    end_turn(COMPUTER);
-    if (discard_card->card.name == SKIP){
-        g_player_on_turn = COMPUTER;
-        return;
-    }
-    else if (discard_card->card.name == DRAW_ONE){
-        g_player_on_turn = COMPUTER;
-        player_process_draw_one_card(COMPUTER);
-        return;
-    }
-    else if (discard_card->card.name == WILD_DRAW_TWO){
-        g_player_on_turn = COMPUTER;
-        player_process_wild_draw_two_card(COMPUTER);
-        return;
-    }
+    process_playable_card(discard_card->card);
+
+    return;
 }
 
 /**
