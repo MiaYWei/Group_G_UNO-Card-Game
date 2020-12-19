@@ -167,7 +167,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
 ret_type_e human_process_new_card_request(void)
 {
     if (g_card_requested){
-        print_warning("!!Warning!! You've already drawn a card from the pile. Please discard card or end turn now. \n");
+        print_warning("!!Warning!! You've already requested a new card. Please discard card or end turn now. \n");
         return RET_FAILURE;
     }
     else{
