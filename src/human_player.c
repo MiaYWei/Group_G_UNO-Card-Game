@@ -354,6 +354,7 @@ ret_type_e human_process_card(const char* user_input)
     ret_type_e ret = RET_FAILURE;
     CardColor_e color_changed;
     Card_t human_card_choice = map_user_input(user_input);
+    printf("You selected: (%s, %s).\n", CARD_COLOR_STRING[human_card_choice.color], CARD_NAME_STRING[human_card_choice.name]);
     if ((human_card_choice.color == INVALID_COLOR) || (human_card_choice.name == INVALID_NAME)){
         print_warning("!!Warning!! Invalid Input - Please enter a valid choice. \n");            
         return RET_INVALID_INPUT;
