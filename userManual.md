@@ -1,101 +1,107 @@
+<div style="text-align: justify">  
+
 ## Contents
 * Introduction
-* Installation and Usage
+* Installation 
+* Compiling the project
 * Testing
-* Feature Description
+* Welcome Screen
+* Rules 
+* Feature Descriptions
+* Things to Note
 
 ## Introduction
 
-UNO Card Game is a fun and interesting game, traditionally played by a group of 2 to 4 people with a deck of printed cards. And during the COVID-19 pandemic, we can use this game to keep ourselves entertained while maintaining our social circle. What’s more, this game will keep you engaged and help reduce stress. This time you neither need to fret over saying UNO before you drop your penultimate card nor wait until the deck is shuffled.
+UNO Express Card Game is a fun and interesting game which is developed in  C programming  language which supports a single player competing against a computer opponent. The game has been slightly modified to suit development of a single player game and make it simple and interesting at the same time.
 
-## Installation and Usage
+## Installation 
 
-Our project 'UNO Card Game' can be run on Cygwin compiler or any other IDE with GNU GCC compiler. 
+UNO Card Game can be run on Cygwin compiler or any other IDE with GNU GCC compiler. 
 
 Cygwin : [Download Link](https://sourceforge.net/projects/mingw-w64/)
 
-To download the project game, the following are the steps:
+To download the project, follow the steps below,
 
-1. Install Git (The 'User' can use Git bash or any other software of choice to clone the project).
+* Install Git (The 'User' can use Git bash or any other software of choice to clone the project).
 
-2. Create a new folder for the project. Right-click inside the folder and open a gitbash here. Right-Click +” Git Bashhere”.
+* Create a new folder for the project. Right-click inside the folder and open gitbash.
 
-3. Type the following command in the git terminal: 
+* Type the following command in the git terminal: 
 
-Git clone https://github.com/MiaYWei/Group_G_UNO-Card-Game 
+git clone https://github.com/MiaYWei/Group_G_UNO-Card-Game 
 
 OR 
 
-Go to the link https://github.com/MiaYWei/Group_G_UNO-Card-Game and click on "Clone" or "Download" and download the zip folder of the software.
+Go to https://github.com/MiaYWei/Group_G_UNO-Card-Game and click on "Download" option to download the
+zip folder of the project.
 
-To Ensure that project(program) is compiled and running:
+## Compiling the project 
 
-1. Compiling the project.
+* Open the folder containing the project downloaded in the previous step and copy its path.
+* Open Cygwin64 Terminal, type cd (path), and enter.
+* Ensure to initialize the project using `make clean` to remove all build artifacts.
+* Type the command `make all` and click on enter. Screenshot below shows the expected output after executing this command.
 
-     a) Open the downloaded folder, open  ..\.
+![image](https://user-images.githubusercontent.com/42897174/102678709-26564100-4178-11eb-925d-592a30cee251.png)
 
-     b) Copy path.
-
-     c) Open Cygwin64 Terminal, type cd (path), and enter.
-
-     d) Type `make` and enter. (After this command is entered, object files and executable files will be created. The user can run the project from the bin folder.)
-
-2. Ensure to initialize the project using `make clean` to remove all build artifacts
-
-4. Compile by using `make` to build the application
-
-5. Type `bin/./Group_G_UNO-Card-Game.exe` to run the project(or game). //Krithiga if this is needed, edit it and check the name of the executable file.
-Note: DEBUG can be enabled by appending DEBUG=1 to the make command (i.e. make DEBUG=1) //Krithiga, if this is needed keep it or else delete this.
+* After the execution of the previous command, we see that the executable files will be created in the bin folder.
+* The user can run the application by using the command `./bin/UNO-Card-Game.exe`.
 
 ## Testing
 
-1. Replace the makefile with the file present at path test../makefile and run the command again. 
+* After executing the 'make all' command, we will see a 'UNO-Card-Game_Test.exe' file created in the bin folder. To run the test files
+  please use the command `./bin/UNO-Card-Game_Test.exe`.
+* The output of the test file is logged to 'test_log.txt' in the same folder. This file gives the summary of the outputs
+  (success/failure) for all the test cases in the test files. 
+  
+  
+## Welcome Screen
+After executing the program, the following Welcome screen is displayed with the Main menu.
 
-2. Test the project using `make` to build a test application.
-
-Note: We are using `make all` to create ... //Krithiga, if this is needed edit it or else delete this.
-
-## Feature Description
-
-After running the program, the following screen is displayed with the following options,
-
-////Krithiga, screenshot.
-
-This module handles the display functionalities on the console. 
-
-* display_main_menu() - Displays main menu of the opening screen of the game, 4 selectable options to operate the game. 
-
-* start_new_game()- Executes and start the main program 
-
-* display_game_rules () - Displays the rules of UNO express 
-
-* exit_game () - Exit the program and return to main menu 
-
-If user choose the option of displaying game rules, the following screen is displayed,
-
-////Krithiga, screenshot.
-
-If user choose the option of starting the game, the following screen is displayed with human player's deck with 5 cards,
-
-////Krithiga, screenshot.
+![image](https://user-images.githubusercontent.com/42897174/102591053-6c12fb00-40df-11eb-97d0-2e0f627bd252.png)
 
 
-If user wishes to quit the game, human player can enter “q” or “Q” using the keyboard.
+## Rules 
+ The rules of the game are available to the user by choosing option '1' in the Main menu. We can also take a look at the keyboard inputs required for the human player to play the game here. They are also available in depth in the readme file linked below.
+ 
+ [UNO Express Readme file](https://github.com/MiaYWei/Group_G_UNO-Card-Game/blob/master/README.md)
 
-Note: PLayer **MUST** follow the rules displayed in the game. If not followed, a warning message is displayed as shown below for one of the input cases,
+## Game Initialization
 
-////Krithiga, screenshot.
+![image](https://user-images.githubusercontent.com/42897174/102587463-dde84600-40d9-11eb-8086-c2406789ef05.png)
+
+* In the image above, we see that during the start of the game each player is assigned 5 cards. The deck assigned to the human player seen on the screen( highlighted in yellow).
+
+* Also, for the game to begin, one card is placed on the table which is displayed on the screen( highlighted in yellow).
+
+* The player to take turn next is also displayed on the screen.
+
+## Project Modules
+The project is split into 5 modules as follows,
+
+* Menu Display-  Displays the Welcome screen along with the Main menu during the start of the game.
+
+* Game - This module handles the initialization of the game, assigning each player with 5 cards during the start of the game and setting up the discard and draw piles. This also has the functionality to end each player's turn as well as quit game.
+
+* Cards Management - All card related functionalities like the declaration of cards structures, global variables, add/remove card, display card are all taken care of here.
+
+* Computer Player - Computer player related functions is implemented here.
+
+* Human Player- Human player functionality is supported here.
 
 
+## Things to Note
+
+This game is designed with a predefined set of rules for the human player to follow so that the computer understands the user input and carries the game forward. If the human player does not make a valid choice during his turn we display a warning message (with the error) as shown in the image below.
+
+![image](https://user-images.githubusercontent.com/42897174/102587250-8649da80-40d9-11eb-9064-5a4de171b2ee.png)
+
+Scenarios where the Human player will be faced with warning:
+
+* When a invalid card is chosen. Say, for example, when the card discarded does not match   the card on table with either color/number.
+* When you discard a card that doesn't belong to your deck of cards.
+* When you try to draw card twice from the draw pile. Just one draw card per turn is allowed.
+* When you try to end you turn before you draw card/discard card. If you don't have any   cards to match the card on the table, you are expected to draw card first and then end your turn.
 
 
-
-
-
-
-
-
-
-
-
-
+</div>
