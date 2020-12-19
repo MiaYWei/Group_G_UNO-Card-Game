@@ -497,7 +497,7 @@ int computer_process_request_card(void)
 {
     int result = -1;
     Card_t draw_card = draw_one_card();
-    printf("COMPUTER draws a new card from the pile, since no playable card on hand. \n");
+    printf("COMPUTER draws a new card from the pile. \n");
     if (is_playable_card(draw_card)){
         memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
         add_card_at_end(g_discard_pile, g_card_on_table);
