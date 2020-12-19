@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <windows.h>
 #include "../include/cards_management.h"
 #include "../include/human_player.h"
 #include "../include/game.h"
@@ -14,8 +13,10 @@ bool g_card_requested = false;
 
 ret_type_e record_human_input(void);
 Card_t map_user_input(const char* user_input);
+CardType_e get_card_type(Card_t card);
 int request_card(PlayerType_e PlayerType);
 void invalid_card_warning(void);
+void show_cards_assigned(Card_t assigned_card);
 bool is_human_card(Card_t current_card);
 ret_type_e card_color_change_inquiry(CardColor_e* color_changed);
 ret_type_e human_process_card(const char* user_input);
@@ -26,8 +27,6 @@ ret_type_e human_process_skip_card(Card_t human_card_choice);
 ret_type_e human_process_draw_one_card(Card_t human_card_choice);
 ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_changed);
 ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_e color_changed);
-void print_warning(const char* string);
-void print_info(const char* string_1, const char* string_2);
 int quit_game(void);
 
 /**
@@ -44,19 +43,18 @@ int request_card(PlayerType_e PlayerType)
 {
     g_card_requested = true;
     Card_t card = draw_one_card();
-    printf("The card from the draw pile is (%s,%s) \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
+    show_cards_assigned(card);
 
     //Assigning the drawn card to the human player
     return add_card_at_end(g_players[HUMAN].cards_on_hand, card);
 }
-
 /**
  * @brief Throws a warning message if the card dropped by the user is invalid
  * 
  */
 void invalid_card_warning(void)
 {
-    print_warning("!!Warning!! Invalid card - Please choose a valid card. \n");
+    printf("!!Warning!! Invalid card - Please choose a valid card \n");
     display_player_deck(HUMAN);
 
     return;
@@ -80,7 +78,7 @@ ret_type_e human_process_end_turn_request(void)
     }
     else
     {
-        print_warning("!!Warning!! Please draw a card before you can end your turn.\n");
+        printf("!!Warning!! Please draw a card before you can end your turn.\n");
         display_player_deck(HUMAN);
     }
 
@@ -99,7 +97,7 @@ ret_type_e human_process_normal_card(Card_t human_card_choice)
 {
     //Check if the card is from the human player deck
     if (!is_human_card(human_card_choice)){
-        print_warning("!!Warning!! Please select a card from your deck! \n");
+        printf("!!Warning!! Please select a card from your deck! \n");
         invalid_card_warning();
         return RET_INVALID_CARD;
     }
@@ -132,7 +130,7 @@ ret_type_e human_process_draw_one_card(Card_t human_card_choice)
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
         ret = player_process_draw_one_card(HUMAN);
-        print_info("%s discarded a Draw-One card, COMPUTER player will lose turn.\n", g_human_player_name);
+        printf("%s discarded a Draw-One card, COMPUTER player will lose turn.\n", g_human_player_name);
     }
 
     return ret;
@@ -150,7 +148,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
     if (RET_SUCCESS == human_process_normal_card(human_card_choice)){
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
-        print_info("%s discarded a Skip card, COMPUTER player will lose turn.\n", g_human_player_name);
+        printf("%s discarded a Skip card, COMPUTER player will lose turn.\n", g_human_player_name);
         return RET_SUCCESS;
     }
 
@@ -166,7 +164,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
 ret_type_e human_process_new_card_request(void)
 {
     if (g_card_requested){
-        print_warning("!!Warning!! You've already drawn a card from the pile. Please discard card or end turn now. \n");
+        printf("!!Warning!! You've already drawn a card from the pile. Please discard card or end turn now \n");
         return RET_FAILURE;
     }
     else{
@@ -202,7 +200,7 @@ ret_type_e card_color_change_inquiry(CardColor_e* color_changed)
         *color_changed = YELLOW;
     }
     else{
-        print_warning("!!Warning!! Choose a valid color (R/B/G/Y) \n");
+        printf("!!Warning!! Choose a valid color (R/B/G/Y) \n");
         return RET_INVALID_INPUT;
     }
     return RET_SUCCESS;
@@ -222,7 +220,7 @@ ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_c
     //If valid add the card to the discard_pile
     if (!is_human_card(human_card_choice))
     {
-        print_warning("!!Warning!! Please select a card from your deck! \n");
+        printf("!!Warning!! Please select a card from your deck! \n");
         return RET_INVALID_CARD;
     }
 
@@ -254,7 +252,7 @@ ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
         ret = player_process_wild_draw_two_card(HUMAN);
-        print_info("%s discarded a Wild-Draw-Two card, COMPUTER player will lose turn.\n", g_human_player_name);
+        printf("%s discarded a Wild-Draw-Two card, COMPUTER player will lose turn.\n", g_human_player_name);
     }
 
     return ret;
@@ -312,6 +310,41 @@ Card_t map_user_input(const char* user_input)
 }
 
 /**
+ * @brief Get the card type by card info
+ *
+ * @param card The specific card info
+ * @return CardType_e the mapped card type.
+ *
+ */
+CardType_e get_card_type(Card_t card)
+{
+    CardType_e card_type = INVALID_TYPE;
+    switch (card.name){
+        case ZERO:
+        case TWO:
+        case THREE:
+        case FOUR:
+        case FIVE:
+        case SIX:
+        case SEVEN:
+        case EIGHT:
+        case NINE:
+            card_type = NORMAL;
+            break;
+        case SKIP:
+        case DRAW_ONE:
+        case WILD:
+        case WILD_DRAW_TWO:
+            card_type = card.name - 9;
+            break;
+        default:
+            break;
+    }
+
+    return card_type;
+}
+
+/**
  * @brief Records the Human player input during his turn and performs appropriate functions 
  * Called each time when it's the human player's turn 
  * Keyboard Input from Human 
@@ -354,7 +387,6 @@ ret_type_e human_process_card(const char* user_input)
     CardColor_e color_changed;
     Card_t human_card_choice = map_user_input(user_input);
     if ((human_card_choice.color == INVALID_COLOR) || (human_card_choice.name == INVALID_NAME)){
-        print_warning("!!Warning!! Invalid Input - Please enter a valid choice. (See Game Rules) \n");            
         return RET_INVALID_INPUT;
     }
 
@@ -382,6 +414,19 @@ ret_type_e human_process_card(const char* user_input)
         default:
             return RET_FAILURE;
     }
+}
+
+/**
+ * @brief Displays the card assigned to the human player on the console during Request card/
+ * Draw1 and Draw2 scenarios
+ * 
+ * @param assigned_card Card that has been added newly to the player's deck
+ */
+void show_cards_assigned(Card_t assigned_card)
+{
+    printf("The card from the draw pile is (%s,%s) \n", CARD_COLOR_STRING[assigned_card.color], CARD_NAME_STRING[assigned_card.name]);
+    display_player_deck(HUMAN);
+    return;
 }
 
 /**
@@ -418,34 +463,4 @@ int quit_game(void)
 {
     printf("Exiting the game..");
     exit(0);
-}
-
-void set_console_colour(WORD* attributes, WORD color)
-{
-    CONSOLE_SCREEN_BUFFER_INFO Info;
-    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-    GetConsoleScreenBufferInfo(hStdout, &Info);
-    *attributes = Info.wAttributes;
-    SetConsoleTextAttribute(hStdout, color);
-}
-
-void reset_console_colour(WORD attributes)
-{
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), attributes);
-}
-
-void print_warning(const char* string)
-{
-    WORD attributes = 0;
-    set_console_colour(&attributes, FOREGROUND_INTENSITY | FOREGROUND_RED);
-    printf("%s\n", string);
-    reset_console_colour(attributes);
-}
-
-void print_info(const char* string_1, const char* string_2)
-{
-    WORD attributes = 0;
-    set_console_colour(&attributes, FOREGROUND_INTENSITY | FOREGROUND_BLUE);
-    printf("%s%s\n", string_1, string_2);
-    reset_console_colour(attributes);
 }

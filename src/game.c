@@ -9,15 +9,14 @@
 bool g_end_game = false;
 char g_human_player_name[PLAYERS_NAME_LENGTH] = "HumanPlayer";
 
+void start_new_game(void);
+bool confirm_exit(void);
 int initialize_game(void);
 void initialize_players(void);
-void start_new_game(void);
-void player_name_inquiry(void);
-bool confirm_exit(void);
 void end_turn(PlayerType_e player);
 bool if_end_game(PlayerType_e player);
 void handle_computer_turn(void);
-ret_type_e handle_human_turn(void);
+void player_name_inquiry(void);
 int player_process_draw_one_card(PlayerType_e player);
 int player_process_wild_draw_two_card(PlayerType_e player);
 
@@ -35,6 +34,11 @@ void start_new_game(void)
     }
 
     printf("\nGame begins now...\n");
+    printf("Human Player Deck: ");
+    display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
+    //For Testing only
+    //printf("Computer Player Deck: ");
+    //display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
     printf("\n\n");
 
     while (true){
@@ -169,22 +173,32 @@ bool if_end_game(PlayerType_e player)
 }
 
 /**
+ * @brief This function handles the functionality to support computer player's turn 
+ * 
+ */
+void handle_computer_turn(void)
+{
+    int ret = computer_take_turn();
+    if ((0 == ret) || (1 == ret)){
+        end_turn(COMPUTER);
+    }
+    else{
+        printf("Error: Not Computer's turn now.\n");
+    }
+
+    return;
+}
+
+/**
  * @brief This function handles the functionality to support human player's turn
  *
  */
 ret_type_e handle_human_turn(void)
 {
     display_player_deck(HUMAN);
-    return record_human_input();
-}
+    ret_type_e ret = record_human_input();
 
-/**
- * @brief This function handles the functionality to support computer player's turn
- *
- */
-void handle_computer_turn(void)
-{
-    computer_take_turn();
+    return ret;
 }
 
 /**

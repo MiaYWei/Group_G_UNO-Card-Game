@@ -1,10 +1,9 @@
 #include <stdlib.h>
-#include "../../include/game.h"
+#include "../../include/cards_management.h"
 #include "../../include/computer_player.h"
 #include "../include/test.h"
 #include "../include/test_game.h"
 #include "../include/test_cards_management.h"
-
 void test_computer_take_turn(void);
 
 void test_computer_player(void)
@@ -14,6 +13,56 @@ void test_computer_player(void)
     write_log("--------------- End of Test: Computer Player Module ---------------\n");
     return;
 }
+void append(Deck_t** head_ref, Card_t card) {
+    /* 1. allocate node */
+
+    Deck_t* new_card = (Deck_t*)malloc(sizeof(Deck_t));
+    struct DECK* last = *head_ref;  /* used in step 5*/
+
+    /* 2. put in the data  */
+    new_card->card.color = card.color;
+    new_card->card.name = card.name;
+    new_card->next = NULL;
+
+
+    /* 4. If the Linked List is empty, then make the new node as head */
+    if (*head_ref == NULL)
+    {
+        *head_ref = new_card;
+        return;
+    }
+
+    /* 5. Else traverse till the last node */
+    while (last->next != NULL)
+        last = last->next;
+
+    /* 6. Change the next of last node */
+    last->next = new_card;
+    return;
+}
+
+Deck_t* build_test_list_for_computer() {
+    /* define cards*/
+    struct CARD card1 = { RED, ONE }, card2 = { RED, FIVE }, card3 = { GREEN, FIVE }, card4 = { ACTION, WILD }, card5 = { GREEN, TWO }, card6 = { YELLOW, FOUR }, card7 = { RED, NINE }, card8 = { RED, SKIP }, card9 = {GREEN, DRAW_ONE};
+    struct CARD testCard1 = { BLUE, SIX }, testCard2 = { GREEN , SEVEN }, testCard3 = { BLUE, FIVE }, testCard4 = { BLUE, ONE }, testCard5 = { GREEN, FOUR }, testWILD = { BLUE, WILD }, testDRAW = { BLUE, DRAW_ONE };
+
+    /* define hand card list */
+    struct DECK* hand_card_list = NULL, * played = NULL;
+    struct DECK* ptr = NULL;
+    append(&hand_card_list, card1);
+    append(&hand_card_list, card2);
+    append(&hand_card_list, card3);
+    append(&hand_card_list, card4);
+    append(&hand_card_list, card5);
+    append(&hand_card_list, card6);
+    append(&hand_card_list, card7);
+    append(&hand_card_list, card8);
+    append(&hand_card_list, card9);
+    display_cards_list(hand_card_list);
+
+    return hand_card_list;
+}
+
 
 void test_computer_take_turn(void)
 {
@@ -21,8 +70,229 @@ void test_computer_take_turn(void)
     if (initialize_game()) {
         write_log("Test --- computer_take_turn()......Initialize game failed! \n");
     }
+    g_players[COMPUTER].cards_on_hand = build_test_list_for_computer();
 
-    // Case 1: No playable card to discard, end of turn, game continues.
+
+    // function - test find_most_color
+    actual_ret = test_find_most_color(&g_players[COMPUTER].cards_on_hand);
+    expected_ret = 1;
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - find_most_color().find the color with the most occurence......Successful!\n");;
+    }
+    else {
+        write_log("Test-- - find_most_color().find the color with the most occurence......failed!\n");
+        write_fail_log("The return value of find_most_color: %s  %s\n", actual_ret, "expected_ret");
+    }
+
+    // function - test ifexists
+    Card_t card = { RED, ONE };
+    actual_ret = test_ifexists(&g_players[COMPUTER].cards_on_hand, card, 1);
+    expected_ret = 1;
+    if (expected_ret == actual_ret) {
+        write_log("Test-- - ifexsits.find if a card is existed in the list......Successful!\n");
+    }
+    else {
+        write_log("Test-- - ifexsits.find if a card is existed in the list......failed!\n");
+        write_fail_log("The return value of ifexists():\n", actual_ret, expected_ret);
+    }
+
+
+    // function - test find_largest_number
+    actual_ret = test_find_largest_number(&g_players[COMPUTER].cards_on_hand, RED, NINE);
+    expected_ret = 1;
+    if (expected_ret == actual_ret) {
+        write_log("Test-- - find_largest_number().find the largest number of a color in the list......Successful!\n");
+    }
+    else {
+        write_log("Test-- - find_largest_number().find the largest number of a color in the list......failed!\n");
+        write_fail_log("The return value of find_largest_number():\n", actual_ret, expected_ret);
+    }
+
+
+    // function - test find_occurence_of_number
+    actual_ret = test_find_occurence_of_number(&g_players[COMPUTER].cards_on_hand, FIVE, 2);
+    expected_ret = 1;
+    if (expected_ret == actual_ret) {
+        write_log("Test-- - find_largest_number().find the occurence of a number  in the list......Successful!\n");
+    }
+    else {
+        write_log("Test-- - find_largest_number.()find the largest number of a color in the list......failed!\n");
+        write_fail_log("The return value of find_largest_number():\n", actual_ret, expected_ret);
+    }
+
+
+    // function - test find_occurence_of_color
+    expected_ret = 1;
+    actual_ret = test_find_occurence_of_color(&g_players[COMPUTER].cards_on_hand, RED, 4);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - find_occurence_of_color().find the count of a color in the list......Successful!\n");
+    }
+    else {
+        write_log("Test-- - find_occurence_of_color.find the count of a clolr in the list......failed!\n");
+        write_fail_log("The return value of find_occurence_of_color():\n", actual_ret, expected_ret);
+    }
+
+
+
+    // function - test find_color_with_most_occurence
+    expected_ret = 1;
+    actual_ret = test_find_color_with_most_occurence(&g_players[COMPUTER].cards_on_hand, FIVE, RED);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - find_color_with_most_occurence.if multiple color have same number(). find the color with most occurence......Successful!\n");
+    }
+    else {
+        write_log("Test-- - find_color_with_most_occurence.if multiple color have same number. find the color with most occurence......failed!\n");
+        write_fail_log("The return value of find_color_with_most_occurence():\n", actual_ret, expected_ret);
+    }
+
+    //function - pick case CASE1
+    expected_ret = 1;
+     Card_t testCard1 = { BLUE, SIX };
+    actual_ret = test_pick_case(&g_players[COMPUTER].cards_on_hand, testCard1, CASE1);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - pick_case(). CASE1 No matched color and No matched number......Successful!\n");
+    }
+    else {
+        write_log("Test-- - pick_case(). CASE1 No matched color and No matched number......failed!\n");
+        write_fail_log("The return value of pick_case().CASE1:\n", actual_ret, expected_ret);
+    }
+
+    //function - pick case CASE2
+    expected_ret = 1;
+    Card_t testCard2 = { GREEN , SEVEN };
+    actual_ret = test_pick_case(&g_players[COMPUTER].cards_on_hand, testCard2, CASE2);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - pick_case(). CASE2 matched color and No matched number......Successful!\n");
+    }
+    else {
+        write_log("Test-- - pick_case(). CASE2 matched color and No matched number......failed!\n");
+        write_fail_log("The return value of pick_case().CASE2:\n", actual_ret, expected_ret);
+    }
+
+    //function - pick case CASE3
+    expected_ret = 1;
+    Card_t  testCard3 = { BLUE, FIVE };
+    actual_ret = test_pick_case(&g_players[COMPUTER].cards_on_hand, testCard3, CASE3);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - pick_case(). CASE3 NO matched color and matched number......Successful!\n");
+    }
+    else {
+        write_log("Test-- - pick_case(). CASE3 NO matched color and matched number......failed!\n");
+        write_fail_log("The return value of pick_case().CASE3:\n", actual_ret, expected_ret);
+    }
+
+
+    //function - pick case CASE4
+    expected_ret = 1;
+    Card_t  testCard5 = {  GREEN, FOUR };
+    actual_ret = test_pick_case(&g_players[COMPUTER].cards_on_hand, testCard5, CASE4);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - pick_case(). CASE4  matched color and matched number......Successful!\n");
+    }
+    else {
+        write_log("Test-- - pick_case(). CASE4  matched color and matched number......failed!\n");
+        write_fail_log("The return value of pick_case().CASE4:\n", actual_ret, expected_ret);
+    }
+
+    //function - pick card CASE1
+    expected_ret = 1;
+    Card_t  expectCard = { RED, WILD };
+    actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard1, expectCard);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - pick_card(). CASE1  Play wild if there is no playable card......Successful!\n");
+    }
+    else {
+        write_log("Test-- -  pick_card(). CASE1  Play wild if there is no playable card......failed!\n");
+        write_fail_log("The return value of pick_card().CASE1:\n", actual_ret, expected_ret);
+    }
+
+    //function - pick card CASE1-1
+    expected_ret = 1;
+    //pop wild from list
+    Card_t WILDCard = { ACTION, WILD };
+    play_card(find_address(&g_players[COMPUTER].cards_on_hand, WILDCard), &g_players[COMPUTER].cards_on_hand);
+    Card_t NULLcard = { INVALID_COLOR, INVALID_NAME };
+    actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard1, NULLcard);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - pick_card(). CASE1-1  Play nothing there is no playable card and wild card......Successful!\n");
+    }
+    else {
+        write_log("Test-- -  pick_card(). CASE1-1  Play nothing there is no playable card and wild card......failed!\n");
+        write_fail_log("The return value of pick_card(). CASE 1-1:\n", actual_ret, expected_ret);
+    }
+
+    //function - pick card CASE2
+    expected_ret = 1;
+    Card_t expectCard2 = { GREEN, DRAW_ONE };
+    actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard2, expectCard2);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - pick_card(). CASE2  Play matched action card if matched color > 2 ......Successful!\n");
+    }
+    else {
+        write_log("Test-- -  pick_card(). CASE2  Play matched action card if matched color > 2......failed!\n");
+        write_fail_log("The return value of pick_card(). CASE 2:\n", actual_ret, expected_ret);
+    }
+
+
+    //function - pick card CASE2-1
+    expected_ret = 1;
+    display_cards_list(g_players[COMPUTER].cards_on_hand);
+    Card_t testCard6 = { YELLOW, THREE }; 
+    Card_t expectCard3 = { YELLOW, FOUR };
+    actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard6, expectCard3);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - pick_card(). CASE2-1  Play matched card with largest number if matched color < 2 ......Successful!\n");
+    }
+    else {
+        write_log("Test-- -  pick_card(). CASE2-1 Play matched card with largest number if matched color < 2......failed!\n");
+        write_fail_log("The return value of pick_card(). CASE 2-1:\n", actual_ret, expected_ret);
+    }
+
+
+    //function - pick card CASE3
+    expected_ret = 1;
+    display_cards_list(g_players[COMPUTER].cards_on_hand);
+    Card_t testCard7 = { BLUE, FIVE };
+    Card_t expectCard4 = { RED, FIVE };
+    actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard7, expectCard4);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - pick_card(). CASE3 Play color you have the most with that number......Successful!\n");
+    }
+    else {
+        write_log("Test-- -  pick_card(). CASE3 Play the number with most color you have with that number......failed!\n");
+        write_fail_log("The return value of pick_card(). CASE 3:\n", actual_ret, expected_ret);
+    }
+
+    //function - pick card CASE4
+    expected_ret = 1;
+    display_cards_list(g_players[COMPUTER].cards_on_hand);
+    Card_t testCard8 = { RED, FOUR };
+    Card_t expectCard5 = { RED, NINE };
+    actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard8, expectCard5);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - pick_card(). CASE4 play if input color = most_color......Successful!\n");
+    }
+    else {
+        write_log("Test-- -  pick_card(). CASE4 play if input color = most_color......failed!\n");
+        write_fail_log("The return value of pick_card(). CASE 4:\n", actual_ret, expected_ret);
+    }
+
+    //function - pick card CASE4
+    expected_ret = 1;
+    display_cards_list(g_players[COMPUTER].cards_on_hand);
+    Card_t testCard9 = { YELLOW, FIVE };
+    Card_t expectCard6 = { RED, FIVE };
+    actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard9, expectCard6);
+    if (actual_ret == expected_ret) {
+        write_log("Test-- - pick_card(). CASE4-1 find and play the most color with that number if input color! = most_color......Successful!\n");
+    }
+    else {
+        write_log("Test-- -  pick_card(). CASE4-1 find and play the most color with that number if input color! = most_color......failed!\n");
+        write_fail_log("The return value of pick_card(). CASE 4-1:\n", actual_ret, expected_ret);
+    }
+
+
+    //function computer_take_turn Case 1: no playable card to discard, end of turn, game continues.
     g_card_on_table.color = BLUE;
     g_card_on_table.name = EIGHT;
     g_player_on_turn = COMPUTER;
@@ -33,13 +303,14 @@ void test_computer_take_turn(void)
     actual_ret = computer_take_turn();
     if (expected_ret == actual_ret) {
         write_log("Test-- - computer_take_turn().Case 1:No Playable Card Discarded, End Turn, Game Continues......Successful!\n");
-    } 
+    }
     else {
         write_log("Test-- - computer_take_turn().Case 1:No Playable Card Discarded, End Turn, Game Continues......failed!\n");
         write_fail_log("The return value of computer_take_turn():\n", actual_ret, expected_ret);
     }
+
     
-    // Case 2: Computer: discard cards successful
+    // function computer_take_turn Case 2: Computer: discard cards successful
     g_card_on_table.color = RED;
     g_card_on_table.name = TWO;
     g_player_on_turn = COMPUTER;
@@ -55,7 +326,7 @@ void test_computer_take_turn(void)
         write_fail_log("The return value of computer_take_turn():\n", actual_ret, expected_ret);
     }
 
-    // Case 3: Not Computer Turn.
+    // function computer_take_turn Case 3: Not Computer Turn.
     g_player_on_turn = HUMAN;
     expected_ret = 2;
     actual_ret = computer_take_turn();
@@ -70,7 +341,10 @@ void test_computer_take_turn(void)
     return;
 }
 
-#if 0
+
+
+
+
 /*********************** test functions ********************************/
 int test_find_most_color(Deck_t* head) {
     CardColor_e color = find_most_color(&head);
@@ -81,19 +355,26 @@ int test_find_most_color(Deck_t* head) {
     return 0;
 }
 
-int test_pick_case(Deck_t** head, Card_t card, int n) {
-    int CaseNumber;
+int test_pick_case(Deck_t** head, Card_t card, casenumber_e expected) {
+    casenumber_e result = pick_case(card, head);
+    
+    if (result == expected) {
+        return 1;
+    }
+    return 0;
+}
 
-    CaseNumber = pick_case(card, head);
-    if (CaseNumber == n) {
+int test_ifexists(Deck_t** head, Card_t card, int n) {
+    int result;
+    result = ifexists(head, card.name, card.color);
+    if (result == n) {
         return 1;
     }
     return 0;
 }
 
 int test_find_largest_number(Deck_t** handcard, CardColor_e color, CardName_e name) {
-    CardName_e Max;
-    Max = find_largest_number(handcard, color);
+    CardName_e Max = find_largest_number(handcard, color);
     if (Max == name) {
         return 1;
     }
@@ -126,140 +407,22 @@ int test_find_color_with_most_occurence(Deck_t** handcard, CardName_e inputCardN
     }
     return 0;
 }
-void append(Deck_t** head_ref, Card_t card) {
-    /* 1. allocate node */
 
-    Deck_t* new_card = (Deck_t*)malloc(sizeof(Deck_t));
-    struct DECK* last = *head_ref;  /* used in step 5*/
+int test_pick_card(Deck_t** handcard, Card_t inputCard, Card_t expectCard) {
+    Deck_t* result = pick_card(inputCard, handcard);
+    
 
-    /* 2. put in the data  */
-    new_card->card.color = card.color;
-    new_card->card.name = card.name;
-    new_card->next = NULL;
+    if (result == NULL) {
+        if (expectCard.color == INVALID_COLOR) {
 
-
-    /* 4. If the Linked List is empty, then make the new node as head */
-    if (*head_ref == NULL)
-    {
-        *head_ref = new_card;
-        return;
+            return 1;
+        }
     }
+    else if (result->card.name == expectCard.name && result->card.color == expectCard.color) {
+        return 1;
+    }
+    else {
+    };
+    return 0;
 
-    /* 5. Else traverse till the last node */
-    while (last->next != NULL)
-        last = last->next;
-
-    /* 6. Change the next of last node */
-    last->next = new_card;
-    return;
 }
-
-
-
-int main()
-{
-
-    /* define cards*/
-    struct CARD card1 = { RED, ONE }, card2 = { RED, FIVE }, card3 = { GREEN, FIVE }, card4 = { BLACK, WILD }, card5 = { GREEN, TWO }, card6 = { YELLOW, FOUR }, card7 = { RED, NINE };
-    struct CARD testCard1 = { BLUE, SIX }, testCard2 = { GREEN , SEVEN }, testCard3 = { BLUE, FIVE }, testCard4 = { BLUE, ONE }, testCard5 = { GREEN, FOUR }, testWILD = { BLUE, WILD }, testDRAW = { BLUE, DRAWONE };
-
-    /* define hand card list */
-    struct DECK* hand_card_list = NULL, * played = NULL;
-    struct DECK* ptr = NULL;
-    append(&hand_card_list, card1);
-    append(&hand_card_list, card2);
-    append(&hand_card_list, card3);
-    append(&hand_card_list, card4);
-    append(&hand_card_list, card5);
-    append(&hand_card_list, card6);
-    append(&hand_card_list, card7);
-    display_cards_list(hand_card_list);
-    /* ptr = find_address(&hand_card_list, card4);
-     printf("card is (%s,%s) \n", CARD_COLOR_STRING[ptr->card.color], CARD_NAME_STRING[ptr->card.name]);
-     played = play_card(ptr, &hand_card_list);
-     played->card.color = RED;
-     printf("card is (%s,%s) \n", CARD_COLOR_STRING[ptr->card.color], CARD_NAME_STRING[ptr->card.name]);
-     display_cards_list(hand_card_list);*/
-
-     /*rintf("\n\n");
-     printf("****************** function test *******************\n");
-     if (test_find_most_color(&hand_card_list)) {
-         printf("find_most_color Passed !\n");
-     }
-
-     if (test_pick_case(&hand_card_list, testCard1, CASE1)) {
-         printf("pick_case CASE 1 Passed ! \n");
-     }
-     if (test_pick_case(&hand_card_list, testCard2, CASE2)) {
-         printf("pick_case CASE 2 Passed ! \n");
-     }
-     if (test_pick_case(&hand_card_list, testCard3, CASE3)) {
-         printf("pick_case CASE 3 Passed ! \n");
-     }
-     if (test_pick_case(&hand_card_list, testCard5, CASE4)) {
-         printf("pick_case CASE 4 Passed ! \n");
-     }
-
-     if (test_find_largest_number(&hand_card_list, RED, EIGHT)) {
-         printf("find_largest_number TEST1 Passed ! \n");
-     }
-     if (test_find_largest_number(&hand_card_list, GREEN, FIVE)) {
-         printf("find_largest_number TEST2 Passed ! \n");
-     }
-
-     if (test_find_occurence_of_number(&hand_card_list, FIVE, 2)) {
-         printf("find_occurence_of_number Passed ! \n");
-     }
-
-     if (test_find_occurence_of_color(&hand_card_list, RED, 3)) {
-         printf("find_occurence_of_color Passed ! \n");
-     }
-
-     if (test_find_color_with_most_occurence(&hand_card_list, FIVE, RED)) {
-         printf("find_color_with_most_occurence Passed ! \n");
-     }
-
-     initialize_cards();*/
-    printf("\n\n");
-    printf("****************** Pick_action test *******************\n");
-    /* PASSED
-    printf("CASE 1: NO MATCH COLOR/NUMBER && WILD > 1 \n");
-    display_cards_list(hand_card_list);
-    printf("DRAW WILD \n");
-
-    played = play_card(pick_card(testCard1, &hand_card_list), &hand_card_list);
-    printf("card is (%s,%s) \n", CARD_COLOR_STRING[played->card.color], CARD_NAME_STRING[played->card.name]);
-    display_cards_list(hand_card_list); */
-
-    //PASSED
-    //printf("CASE 1: NO MATCH COLOR/NUMBER && WILD <= 1 \n");
-    //display_cards_list(hand_card_list);
-    //play_card(pick_card(testWILD, &hand_card_list), &hand_card_list);
-    //display_cards_list(hand_card_list);
-
-    //PASSED
-    //printf("\n\n");
-    //printf("CASE 2: MATCH COLOR, no matche number \n");
-    //display_cards_list(hand_card_list);
-    //printf("input Card [GREEN , 7], play [GREEN, 5] \n");
-    //play_card(pick_card(testCard2, &hand_card_list), &hand_card_list);
-    //display_cards_list(hand_card_list);
-
-    //PASSED
-    //printf("\n\n");
-    //printf("CASE 3: No MATCH COLOR, match number \n");
-    //display_cards_list(hand_card_list);
-    //printf("input Card [BLUE, 5], play [GREEN, 5] \n");
-    //play_card(pick_card(testCard3, &hand_card_list), &hand_card_list);
-    //display_cards_list(hand_card_list);
-
-    //PASSED
-    //printf("\n\n");
-    //printf("CASE 4:   MATCH COLOR, MATCH NUMBER  \n");
-    //display_cards_list(hand_card_list);
-    //printf("input Card [GREEN,4], play [YELLOW, 4] \n");
-    //play_card(pick_card(testCard5, &hand_card_list), &hand_card_list);
-    //display_cards_list(hand_card_list);
-}
-
-#endif
