@@ -95,12 +95,6 @@ ret_type_e human_process_end_turn_request(void)
  */
 ret_type_e human_process_normal_card(Card_t human_card_choice)
 {
-    //Check if the card is from the human player deck
-    if (!is_human_card(human_card_choice)){
-        print_warning("!!Warning!! Please select a card from your deck! \n");
-        return RET_INVALID_CARD;
-    }
-
     //If valid add the card to the discard_pile
     if (!is_playable_card(human_card_choice)){
         invalid_card_warning();
@@ -220,13 +214,6 @@ ret_type_e card_color_change_inquiry(CardColor_e* color_changed)
  */
 ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_changed)
 {
-    //If valid add the card to the discard_pile
-    if (!is_human_card(human_card_choice))
-    {
-        print_warning("!!Warning!! Please select a card from your deck! \n");
-        return RET_INVALID_CARD;
-    }
-
     remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), human_card_choice);
     add_card_at_end(g_discard_pile, human_card_choice);
 
@@ -361,6 +348,12 @@ ret_type_e human_process_card(const char* user_input)
     }
 
     CardType_e card_type = get_card_type(human_card_choice);
+    //Check if the card is from the human player deck
+    if (!is_human_card(human_card_choice)){
+        print_warning("!!Warning!! Please select a card from your deck! \n");
+        return RET_INVALID_CARD;
+    }
+
     switch (card_type){
         case NORMAL:
             return human_process_normal_card(human_card_choice);
