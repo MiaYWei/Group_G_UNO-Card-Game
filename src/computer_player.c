@@ -328,84 +328,83 @@ casenumber_e pick_case(Card_t card, Deck_t** hand_card)
  *
  *  @return A best cooresponding card from hand cards, or call an action (draw card)
  */
-Deck_t* pick_card(Card_t inputCard, Deck_t** hand_card)
+Deck_t* pick_card(Card_t input_card, Deck_t** hand_card)
 {
-    int colorCount = 0, numberCount = 0;
+    int color_count = 0, number_count = 0;
     CardColor_e most_color;
-    Deck_t* playCard = NULL;
-    Card_t playableCard;
+    Deck_t* play_card = NULL;
+    Card_t playable_card;
     Deck_t* temp = *hand_card;
     Card_t wild_card = { ACTION, WILD };
     Card_t wild_draw_two_card = { ACTION, WILD_DRAW_TWO };
-    Card_t case2_card = { inputCard.color, DRAW_ONE };
+    Card_t case2_card = { input_card.color, DRAW_ONE };
 
-    enum casenumber caseNum = pick_case(inputCard, hand_card);
+    enum casenumber caseNum = pick_case(input_card, hand_card);
     most_color = find_most_color(hand_card);
 
     switch (caseNum){
         case CASE1: /* no matched color or number, check if wild or wild-draw-two*/
             if (is_exist_card(*hand_card, wild_card) == 1){
-                playableCard.name = WILD;
-                playCard = find_address(hand_card, playableCard);
-                playCard->card.color = most_color;
-                return playCard;
+                playable_card.name = WILD;
+                play_card = find_address(hand_card, playable_card);
+                play_card->card.color = most_color;
+                return play_card;
             }
             else if (is_exist_card(*hand_card, wild_draw_two_card) == 1){
-                playableCard.name = WILD_DRAW_TWO;
-                playCard = find_address(hand_card, playableCard);
-                playCard->card.color = most_color;
-                return playCard;
+                playable_card.name = WILD_DRAW_TWO;
+                play_card = find_address(hand_card, playable_card);
+                play_card->card.color = most_color;
+                return play_card;
             }
             else{
                 return NULL;
             }
         case CASE2: /* check if occurence of the color > 2, play DRAW if true*/
-            colorCount = 0;
             while (temp != NULL){
-                if (inputCard.color == temp->card.color)
+                if (input_card.color == temp->card.color)
                 {
-                    colorCount++;
+                    color_count++;
                 }
                 temp = temp->next;
             }
-            if (colorCount > 2 && is_exist_card(*hand_card, case2_card)){
-                playableCard.name = DRAW_ONE;  
+            if (color_count > 2 && is_exist_card(*hand_card, case2_card)){
+                playable_card.name = DRAW_ONE;
             }
             else{
-                CardName_e Max = find_largest_number(hand_card, inputCard.color);
-                playableCard.name = Max;
+                CardName_e Max = find_largest_number(hand_card, input_card.color);
+                playable_card.name = Max;
             }
-            playableCard.color = inputCard.color;
-            playCard = find_address(hand_card, playableCard);
-            return playCard;
+            playable_card.color = input_card.color;
+            play_card = find_address(hand_card, playable_card);
+            return play_card;
         case CASE3: /* no matched color, but have matched number */
-            numberCount = find_occurence_of_number(hand_card, inputCard.name);
-            if (numberCount == 1){
-                playableCard.color = find_matched_color(hand_card, inputCard.name);
+            number_count = find_occurence_of_number(hand_card, input_card.name);
+            if (number_count == 1){
+                playable_card.color = find_matched_color(hand_card, input_card.name);
             }
             else{
-                playableCard.color = find_color_with_most_occurence(hand_card, inputCard.name);
+                playable_card.color = find_color_with_most_occurence(hand_card, input_card.name);
             }
-            playableCard.name = inputCard.name;
-            playCard = find_address(hand_card, playableCard);
-            return playCard;
+            playable_card.name = input_card.name;
+            play_card = find_address(hand_card, playable_card);
+            return play_card;
         case CASE4: /* have matched color, and have matched number */
-            if (inputCard.color == find_most_color(hand_card)){
-                playableCard.name = find_largest_number(hand_card, inputCard.color);
-                playableCard.color = inputCard.color;     
+            if (input_card.color == find_most_color(hand_card)){
+                playable_card.name = find_largest_number(hand_card, input_card.color);
+                playable_card.color = input_card.color;
             }
             else{
-                playableCard.color = find_color_with_most_occurence(hand_card, inputCard.name);
-                playableCard.name = inputCard.name;
+                playable_card.color = find_color_with_most_occurence(hand_card, input_card.name);
+                playable_card.name = input_card.name;
             }
-            playCard = find_address(hand_card, playableCard);
-            return playCard;
+            play_card = find_address(hand_card, playable_card);
+            return play_card;
         default:
             printf("entered default!\n");
             break;
     }
 
-    return playCard;
+    return play_card;
 }
 
 /*
@@ -447,7 +446,6 @@ Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head)
     if (cardAddress->card.name == WILD){         
         while ((temp != NULL) && (temp->card.name == WILD)){
             *head = temp->next;
-
             return temp;
         }
         /* For each node in the list */
@@ -460,10 +458,9 @@ Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head)
             return NULL;
         }
         prev->next = temp->next;
-        
         return temp;
     }
-    else {
+    else{
         // head node
         while ((temp != NULL) && (temp->card.name == cardAddress->card.name) && (temp->card.color == cardAddress->card.color)){
             *head = temp->next;
@@ -474,12 +471,10 @@ Deck_t* play_card(const Deck_t* cardAddress, Deck_t** head)
             prev = temp;
             temp = temp->next;
         }
-
         if (temp == NULL) {
             return NULL;
         }
         prev->next = temp->next;
-        
         return temp;
     }
 }

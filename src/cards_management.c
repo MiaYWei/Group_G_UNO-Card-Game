@@ -18,7 +18,7 @@ int shuffle_cards(void);
 int add_card_at_beginning(Deck_t **pp_head, Card_t card);
 int add_card_at_end(Deck_t *p_head, Card_t card);
 const Deck_t *remove_first_card_from_deck(Deck_t **pp_head);
-bool remove_card_from_deck(Deck_t** pp_head, const Card_t card);
+bool remove_card_from_deck(Deck_t** pp_head, Card_t card);
 void display_cards_list(const Deck_t *p_list);
 int get_pile_length(Deck_t *p_pile);
 bool is_playable_card(Card_t card);
@@ -394,7 +394,7 @@ void initialize_card_on_table(void)
  * @return true If the card has been removed successfully
  * @return false If the removing of card fails
  */
-bool remove_card_from_deck(Deck_t** pp_head, const Card_t card)
+bool remove_card_from_deck(Deck_t** pp_head, Card_t card)
 {
     Deck_t* temp = *pp_head;
     Deck_t* prev = *pp_head;

@@ -167,7 +167,7 @@ int add_card_at_end(Deck_t *p_head, Card_t card);
  * @return true If the card is been removed successfully
  * @return false If the removing of card fails
  */
-bool remove_card_from_deck(Deck_t** ptr_head, const Card_t card);
+bool remove_card_from_deck(Deck_t** ptr_head, Card_t card);
 
 /**
  * @brief Displays player's current list of cards
