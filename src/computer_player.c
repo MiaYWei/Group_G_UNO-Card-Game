@@ -494,21 +494,33 @@ Deck_t* play_card(const Deck_t* card_address, Deck_t** head)
  */
 int computer_process_request_card(void)
 {
-    int result = 0;
+    int result = -1;
     Card_t draw_card = draw_one_card();
     printf("COMPUTER draws a new card from the pile, since no playable card on hand. \n");
     if (is_playable_card(draw_card)){
         memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
         add_card_at_end(g_discard_pile, g_card_on_table);
         printf("COMPUTER dropped..(%s, %s)\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);
+        end_turn(COMPUTER);
+        if (draw_card.name == SKIP) { 
+            g_player_on_turn = COMPUTER;
+        }
+        else if (draw_card.name == DRAW_ONE) {
+            g_player_on_turn = COMPUTER;
+            player_process_draw_one_card(COMPUTER);
+        }
+        else if (draw_card.name == WILD_DRAW_TWO) {
+            g_player_on_turn = COMPUTER;
+            player_process_wild_draw_two_card(COMPUTER);
+        }
         result = 0;
     }
     else{
         add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card);
+        end_turn(COMPUTER);
         result = 1;
     }
 
-    end_turn(COMPUTER);
     return result;
 }
 
