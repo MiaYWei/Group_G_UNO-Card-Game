@@ -7,7 +7,6 @@ extern bool g_card_requested;
 
 ret_type_e record_human_input(void);
 Card_t map_user_input(const char* user_input);
-CardType_e get_card_type(Card_t card);
 int request_card(PlayerType_e PlayerType);
 void invalid_card_warning(void);
 bool is_human_card(Card_t current_card);

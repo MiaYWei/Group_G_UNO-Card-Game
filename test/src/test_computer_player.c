@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "../../include/cards_management.h"
+#include "../../include/game.h"
 #include "../../include/computer_player.h"
 #include "../include/test.h"
 #include "../include/test_game.h"
