@@ -308,6 +308,7 @@ ret_type_e record_human_input(void)
     scanf("%s", user_input);
 
     if (user_input[0] == 'q' || user_input[0] == 'Q'){
+        confirm_exit();
         quit_game();
     }
     else if (user_input[0] == 'n' || user_input[0] == 'N'){
