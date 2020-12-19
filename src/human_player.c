@@ -74,7 +74,7 @@ ret_type_e human_process_end_turn_request(void)
         return RET_SUCCESS;
     }
     else {
-        print_warning("!!Warning!! Please draw a card before you can end your turn.\n");
+        print_warning("!!Warning!! Please draw a card('n' or 'N'), then you can end your turn.\n");
         return RET_FAILURE;
     }
 }
@@ -155,7 +155,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
 ret_type_e human_process_new_card_request(void)
 {
     if (g_card_requested){
-        print_warning("!!Warning!! You've already requested a new card. Please discard card or end turn now. \n");
+        print_warning("!!Warning!! You've already requested a new card. Please discard card or end turn('e' or 'E') now. \n");
         return RET_FAILURE;
     }
     else{
