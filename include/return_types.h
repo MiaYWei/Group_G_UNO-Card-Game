@@ -27,4 +27,4 @@ ret_type_e;
                             return x;\
                         }
 
-#endif // __RETURN_TYPES_HEADER__#pragma once
+#endif //__RETURN_TYPES_HEADER__

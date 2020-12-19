@@ -89,4 +89,4 @@ int player_process_draw_one_card(PlayerType_e player);
  */
 int player_process_wild_draw_two_card(PlayerType_e player);
 
-#endif // __GAME_HEADER__#pragma once
+#endif //__GAME_HEADER__
