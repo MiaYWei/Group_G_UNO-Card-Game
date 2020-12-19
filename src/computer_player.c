@@ -226,6 +226,14 @@ Deck_t* find_address(Deck_t** head, Card_t card)
             temp = temp->next;
         }
     }
+    else if (card.name == WILD_DRAW_TWO){
+        while (temp != NULL){
+            if (temp->card.name == WILD_DRAW_TWO){
+                return temp;
+            }
+            temp = temp->next;
+        }
+    }
     else {
         while (temp != NULL) {
             if (temp->card.name == card.name && temp->card.color == card.color){
@@ -291,11 +299,12 @@ casenumber_e pick_case(Card_t card, Deck_t** hand_card)
     else if (commonColor && !commonName){
         return CASE2;
     }
-    else if (!commonColor && !commonName) {
+    else if (!commonColor && !commonName){
         return CASE1;
     }
-
-    return 0;
+    else{
+        return INVALID_CASE;
+    }
 }
 
 /** @brief Pick the best card to discard from hand cards based on
@@ -339,20 +348,18 @@ Deck_t* pick_card(Card_t input_card, Deck_t** hand_card)
     Card_t wild_draw_two_card = { ACTION, WILD_DRAW_TWO };
     Card_t case2_card = { input_card.color, DRAW_ONE };
 
-    enum casenumber caseNum = pick_case(input_card, hand_card);
+    casenumber_e caseNum = pick_case(input_card, hand_card);
     most_color = find_most_color(hand_card);
 
     switch (caseNum){
         case CASE1: /* no matched color or number, check if wild or wild-draw-two*/
             if (is_exist_card(*hand_card, wild_card) == 1){
-                playable_card.name = WILD;
-                play_card = find_address(hand_card, playable_card);
+                play_card = find_address(hand_card, wild_card);
                 play_card->card.color = most_color;
                 return play_card;
             }
             else if (is_exist_card(*hand_card, wild_draw_two_card) == 1){
-                playable_card.name = WILD_DRAW_TWO;
-                play_card = find_address(hand_card, playable_card);
+                play_card = find_address(hand_card, wild_draw_two_card);
                 play_card->card.color = most_color;
                 return play_card;
             }
@@ -552,9 +559,6 @@ int computer_take_turn(void)
     int result = 0;
     Deck_t* playable_card;
 
-    //For test only
-    //printf("Computer dect: ");
-    //display_player_deck(COMPUTER);
     playable_card = pick_card(g_card_on_table, &g_players[COMPUTER].cards_on_hand);
 
     if (g_players[COMPUTER].cards_on_hand->next == NULL){

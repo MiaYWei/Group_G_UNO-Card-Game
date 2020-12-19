@@ -51,10 +51,13 @@ void start_new_game(void)
         }
 
         if (g_end_game){
-            printf("Game over. The winner is %s", PLAYER_TYPE_STRING[g_game_winner]);
-            if (g_game_winner == HUMAN){
-                printf(": %s", g_human_player_name);
+            if (g_game_winner == COMPUTER) {
+                print_winner("Game over. The winner is COMPUTER player ", NULL);
             }
+            else {
+                print_winner("Game over. The winner is HUMAN player:", PLAYER_TYPE_STRING[g_game_winner]);
+            }
+
             printf("\n");
             return;
         }
