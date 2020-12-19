@@ -36,9 +36,6 @@ void start_new_game(void)
     printf("\nGame begins now...\n");
     printf("Human Player Deck: ");
     display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
-    //For Testing only
-   /* printf("Computer Player Deck: ");
-    display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);*/
     printf("\n\n");
 
     while (true){
