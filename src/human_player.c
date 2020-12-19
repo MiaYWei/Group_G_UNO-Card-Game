@@ -98,7 +98,6 @@ ret_type_e human_process_normal_card(Card_t human_card_choice)
     //Check if the card is from the human player deck
     if (!is_human_card(human_card_choice)){
         print_warning("!!Warning!! Please select a card from your deck! \n");
-        invalid_card_warning();
         return RET_INVALID_CARD;
     }
 
