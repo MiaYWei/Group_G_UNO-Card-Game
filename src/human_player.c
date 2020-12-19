@@ -68,21 +68,15 @@ void invalid_card_warning(void)
   */
 ret_type_e human_process_end_turn_request(void)
 {
-    ret_type_e ret = RET_FAILURE;
-
-    if (g_card_requested)
-    {
+    if (g_card_requested){
         g_card_requested = false;
         end_turn(HUMAN);
-        ret = RET_SUCCESS;
+        return RET_SUCCESS;
     }
-    else
-    {
+    else {
         print_warning("!!Warning!! Please draw a card before you can end your turn.\n");
-        display_player_deck(HUMAN);
+        return RET_FAILURE;
     }
-
-    return ret;
 }
 
 /**
