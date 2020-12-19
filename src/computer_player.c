@@ -487,30 +487,6 @@ Deck_t* play_card(const Deck_t* card_address, Deck_t** head)
     }
 }
 
-/**
- * @brief Computer requests a new card when it has no playable card on hand
- *
- * @return int 0 - The new drawn card is playable;
- *             1 - The new drawn card is not playable, and be added to player cards on hand list;
- */
-int computer_process_request_card(void)
-{
-    int result = -1;
-    Card_t draw_card = draw_one_card();
-    printf("COMPUTER draws a new card from the pile. \n");
-    if (is_playable_card(draw_card)){
-        process_playable_card(draw_card);
-        result = 0;
-    }
-    else{
-        add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card);
-        end_turn(COMPUTER);
-        result = 1;
-    }
-
-    return result;
-}
-
 void process_playable_card(Card_t playable_card)
 {
     memcpy(&g_card_on_table, &playable_card, sizeof(Card_t));
@@ -538,6 +514,31 @@ void process_playable_card(Card_t playable_card)
     }
     return;
 }
+
+/**
+ * @brief Computer requests a new card when it has no playable card on hand
+ *
+ * @return int 0 - The new drawn card is playable;
+ *             1 - The new drawn card is not playable, and be added to player cards on hand list;
+ */
+int computer_process_request_card(void)
+{
+    int result = -1;
+    Card_t draw_card = draw_one_card();
+    printf("COMPUTER draws a new card from the pile. \n");
+    if (is_playable_card(draw_card)) {
+        process_playable_card(draw_card);
+        result = 0;
+    }
+    else {
+        add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card);
+        end_turn(COMPUTER);
+        result = 1;
+    }
+
+    return result;
+}
+
 /**
  * @brief Computer player discards a playable card, which include Skip and DRAW_ONE card.
  *
