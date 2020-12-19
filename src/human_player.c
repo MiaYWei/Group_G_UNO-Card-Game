@@ -14,7 +14,6 @@ bool g_card_requested = false;
 
 ret_type_e record_human_input(void);
 Card_t map_user_input(const char* user_input);
-CardType_e get_card_type(Card_t card);
 int request_card(PlayerType_e PlayerType);
 void invalid_card_warning(void);
 bool is_human_card(Card_t current_card);
@@ -310,41 +309,6 @@ Card_t map_user_input(const char* user_input)
     }
     
     return card;
-}
-
-/**
- * @brief Get the card type by card info
- *
- * @param card The specific card info
- * @return CardType_e the mapped card type.
- *
- */
-CardType_e get_card_type(Card_t card)
-{
-    CardType_e card_type = INVALID_TYPE;
-    switch (card.name){
-        case ZERO:
-        case TWO:
-        case THREE:
-        case FOUR:
-        case FIVE:
-        case SIX:
-        case SEVEN:
-        case EIGHT:
-        case NINE:
-            card_type = NORMAL;
-            break;
-        case SKIP:
-        case DRAW_ONE:
-        case WILD:
-        case WILD_DRAW_TWO:
-            card_type = card.name - 9;
-            break;
-        default:
-            break;
-    }
-
-    return card_type;
 }
 
 /**

@@ -11,6 +11,7 @@ void test_add_card_at_beginning(void);
 void test_remove_card_from_deck(void);
 void test_remove_first_card_from_deck(void);
 void test_is_playable_card(void);
+void test_get_card_type(void);
 
 /*#################################### Test Functions ####################################*/
 void test_cards_mgmt(void)
@@ -23,6 +24,7 @@ void test_cards_mgmt(void)
     test_remove_card_from_deck();
     test_remove_first_card_from_deck();
     test_is_playable_card();
+    test_get_card_type();
     write_log("--------------- End of Test: Cards Management Module ---------------\n");
 
     return;
@@ -305,5 +307,82 @@ void test_is_playable_card(void)
         write_fail_log("The return value of is_playable_card():\n", actual_return, expected_return);
     }
     
+    return;
+}
+
+void test_get_card_type(void)
+{
+    // Case 1: Normal Card Type
+    Card_t test_card = { GREEN, FIVE };
+    CardType_e expected_type = NORMAL;
+    CardType_e actual_type = get_card_type(test_card);
+    if (expected_type == actual_type) {
+        write_log("Test--- get_card_type().Case 1:Normal Card Type......Successful!\n");
+    }
+    else {
+        write_log("Test--- get_card_type().Case 1:Normal Card Type......failed!\n");
+        write_fail_log(" The return value of get_card_type():\n", actual_type, expected_type);
+    }
+
+    // Case 2: Skip Card Type
+    test_card.name = SKIP;
+    expected_type = SKIP_T;
+    actual_type = get_card_type(test_card);
+    if (expected_type == actual_type) {
+        write_log("Test--- get_card_type().Case 2:Skip Card Type......Successful!\n");
+    }
+    else {
+        write_log("Test--- get_card_type().Case 2:Skip Card Type......failed!\n");
+        write_fail_log(" The return value of get_card_type():\n", actual_type, expected_type);
+    }
+
+    // Case 3: Draw-One Card Type
+    test_card.name = DRAW_ONE;
+    expected_type = DRAW_ONE_T;
+    actual_type = get_card_type(test_card);
+    if (expected_type == actual_type) {
+        write_log("Test--- get_card_type().Case 3:Draw-One Card Type......Successful!\n");
+    }
+    else {
+        write_log("Test--- get_card_type().Case 3:Draw-One Card Type......failed!\n");
+        write_fail_log(" The return value of get_card_type():\n", actual_type, expected_type);
+    }
+
+    // Case 4: Wild Card Type
+    test_card.name = WILD;
+    expected_type = WILD_T;
+    actual_type = get_card_type(test_card);
+    if (expected_type == actual_type) {
+        write_log("Test--- get_card_type().Case 4:Wild Card Type......Successful!\n");
+    }
+    else {
+        write_log("Test--- get_card_type().Case 4:Wild Card Type......failed!\n");
+        write_fail_log(" The return value of get_card_type():\n", actual_type, expected_type);
+    }
+
+    // Case 5: Wild-Draw-Two Card Type
+    test_card.name = WILD_DRAW_TWO;
+    expected_type = WILD_DRAW_TWO_T;
+    actual_type = get_card_type(test_card);
+    if (expected_type == actual_type) {
+        write_log("Test--- get_card_type().Case 5:Wild-Draw-Two Card Type......Successful!\n");
+    }
+    else {
+        write_log("Test--- get_card_type().Case 5:Wild-Draw-Two Card Type......failed!\n");
+        write_fail_log(" The return value of get_card_type():\n", actual_type, expected_type);
+    }
+
+    // Case 6: Wild-Draw-Two Card Type
+    test_card.name = INVALID_NAME;
+    expected_type = INVALID_TYPE;
+    actual_type = get_card_type(test_card);
+    if (expected_type == actual_type) {
+        write_log("Test--- get_card_type().Case 6:Invalid Card Type......Successful!\n");
+    }
+    else {
+        write_log("Test--- get_card_type().Case 6:Invalid Card Type......failed!\n");
+        write_fail_log(" The return value of get_card_type():\n", actual_type, expected_type);
+    }
+
     return;
 }

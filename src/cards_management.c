@@ -13,17 +13,22 @@ PlayerType_e g_player_on_turn = HUMAN; /* The current player on turn */
 PlayerType_e g_game_winner = PlayerTypeNum;    /* game winner*/
 
 int initialize_cards(void);
+void initialize_card_on_table(void);
 int deal_cards(void);
 int shuffle_cards(void);
-int add_card_at_beginning(Deck_t **pp_head, Card_t card);
-int add_card_at_end(Deck_t *p_head, Card_t card);
-const Deck_t *remove_first_card_from_deck(Deck_t **pp_head);
-bool remove_card_from_deck(Deck_t** pp_head, Card_t card);
-void display_cards_list(const Deck_t *p_list);
-int get_pile_length(Deck_t *p_pile);
+int add_card_at_beginning(Deck_t** pp_head, Card_t card);
+int add_card_at_end(Deck_t* p_head, Card_t card);
+const Deck_t* remove_first_card_from_deck(Deck_t** pp_head);
+bool remove_card_from_deck(Deck_t** ptr_head, Card_t card);
+void display_cards_list(const Deck_t* p_list);
+int get_pile_length(Deck_t* p_pile);
 bool is_playable_card(Card_t card);
-void swap_cards(Card_t *p_a, Card_t *p_b);
+bool is_exist_card(Deck_t* p_pile, Card_t card);
+void swap_cards(Card_t* p_a, Card_t* p_b);
 Card_t draw_one_card(void);
+void initialize_card_on_table(void);
+void display_player_deck(PlayerType_e player);
+CardType_e get_card_type(Card_t card);
 
 /**
  * @brief Initializes all the cards status and put them in remaining deck iteratively.
@@ -378,7 +383,16 @@ int shuffle_cards(void)
  */
 void initialize_card_on_table(void)
 {
-    Card_t draw_card = draw_one_card();
+    CardType_e card_type = INVALID_TYPE;
+    Card_t draw_card;
+
+    while (card_type != NORMAL)
+    {
+        draw_card = draw_one_card();
+        card_type = get_card_type(draw_card);
+        add_card_at_end(g_discard_pile, draw_card);
+    }
+
     memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
 
     return;
@@ -436,4 +450,39 @@ void display_player_deck(PlayerType_e player)
     display_cards_list(g_players[player].cards_on_hand);
 
     return;
+}
+
+/**
+ * @brief Get the card type by card info
+ *
+ * @param card The specific card info
+ * @return CardType_e the mapped card type.
+ *
+ */
+CardType_e get_card_type(Card_t card)
+{
+    CardType_e card_type = INVALID_TYPE;
+    switch (card.name){
+        case ZERO:
+        case TWO:
+        case THREE:
+        case FOUR:
+        case FIVE:
+        case SIX:
+        case SEVEN:
+        case EIGHT:
+        case NINE:
+            card_type = NORMAL;
+            break;
+        case SKIP:
+        case DRAW_ONE:
+        case WILD:
+        case WILD_DRAW_TWO:
+            card_type = card.name - 9;
+            break;
+        default:
+            break;
+    }
+
+    return card_type;
 }
