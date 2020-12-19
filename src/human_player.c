@@ -17,7 +17,6 @@ Card_t map_user_input(const char* user_input);
 CardType_e get_card_type(Card_t card);
 int request_card(PlayerType_e PlayerType);
 void invalid_card_warning(void);
-void show_cards_assigned(Card_t assigned_card);
 bool is_human_card(Card_t current_card);
 ret_type_e card_color_change_inquiry(CardColor_e* color_changed);
 ret_type_e human_process_card(const char* user_input);
@@ -45,7 +44,7 @@ int request_card(PlayerType_e PlayerType)
 {
     g_card_requested = true;
     Card_t card = draw_one_card();
-    show_cards_assigned(card);
+    printf("The card from the draw pile is (%s,%s) \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
 
     //Assigning the drawn card to the human player
     return add_card_at_end(g_players[HUMAN].cards_on_hand, card);
@@ -418,19 +417,6 @@ ret_type_e human_process_card(const char* user_input)
         default:
             return RET_FAILURE;
     }
-}
-
-/**
- * @brief Displays the card assigned to the human player on the console during Request card/
- * Draw1 and Draw2 scenarios
- * 
- * @param assigned_card Card that has been added newly to the player's deck
- */
-void show_cards_assigned(Card_t assigned_card)
-{
-    printf("The card from the draw pile is (%s,%s) \n", CARD_COLOR_STRING[assigned_card.color], CARD_NAME_STRING[assigned_card.name]);
-    display_player_deck(HUMAN);
-    return;
 }
 
 /**

@@ -10,7 +10,6 @@ Card_t map_user_input(const char* user_input);
 CardType_e get_card_type(Card_t card);
 int request_card(PlayerType_e PlayerType);
 void invalid_card_warning(void);
-void show_cards_assigned(Card_t assigned_card);
 bool is_human_card(Card_t current_card);
 ret_type_e card_color_change_inquiry(CardColor_e* color_changed);
 ret_type_e human_process_card(const char* user_input);
