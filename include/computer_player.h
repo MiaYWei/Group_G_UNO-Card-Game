@@ -6,7 +6,7 @@
 #include <stdarg.h>
 #include "../include/cards_management.h"
 
-typedef enum casenumber { CASE1, CASE2, CASE3, CASE4 } casenumber_e;
+typedef enum casenumber { CASE1, CASE2, CASE3, CASE4, INVALID_CASE } casenumber_e;
 typedef struct colorInfo {
     CardColor_e color;
     int count;

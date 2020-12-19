@@ -464,6 +464,7 @@ CardType_e get_card_type(Card_t card)
     CardType_e card_type = INVALID_TYPE;
     switch (card.name){
         case ZERO:
+        case ONE:
         case TWO:
         case THREE:
         case FOUR:

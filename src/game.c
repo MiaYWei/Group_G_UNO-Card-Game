@@ -39,7 +39,7 @@ void start_new_game(void)
     printf("\n\n");
 
     while (true){
-        printf("Card on the table now: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
+        printf("Card on the table now: (%s,%s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
         printf("Current player is ");
         print_info(PLAYER_TYPE_STRING[g_player_on_turn]);
 
@@ -51,10 +51,13 @@ void start_new_game(void)
         }
 
         if (g_end_game){
-            printf("Game over. The winner is %s", PLAYER_TYPE_STRING[g_game_winner]);
-            if (g_game_winner == HUMAN){
-                printf(": %s", g_human_player_name);
+            if (g_game_winner == COMPUTER) {
+                print_winner("Game over. The winner is COMPUTER player", NULL);
             }
+            else {
+                print_winner("Game over. The winner is HUMAN player:", g_human_player_name);
+            }
+
             printf("\n");
             return;
         }
@@ -84,11 +87,11 @@ void player_name_inquiry(void)
  */
 bool confirm_exit(void)
 {
-    char char_choice[4] = {0,0,0,0};
+    char char_choice[10] = {0,0,0,0};
     char exit_string[] = "Yes";
 
-    printf("Exit Game?\n");
-    printf("Please enter 'Yes' to confirm the Exit. Press any other key to cancel Exit.\n");
+    print_info("Exit Game?");
+    print_info("Please enter 'Yes' to confirm the Exit. Press any other key to cancel Exit. \n");
 
     scanf("%s", char_choice);
     printf("Entered choice is %s \n", char_choice);
