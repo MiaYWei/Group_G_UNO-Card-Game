@@ -3,6 +3,7 @@
 # Makefile
 #
 # Authors: Mia Wei 
+#          krithigasr
 #	   
 #
 # Changelog :
@@ -22,6 +23,7 @@ SRCDIR     	 = src
 INCDIR	  	 = include
 SRCTESTDIR	 = test/src
 INCTESTDIR	 = test/include
+OBJTESTDIR       = obj
 
 CC       = gcc
 
