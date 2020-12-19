@@ -104,11 +104,12 @@ CardName_e find_largest_number(Deck_t** handcard, CardColor_e inputCardColor)
     CardName_e Max = ZERO;
 
     // Check loop while head not equal to NULL
-    while (temp != NULL){
+    while (temp != NULL) {
         // If max is less then head->data then
         // assign value of head->data to max
         // otherwise node point to next node.
-        if (temp->card.color == inputCardColor && Max < temp->card.name){
+        if ((temp->card.name != SKIP) && (temp->card.name != DRAW_ONE)
+            && (temp->card.name != WILD_DRAW_TWO) && (temp->card.name != WILD)){
             Max = temp->card.name;
         }
         temp = temp->next;
