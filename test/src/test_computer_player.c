@@ -299,7 +299,7 @@ void test_process_playable_card(void)
         write_log("Test-- - process_playable_card().Color of card on table updated.......failed!\n");
         write_fail_log("The card color of process_playable_card().Color of card on table updated:\n", 
             actual_card_on_table.color, expected_card_on_table.color);
-        write_fail_log("The card name  of process_playable_card().Color of card on table updated:\n", 
+        write_fail_log("The card name of process_playable_card().Color of card on table updated:\n", 
             actual_card_on_table.name, expected_card_on_table.name);
     }
 
