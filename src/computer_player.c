@@ -585,10 +585,6 @@ int computer_take_turn(void)
 
     playable_card = pick_card(g_card_on_table, &g_players[COMPUTER].cards_on_hand);
 
-    if (g_players[COMPUTER].cards_on_hand->next == NULL){
-        printf("Computer Palyer: UNO !!!\n");
-    }
-
     if (playable_card == NULL){ /* If no playable card on hand */
         return computer_process_request_card();  
     }
