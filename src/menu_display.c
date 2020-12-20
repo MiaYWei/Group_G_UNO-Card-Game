@@ -50,7 +50,8 @@ void display_rules(void)
     printf(" Let's Play\n");
     printf("  1. Human player starts the game. \n");
     printf("  2. The program deals each player 5 cards while starting a new game.\n");
-    printf("  3. On your turn, you must match a card from your hand to the card on the top of the DISCARD pile, either by number, color or symbol.\n");
+    printf("  3. On your turn, you must match a card from your hand to the card on the top of the DISCARD pile," 
+           "either by number, color or symbol.\n");
     printf("    EXAMPLE: If the card on the top of the DISCARD pile is a blue 7, the player must put down a blue card OR 7 in any color.\n");
     printf("    Alternatively, the player can put down a Wild or Wild-Draw-Two card(See FUNCTIONS OF ACTION CARDS\n\n");
     printf("********************************************************************************************************\n\n");

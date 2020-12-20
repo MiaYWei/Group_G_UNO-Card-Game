@@ -10,6 +10,7 @@
 # 2020-12-05: Inital Makefile
 # 2020-12-12: Generate two executables (main program + test program)
 # 2020-12-18: Relocate test object files to the obj folder, instead of test/obj
+# 2020-12-20: Adding command for running the application
 #
 # ------------------------------------------------
 # project name (generate executable with this name)
@@ -60,8 +61,16 @@ $(OBJECTS2): $(OBJDIR)/%.o : $(SRCTESTDIR)/%.c
 #TARGET TO GENERATE ALL THE EXECUTABLES (MAIN PROGRAM + TESTS TOGETHER)
 all: $(BINDIR)/$(TARGET)   $(BINDIR)/$(TARGET_TEST)
 
+# To remove all the previously generated obj files
 .PHONY: clean
 clean:
 	@$(rm) $(OBJECTS1) $(BINDIR)/$(TARGET)
 	@$(rm) $(OBJECTS2) $(BINDIR)/$(TARGET_TEST)
+	
 	@echo "Cleanup complete!"
+# To run the game
+run: 
+	bin/UNO-Card-Game
+
+
+

@@ -303,27 +303,21 @@ void swap_cards(Card_t *p_a, Card_t *p_b)
  */
 Card_t draw_one_card(void)
 {
-    const Deck_t* draw_deck;
-    const Deck_t* temp_deck;
+    const Deck_t *draw_deck;
+    const Deck_t *temp_deck;
     int result = 1;
-    Card_t invalid_card = { INVALID_COLOR, INVALID_NAME };
 
     if (g_draw_pile == NULL){
-        while (g_discard_pile != NULL){
+        while (g_discard_pile != NULL)
+        {
             temp_deck = remove_first_card_from_deck(&g_discard_pile);
             result += add_card_at_end(g_draw_pile, temp_deck->card);
         }
     }
 
-    if (g_draw_pile != NULL){
-        draw_deck = remove_first_card_from_deck(&g_draw_pile);
-        return draw_deck->card;
-    }else{
-        printf("No cards are available in Draw pile now.\n");
-        return invalid_card;
-    }
+    draw_deck = remove_first_card_from_deck(&g_draw_pile);
+    return draw_deck->card;
 }
-
 
 /**
  * @brief Recursively free the given deck
@@ -452,7 +446,7 @@ bool remove_card_from_deck(Deck_t** pp_head, Card_t card)
  */
 void display_player_deck(PlayerType_e player)
 {
-    printf("%s Player Deck", PLAYER_TYPE_STRING[player]);
+    printf("%s", PLAYER_TYPE_STRING[player]);
     display_cards_list(g_players[player].cards_on_hand);
 
     return;
@@ -470,7 +464,6 @@ CardType_e get_card_type(Card_t card)
     CardType_e card_type = INVALID_TYPE;
     switch (card.name){
         case ZERO:
-        case ONE:
         case TWO:
         case THREE:
         case FOUR:

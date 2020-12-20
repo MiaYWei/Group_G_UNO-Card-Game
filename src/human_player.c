@@ -96,7 +96,7 @@ ret_type_e human_process_normal_card(Card_t human_card_choice)
     }
 
     if (remove_card_from_deck(&g_players[HUMAN].cards_on_hand, human_card_choice)){
-        add_card_at_end(g_discard_pile, human_card_choice);
+        add_card_at_beginning(g_discard_pile, human_card_choice);
         memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
         end_turn(HUMAN);
         g_card_requested = false;
@@ -209,7 +209,7 @@ ret_type_e card_color_change_inquiry(CardColor_e* color_changed)
 ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_changed)
 {
     remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), human_card_choice);
-    add_card_at_end(g_discard_pile, human_card_choice);
+    add_card_at_beginning(g_discard_pile, human_card_choice);
 
     //update the card on table
     g_card_on_table.color = color_changed;
@@ -243,7 +243,7 @@ ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_
 /**
  * @brief  Function to map the human player input to Card type structure
  * 
- * @details Should be called only after validation of the user input *
+ * @details Should be called only after validation of the user input
  * If user input is 3R, It will be mapped as follows
  *  card.color=Red, card.name=3
  *
@@ -272,20 +272,12 @@ Card_t map_user_input(const char* user_input)
         }
     }
 
-    if (card.color == INVALID_COLOR){
-        return invalid_card;
-    }
-
     //maps the card name only if the card color is valid.
     for (i = 0; i < n; i++){
         if (user_input[1] == USER_INPUT_NAME[i]){
             card.name = i;
             break;
         }
-    }
-
-    if (card.name == INVALID_NAME){
-        return invalid_card;
     }
     
     return card;
