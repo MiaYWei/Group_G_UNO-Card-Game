@@ -12,7 +12,7 @@ void test_human_process_wild_draw_two_card(void);
 void test_human_process_end_turn_request(void);
 void test_human_process_new_card_request(void);
 
-int test_hunman_player(void)
+int test_human_player(void)
 {
     int result = 0;
     write_log("\n--------------- Start Test: Human Player Module ---------------\n");
@@ -67,10 +67,9 @@ void test_map_user_input(void)
 void test_human_process_normal_card(void)
 {
     g_players[HUMAN].cards_on_hand = create_test_list(RED, ONE, FOUR);
-
-    // Case 1: The human card choice is unavailable in human player deck
+    // Case 1: The human card choice does not exist in human player deck
     Card_t human_card_choice = { YELLOW, ONE };
-    ret_type_e expected_ret = RET_INVALID_CARD;
+    ret_type_e expected_ret = RET_NOT_PLAYABLE_CARD;
     ret_type_e actual_ret = human_process_normal_card(human_card_choice);
     if (expected_ret == actual_ret) {
         write_log("Test--- human_process_normal_card().Case 1:Invalid Card......Successful!\n");
@@ -182,23 +181,12 @@ void test_human_process_draw_one_card(void)
 void test_human_process_wild_card(void)
 {
     Card_t human_card_choice = { ACTION, WILD };
-    g_players[HUMAN].cards_on_hand = create_test_list(RED, ONE, FIVE);
+    g_players[HUMAN].cards_on_hand = create_test_list(RED, ONE, FIVE);   
 
-    // Case 1: Human player Discards a Draw-One Card failed test: Invalid Card
-    ret_type_e expected_ret = RET_INVALID_CARD;
-    ret_type_e actual_ret = human_process_wild_card(human_card_choice, BLUE);
-    if (expected_ret == actual_ret) {
-        write_log("Test--- human_process_wild_card().Case 1:Invalid Card......Successful!\n");
-    }
-    else {
-        write_log("Test--- human_process_wild_card().Case 1:Invalid Card......failed!\n");
-        write_fail_log(" The return value of human_process_wild_card():\n", actual_ret, expected_ret);
-    }
-
-    // Case 2: Human Player Discards a Draw-One Card Successfully 
+    // Case 2: Human Player discards a Draw-One Card successfully 
     add_card_at_end(g_players[HUMAN].cards_on_hand, human_card_choice);
-    expected_ret = RET_SUCCESS;
-    actual_ret = human_process_wild_card(human_card_choice, BLUE);
+    ret_type_e expected_ret = RET_SUCCESS;
+    ret_type_e actual_ret = human_process_wild_card(human_card_choice, BLUE);
     if (expected_ret == actual_ret) {
         write_log("Test--- human_process_wild_card().Case 2:Human Player Discard a Wild Card......Successful!\n");
     }
@@ -215,21 +203,10 @@ void test_human_process_wild_draw_two_card(void)
     g_players[HUMAN].cards_on_hand = create_test_list(RED, ONE, FIVE);
     Card_t human_card_choice = { ACTION, WILD_DRAW_TWO };
 
-    // Case 1: Human player Discards a Draw-One Card failed test: Invalid Card
-    ret_type_e expected_ret = RET_FAILURE;
-    ret_type_e actual_ret = human_process_wild_draw_two_card(human_card_choice, GREEN);
-    if (expected_ret == actual_ret) {
-        write_log("Test--- human_process_wild_draw_two_card().Case 1:Invalid Card......Successful!\n");
-    }
-    else {
-        write_log("Test--- human_process_wild_draw_two_card().Case 1:Invalid Card......failed!\n");
-        write_fail_log(" The return value of human_process_wild_draw_two_card():\n", actual_ret, expected_ret);
-    }
-
-    // Case 2: Human Player Discards a Draw-One Card Successfully 
+    // Case 1: Human Player discards a  Draw-two Card successfully 
     add_card_at_end(g_players[HUMAN].cards_on_hand, human_card_choice);
-    expected_ret = RET_SUCCESS;
-    actual_ret = human_process_wild_draw_two_card(human_card_choice, GREEN);
+     ret_type_e expected_ret = RET_SUCCESS;
+    ret_type_e actual_ret = human_process_wild_draw_two_card(human_card_choice, GREEN);
     if (expected_ret == actual_ret) {
         write_log("Test--- human_process_wild_draw_two_card().Case 2:Human Player Discard a Wild-Draw-Two Card......Successful!\n");
     }

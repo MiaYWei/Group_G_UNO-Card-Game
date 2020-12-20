@@ -94,13 +94,14 @@ bool confirm_exit(void)
     print_info("Please enter 'Yes' to confirm the Exit. Press any other key to cancel Exit. \n");
 
     scanf("%s", char_choice);
-    printf("Entered choice is %s \n", char_choice);
+    printf("Entered choice is %s. \n", char_choice);
 
     if (0 == strcmp(char_choice, exit_string)){
-        printf("Exit the game...\n");
+        print_info("Exit the game...\n");
         exit(0);
     } 
     else{
+        print_info("Back to game... \n");
         return false;
     }
 }
@@ -117,7 +118,16 @@ int initialize_game(void)
     result += deal_cards();
     initialize_card_on_table();
 
-    printf("Hi %s! Let's start a new game.\n", g_human_player_name);
+    printf("\nHello %s! Welcome to UNO Express Card Game.\n\n", g_human_player_name);
+    printf("Inputs to play game\n");
+    printf("  To request a card from Draw pile, Press N or n. \n");
+    printf("  To end turn, Press E or e. \n");
+    printf("  To quit game, Press Q or q.\n");
+    printf("  To discard a normal card - Say you want to discard (Red,3), enter R3.\n");
+    printf("  To discard a action card - Eg:(Red, Skip), enter RS.\n");
+    printf("                                (Blue, Draw-One), enter BO.\n");
+    printf("                                (Action, Wild), enter AW.\n");
+    printf("                                (Action, Wild-Draw-Two), enter AT.\n\n");
     return result;
 }
 
@@ -155,6 +165,12 @@ void end_turn(PlayerType_e player)
         g_player_on_turn = next_turn_type;
     }
     
+    // Computer says UNO when only have one card on hand
+    if ((1 == get_pile_length(g_players[player].cards_on_hand)) && (player == COMPUTER))
+    {
+        print_info("COMPUTER Palyer: UNO !!!\n");
+    }
+
     return;
 }
 

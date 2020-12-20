@@ -21,7 +21,7 @@ void main(void)
     test_cards_mgmt();
     test_game();
     test_computer_player();
-    test_hunman_player();
+    test_human_player();
 
 	return;
 }
