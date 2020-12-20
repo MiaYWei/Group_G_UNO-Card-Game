@@ -446,7 +446,7 @@ bool remove_card_from_deck(Deck_t** pp_head, Card_t card)
  */
 void display_player_deck(PlayerType_e player)
 {
-    printf("%s", PLAYER_TYPE_STRING[player]);
+    printf("%s Player Deck", PLAYER_TYPE_STRING[player]);
     display_cards_list(g_players[player].cards_on_hand);
 
     return;

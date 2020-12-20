@@ -42,7 +42,7 @@ int request_card(PlayerType_e PlayerType)
 {
     g_card_requested = true;
     Card_t card = draw_one_card();
-    printf("The card from the draw pile is (%s,%s), it's added to HUMAN card list. \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
+    printf("The card from the draw pile is (%s,%s), it's added to Human player deck. \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
 
     //Assigning the drawn card to the human player
     return add_card_at_end(g_players[HUMAN].cards_on_hand, card);
@@ -68,21 +68,15 @@ void invalid_card_warning(void)
   */
 ret_type_e human_process_end_turn_request(void)
 {
-    ret_type_e ret = RET_FAILURE;
-
-    if (g_card_requested)
-    {
+    if (g_card_requested){
         g_card_requested = false;
         end_turn(HUMAN);
-        ret = RET_SUCCESS;
+        return RET_SUCCESS;
     }
-    else
-    {
-        print_warning("!!Warning!! Please draw a card before you can end your turn.\n");
-        display_player_deck(HUMAN);
+    else {
+        print_warning("!!Warning!! Please draw a card('n' or 'N'), then you can end your turn.\n");
+        return RET_FAILURE;
     }
-
-    return ret;
 }
 
 /**
@@ -145,7 +139,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
     if (RET_SUCCESS == human_process_normal_card(human_card_choice)){
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
-        print_info("HUMAN discarded a Skip card, COMPUTER will lose turn.\n");
+        print_info("Human player dropped a Skip card, Computer player loses turn.\n");
         return RET_SUCCESS;
     }
 
@@ -161,7 +155,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
 ret_type_e human_process_new_card_request(void)
 {
     if (g_card_requested){
-        print_warning("!!Warning!! You've already requested a new card. Please discard card or end turn now. \n");
+        print_warning("!!Warning!! You've already requested a new card. Please discard card or end turn('e' or 'E') now. \n");
         return RET_FAILURE;
     }
     else{
@@ -318,7 +312,9 @@ ret_type_e record_human_input(void)
     scanf("%s", user_input);
 
     if (user_input[0] == 'q' || user_input[0] == 'Q'){
-        quit_game();
+        if (confirm_exit()){
+            quit_game();
+        }
     }
     else if (user_input[0] == 'n' || user_input[0] == 'N'){
         return human_process_new_card_request();
