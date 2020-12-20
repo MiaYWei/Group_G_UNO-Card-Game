@@ -128,10 +128,10 @@ void test_pick_case(void) {
     expected_ret = CASE1;
     actual_ret = pick_case(testCard1, &g_players[COMPUTER].cards_on_hand);
     if (actual_ret == expected_ret) {
-        write_log("Test-- - pick_case(). CASE1 No matched color and No matched number......Successful!\n");
+        write_log("Test-- - pick_case().CASE1 No matched color and No matched number......Successful!\n");
     }
     else {
-        write_log("Test-- - pick_case(). CASE1 No matched color and No matched number......failed!\n");
+        write_log("Test-- - pick_case().CASE1 No matched color and No matched number......failed!\n");
         write_fail_log("The return value of pick_case().CASE1:\n", actual_ret, expected_ret);
     }
 
@@ -141,10 +141,10 @@ void test_pick_case(void) {
     expected_ret = CASE2;
     actual_ret = pick_case(testCard1, &g_players[COMPUTER].cards_on_hand);
     if (actual_ret == expected_ret) {
-        write_log("Test-- - pick_case(). CASE2 matched color and No matched number......Successful!\n");
+        write_log("Test-- - pick_case().CASE2 matched color and No matched number......Successful!\n");
     }
     else {
-        write_log("Test-- - pick_case(). CASE2 matched color and No matched number......failed!\n");
+        write_log("Test-- - pick_case().CASE2 matched color and No matched number......failed!\n");
         write_fail_log("The return value of pick_case().CASE2:\n", actual_ret, expected_ret);
     }
 
@@ -154,10 +154,10 @@ void test_pick_case(void) {
     expected_ret = CASE3;
     actual_ret = pick_case(testCard1, &g_players[COMPUTER].cards_on_hand);
     if (actual_ret == expected_ret) {
-        write_log("Test-- - pick_case(). CASE3 NO matched color and matched number......Successful!\n");
+        write_log("Test-- - pick_case().CASE3 NO matched color and matched number......Successful!\n");
     }
     else {
-        write_log("Test-- - pick_case(). CASE3 NO matched color and matched number......failed!\n");
+        write_log("Test-- - pick_case().CASE3 NO matched color and matched number......failed!\n");
         write_fail_log("The return value of pick_case().CASE3:\n", actual_ret, expected_ret);
     }
 
@@ -167,10 +167,10 @@ void test_pick_case(void) {
     expected_ret = CASE4;
     actual_ret = pick_case(testCard1, &g_players[COMPUTER].cards_on_hand);
     if (actual_ret == expected_ret) {
-        write_log("Test-- - pick_case(). CASE4  matched color and matched number......Successful!\n");
+        write_log("Test-- - pick_case().CASE4 matched color and matched number......Successful!\n");
     }
     else {
-        write_log("Test-- - pick_case(). CASE4  matched color and matched number......failed!\n");
+        write_log("Test-- - pick_case().CASE4 matched color and matched number......failed!\n");
         write_fail_log("The return value of pick_case().CASE3:\n", actual_ret, expected_ret);
     }
 }
@@ -190,11 +190,11 @@ void test_pick_card(void) {
     testCard1.name = SIX;
     actual_ret = pick_card(testCard1, &g_players[COMPUTER].cards_on_hand);
     if (actual_ret->card.name == expected_ret.name && actual_ret->card.color == expected_ret.color) {
-        write_log("Test-- - pick_card().CASE1  Play wild if there is no playable card......Successful!\n");
+        write_log("Test-- - pick_card().CASE1 Play wild if there is no playable card......Successful!\n");
     }
     else {
-        write_log("Test-- -  pick_card(). CASE1  Play wild if there is no playable card......failed!\n");
-        //write_fail_log("The return value of pick_card().CASE1:)\n", actual_ret->card.name, expected_ret.name);
+        write_log("Test-- -  pick_card().CASE1 Play wild if there is no playable card......failed!\n");
+ 
     }
 
     //CASE 1-1 NO WILD 
@@ -205,11 +205,10 @@ void test_pick_card(void) {
     expected_ret.name = INVALID_NAME;
     actual_ret = pick_card(testCard1, &g_players[COMPUTER].cards_on_hand);
     if (actual_ret == NULL) {
-        write_log("Test-- - pick_card(). CASE1-1  Play nothing there is no playable card and no wild card......Successful!\n");
+        write_log("Test-- - pick_card().CASE1-1 Play nothing there is no playable card and no wild card......Successful!\n");
     }
     else {
-        write_log("Test-- - pick_card(). CASE1-1  Play nothing there is no playable card and wild card......failed!\n");
-        //write_fail_log("The return value of pick_card().CASE1-1:\n", actual_ret->card.name, expected_ret.name);
+        write_log("Test-- - pick_card().CASE1-1 Play nothing there is no playable card and wild card......failed!\n");
     }
 
     //CASE2 
@@ -219,11 +218,10 @@ void test_pick_card(void) {
     testCard1.name = SEVEN;
     actual_ret = pick_card(testCard1, &g_players[COMPUTER].cards_on_hand);
     if (actual_ret->card.name == expected_ret.name && actual_ret->card.color == expected_ret.color) {
-        write_log("Test-- - pick_card().CASE2  Play matched action card if matched color > 2......Successful!\n");
+        write_log("Test-- - pick_card().CASE2 Play matched action card if matched color > 2......Successful!\n");
     }
     else {
-        write_log("Test-- - pick_card(). CASE2  Play matched action card if matched color > 2......failed!\n");
-        //write_fail_log("The return value of pick_card().CASE2:\n", actual_ret->card.name, expected_ret.name);
+        write_log("Test-- - pick_card().CASE2 Play matched action card if matched color > 2......failed!\n");
     }
 
 
@@ -238,8 +236,7 @@ void test_pick_card(void) {
         write_log("Test-- - pick_card().CASE3 Play color you have the most with that number......Successful!\n");
     }
     else {
-        write_log("Test-- -  pick_card().  CASE3 Play color you have the most with that number......failed!\n");
-        //write_fail_log("The return value of pick_card().CASE3:\n", actual_ret->card.name, expected_ret.name);
+        write_log("Test-- - pick_card().CASE3 Play color you have the most with that number......failed!\n");
     }
     
 
@@ -253,8 +250,7 @@ void test_pick_card(void) {
         write_log("Test-- - pick_card().CASE4 play if input color = most_color......Successful!\n");
     }
     else {
-        write_log("Test-- - pick_card().  CASE4 play if input color = most_colorr......failed!\n");
-        //write_fail_log("The return value of pick_card().CASE4:\n", actual_ret->card.name, expected_ret.name);
+        write_log("Test-- - pick_card().CASE4 play if input color = most_colorr......failed!\n");
     }
 
     //CASE4-1
@@ -267,8 +263,7 @@ void test_pick_card(void) {
         write_log("Test-- - pick_card().CASE4-1 find and play the most color with that number if input color! = most_color......Successful!\n");
     }
     else {
-        write_log("Test-- -  pick_card().  CASE4-1 find and play the most color with that number if input color! = most_colo......failed!\n");
-        //write_fail_log("The return value of pick_card().CASE4-1: \n", actual_ret->card.name, expected_ret.name);
+        write_log("Test-- - pick_card().CASE4-1 find and play the most color with that number if input color! = most_colo......failed!\n");
     }
 }
 
