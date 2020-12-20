@@ -81,7 +81,7 @@ void display_rules(void)
         "next player must draw 2 cards from the DRAW pile and lose their turn.\n\n");
     printf("*************************************************************************************************************\n\n");
 
-    printf("\nPress any key to go back to Main Menu...");
+    printf("\nPress any key and enter to go back to Main Menu...");
     scanf("%s", choice);    
 }
 

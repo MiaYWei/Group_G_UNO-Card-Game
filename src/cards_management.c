@@ -313,9 +313,11 @@ Card_t draw_one_card(void)
             temp_deck = remove_first_card_from_deck(&g_discard_pile);
             result += add_card_at_end(g_draw_pile, temp_deck->card);
         }
+    }else{
+        draw_deck = remove_first_card_from_deck(&g_draw_pile);
     }
 
-    draw_deck = remove_first_card_from_deck(&g_draw_pile);
+   
     return draw_deck->card;
 }
 

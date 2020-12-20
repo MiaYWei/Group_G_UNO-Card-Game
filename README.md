@@ -1,4 +1,5 @@
 <div style="text-align: justify"> 
+
 # Group G - UNO Express Card Game
 
 * [Application Overview](#application-overview)
@@ -72,13 +73,13 @@ Following are the rules with which the game has been designed
 
 The following file structure is used to organize files in this repository:
 
-* /bin - Includes the files created after executing the make file.
-* /doc - Includes the designed flowchart for the application.  The main documentation can be found on the [UNO Express Card Game Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/User-Manual).
-* /include -  All Header files are included here that are used throughout the application.
+* /bin - Contains the files created after executing the make file.
+* /doc - Contains the designed flowchart for the application.  The main documentation can be found on the [UNO Express Card Game Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/User-Manual).
 * /src - Contains the definition for all functions.
+* /include -  All Header files are included here that are used throughout the application.
 * /test
-  * /include - Contains the declarations for all unit tests.
-    * Includes the header files for the test files.       
+  * /data - Contains the log files generated during testing. 
+  * /include - Contains the header files for the test files.       
   * /src - Contains the definitions for all unit tests.  
     * test.c - Main file that calls the test functions in other files.
 

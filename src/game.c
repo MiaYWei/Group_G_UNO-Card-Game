@@ -91,7 +91,7 @@ bool confirm_exit(void)
     char exit_string[] = "Yes";
 
     print_info("Exit Game?");
-    print_info("Please enter 'Yes' to confirm the Exit. Press any other key to cancel Exit. \n");
+    print_info("Please enter 'Yes' to confirm the Exit. Press any other key and enter to cancel Exit. \n");
 
     scanf("%s", char_choice);
     printf("Entered choice is %s. \n", char_choice);

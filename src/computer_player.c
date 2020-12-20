@@ -22,8 +22,8 @@
 #include "../include/game.h"
 #include "../include/console_print.h"
 
-/*
-* @brief: variadic function that returns the max of given numbers
+/**
+* @brief variadic function that returns the max of given numbers
 *
 * @param: number of args
 * @return int the max value
@@ -44,10 +44,10 @@ int get_max(int n, ...) {
     return max_value;
 }
 
-/*
-* @brief: function that find the most occurrence with the color
+/**
+* @brief function that find the most occurrence with the color
 *
-* @param: pointer to the head of handcard list
+* @param pointer to the head of handcard list
 * @return CardColor the color with moset occurrence
 */
 CardColor_e  find_most_color(Deck_t** cards_on_hand)
@@ -92,9 +92,8 @@ CardColor_e  find_most_color(Deck_t** cards_on_hand)
     return INVALID_COLOR;
 }
 
-/*
-* @brief: function that find the largest number of given color
-*
+/**
+* @brief function that find the largest number of given color
 *
 * @param pointer to the pointer to the head of handcard list, color that need to be checked
 * @return CardName the largest number
@@ -119,12 +118,13 @@ CardName_e find_largest_number(Deck_t** handcard, CardColor_e inputCardColor)
     return Max;
 }
 
-/*
-* @brief: function that find the occruence of a number
-*
-* @param pointer to the pointer to the head of handcard list, number that needs to be checked
-* @return int number count for occruence
-*/
+/**
+ * @brief Function to count number of occurrences of a number in deck of cards
+ * 
+ * @param hand_card Deck of cards for which the number has to be counted
+ * @param input_card_number Number to be matched
+ * @return int No.of times the card number is present
+ */
 int find_occurence_of_number(Deck_t** hand_card, CardName_e input_card_number)
 {
     Deck_t* temp = *hand_card;
@@ -138,12 +138,13 @@ int find_occurence_of_number(Deck_t** hand_card, CardName_e input_card_number)
     return count;
 }
 
-/*
-* @brief: function that find the occruence of a color
-*
-* @param pointer to the pointer to the head of handcard list, color that needs to be checked
-* @return int number count for occruence
-*/
+/**
+ * @brief Function to count number of occurrences of a color in deck of cards
+ * 
+ * @param hand_card Deck of cards for which the color has to be counted
+ * @param input_card_color Color to be matched
+ * @return int No.of times the card color is present
+ */
 int find_occurence_of_color(Deck_t** hand_card, CardColor_e input_card_color)
 {
     Deck_t* temp = *hand_card;
@@ -157,8 +158,8 @@ int find_occurence_of_color(Deck_t** hand_card, CardColor_e input_card_color)
     return count;
 }
 
-/*
-* @brief: function that find the most color occruence of a given number
+/**
+* @brief function that find the most color occruence of a given number
 *
 *
 * @param pointer to the pointer to the head of handcard list, name that need to be checked
@@ -189,9 +190,8 @@ CardColor_e find_color_with_most_occurence(Deck_t** hand_card, CardName_e input_
     return most_color_with_number;
 }
 
-/*
-* @brief: function that get the matched color in the list for the given number
-*
+/**
+* @brief function that get the matched color in the list for the given number*
 *
 * @param pointer to the pointer to the head of handcard list, name that need to be checked
 * @return CardColor  the matched color
@@ -209,8 +209,8 @@ CardColor_e find_matched_color(Deck_t** hand_card, CardName_e card_name)
     return -1;
 }
 
-/*
-* @brief: function that find address within the list of a given card
+/**
+* @brief function that find the address within the list of a given card
 *
 *
 * @param pointer to the pointer to the head of handcard list, card that need to be checked
@@ -248,9 +248,9 @@ Deck_t* find_address(Deck_t** head, Card_t card)
     return temp;
 }
 
-/* function that choose the right card to draw */
-/*
-* @brief: function that choose the right card to draw
+
+/**
+* @brief function that choose the right card to draw
 *          if player card # > 1
 *           case 1 : no matched color and no matched number
 *             - if have wild card, draw wild if wild card > with color with the most occurence
@@ -337,7 +337,7 @@ casenumber_e pick_case(Card_t card, Deck_t** hand_card)
  *              - use action card if possibile
  *              - avoid play the last color that the player played
  *
- *  @return A best cooresponding card from hand cards, or call an action (draw card)
+ *  @return A best corresponding card from hand cards, or call an action (draw card)
  */
 Deck_t* pick_card(Card_t input_card, Deck_t** hand_card)
 {
@@ -416,9 +416,8 @@ Deck_t* pick_card(Card_t input_card, Deck_t** hand_card)
     return play_card;
 }
 
-/*
-* @brief: after play a card, computer will check if the drawed card is playable
-*
+/**
+* @brief Function to check if the drawn card is playbale after after drawing a card
 * @param card color, hand card list 
 * @return 1 for successed, 0 for failed
 */
@@ -433,7 +432,7 @@ bool check_after_action(CardColor_e color, Deck_t** hand_card)
 }
 
 /*
-* @brief: function that play card from handcard list
+* @brief function that play card from handcard list
 *
 * @param card address, reference to the hand card list
 * @return 1 for successed, 0 for failed
