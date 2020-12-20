@@ -503,11 +503,11 @@ void process_playable_card(Card_t card)
         original_card.name = card.name;
         printf("Computer player dropped..(%s,%s). ", CARD_COLOR_STRING[ACTION], CARD_NAME_STRING[card.name]);
         printf("Color changed to %s\n", CARD_COLOR_STRING[card.color]);
-        add_card_at_end(g_discard_pile, original_card);
+        add_card_discard_pile(original_card);
     }
     else{
         printf("Computer player dropped..(%s,%s)\n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
-        add_card_at_end(g_discard_pile, g_card_on_table);
+        add_card_discard_pile(g_card_on_table);
     }
     
     end_turn(COMPUTER);

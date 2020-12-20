@@ -68,5 +68,6 @@ Card_t draw_one_card(void);
 void initialize_card_on_table(void);
 void display_player_deck(PlayerType_e player);
 CardType_e get_card_type(Card_t card);
+void add_card_discard_pile(Card_t card);
 
 #endif //__CARDS_MANAGEMENT_HEADER__

@@ -3,6 +3,9 @@
 #include <string.h>
 #include <time.h>
 #include "../include/cards_management.h"
+#include "../include/game.h"
+#include "../include/human_player.h"
+#include "../include/console_print.h"
 
 /* Global variables */
 Deck_t *g_draw_pile = NULL;            /* Draw cards pile */
@@ -309,22 +312,26 @@ Card_t draw_one_card(void)
     const Deck_t* temp_deck;
     int result = 1;
     Card_t invalid_card = { INVALID_COLOR, INVALID_NAME };
-    int count = 0;
+
+    //Reshuffling
     if (get_pile_length(g_draw_pile) == 0) {
+        if (get_pile_length(g_discard_pile) == 0){
+            int list_length_human = get_pile_length(g_players[HUMAN].cards_on_hand);
+            int list_length_computer = get_pile_length(g_players[COMPUTER].cards_on_hand);
+            if ((list_length_human + list_length_computer) == MAX_CARDS_NUM){
+                print_warning("Both Draw pile and Discard pile are empty. Game over!\n");
+                if (confirm_exit()){
+                    quit_game();
+                }
+            }
+        }
+
         while (get_pile_length(g_discard_pile) != 0) {
-            printf("count is %d \n", count);
             temp_deck = remove_first_card_from_deck(&g_discard_pile);
             result += add_card_at_beginning(&g_draw_pile, temp_deck->card);
-            count++;
         }
     }
-    printf("count outside is %d \n", count);
-    printf("Draw pile: \n");
-    display_cards_list(g_draw_pile);
-    printf("length of the draw pile is %d \n", get_pile_length(g_draw_pile));
-    printf("Discard pile: \n");
-    display_cards_list(g_discard_pile);
-    printf("length of the Discard pile is %d \n", get_pile_length(g_discard_pile));
+
     if (get_pile_length(g_draw_pile) != 0) {
         draw_deck = remove_first_card_from_deck(&g_draw_pile);
         return draw_deck->card;
@@ -503,17 +510,21 @@ CardType_e get_card_type(Card_t card)
     return card_type;
 }
 
+/**
+ * @brief Function to add card to the discard pile
+ *
+ * @param card Card to be added
+ */
 void add_card_discard_pile(Card_t card)
 {
     Card_t init_card = { INIT_COLOR, INIT_NAME };
     
-    //Init
-    if ((get_pile_length(g_discard_pile) == 1) && (is_exist_card(g_discard_pile, init_card)))
+    if ((get_pile_length(g_discard_pile) == 1) && (is_exist_card(g_discard_pile, init_card))) //Init
     {
         add_card_at_end(g_discard_pile, card);
         remove_card_from_deck(&g_discard_pile, init_card);
     }
-    else if (get_pile_length(g_discard_pile) == 0) { //reshuff
+    else if (get_pile_length(g_discard_pile) == 0) { //Reshuff
     
         add_card_at_beginning(&g_discard_pile, card);
     }
