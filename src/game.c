@@ -117,7 +117,16 @@ int initialize_game(void)
     result += deal_cards();
     initialize_card_on_table();
 
-    printf("Hi %s! Let's start a new game.\n", g_human_player_name);
+    printf("\nHello %s! Welcome to UNO Express Card Game.\n\n", g_human_player_name);
+    printf("Inputs to play game\n");
+    printf("  To request a card from Draw pile, Press N or n. \n");
+    printf("  To end turn, Press E or e. \n");
+    printf("  To quit game, Press Q or q.\n");
+    printf("  To discard a normal card - Say you want to discard (Red,3), enter R3.\n");
+    printf("  To discard a action card - Eg:(Red, Skip), enter RS.\n");
+    printf("                                (Blue, Draw-One), enter BO.\n");
+    printf("                                (Action, Wild), enter AW.\n");
+    printf("                                (Action, Wild-Draw-Two), enter AT.\n\n");
     return result;
 }
 
