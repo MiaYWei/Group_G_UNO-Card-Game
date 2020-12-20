@@ -85,14 +85,6 @@ void display_rules(void)
     scanf("%s", choice);    
 }
 
-void display_score_board(void)
-{
-    char choice[CHOICE_MAX_LENGTH] = { 0 };
-    printf("Will be available in Release 2\n");
-    printf("Press any key to go back to Main Menu...");
-    scanf("%s", choice);
-}
-
 void invalid_choice(void)
 {
     char choice[CHOICE_MAX_LENGTH] = { 0 };
