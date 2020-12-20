@@ -494,22 +494,19 @@ Deck_t* play_card(const Deck_t* card_address, Deck_t** head)
  */
 void process_playable_card(Card_t card)
 {
-    Card_t original_card;
     memcpy(&g_card_on_table, &card, sizeof(Card_t));
-    
+
     if ((card.name == WILD) || (card.name == WILD_DRAW_TWO))
     {
-        original_card.color = ACTION;
-        original_card.name = card.name;
         printf("Computer player dropped..(%s,%s). ", CARD_COLOR_STRING[ACTION], CARD_NAME_STRING[card.name]);
         printf("Color changed to %s\n", CARD_COLOR_STRING[card.color]);
-        add_card_discard_pile(original_card);
+        g_card_on_table.color = find_most_color(g_players[COMPUTER].cards_on_hand);
     }
-    else{
+    else {
         printf("Computer player dropped..(%s,%s)\n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
-        add_card_discard_pile(g_card_on_table);
     }
-    
+
+    add_card_discard_pile(card);
     end_turn(COMPUTER);
     if (card.name == SKIP) {
         print_info("Computer player dropped a Skip card, Human player loses turn.\n");
