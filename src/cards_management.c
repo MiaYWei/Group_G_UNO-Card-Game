@@ -303,23 +303,27 @@ void swap_cards(Card_t *p_a, Card_t *p_b)
  */
 Card_t draw_one_card(void)
 {
-    const Deck_t *draw_deck;
-    const Deck_t *temp_deck;
+    const Deck_t* draw_deck;
+    const Deck_t* temp_deck;
     int result = 1;
+    Card_t invalid_card = { INVALID_COLOR, INVALID_NAME };
 
     if (g_draw_pile == NULL){
-        while (g_discard_pile != NULL)
-        {
+        while (g_discard_pile != NULL){
             temp_deck = remove_first_card_from_deck(&g_discard_pile);
             result += add_card_at_end(g_draw_pile, temp_deck->card);
         }
-    }else{
-        draw_deck = remove_first_card_from_deck(&g_draw_pile);
     }
 
-   
-    return draw_deck->card;
+    if (g_draw_pile != NULL){
+        draw_deck = remove_first_card_from_deck(&g_draw_pile);
+        return draw_deck->card;
+    }else{
+        printf("No cards are available in Draw pile now.\n");
+        return invalid_card;
+    }
 }
+
 
 /**
  * @brief Recursively free the given deck
