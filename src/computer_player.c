@@ -432,7 +432,7 @@ bool check_after_action(CardColor_e color, Deck_t** hand_card)
 }
 
 /*
-* @brief: function that play card from handcard list
+* @brief function that play card from handcard list
 *
 * @param card address, reference to the hand card list
 * @return 1 for successed, 0 for failed
