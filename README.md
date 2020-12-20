@@ -59,12 +59,12 @@ Following are the rules with which the game has been designed
 7. These are the keyboard inputs with which human can play the game
    * To request a card from the Draw pile, Press N or n.
    * To end turn, Press E or e.
-   * To discard a normal card - Say you want to discard(RED,3), Press R3.
+   * To discard a normal card - Say you want to discard(Red,3), Press R3.
    * To discard action cards, 
-     * Skip cards- Combine the first letter of the color with 'S', so if you want to discard(RED,SKIP), Press RS.
-     * Draw one cards- Combine the first letter of the color with 'O', so if you want to discard(RED,DRAW-ONE), Press R0.
+     * Skip card- Combine the first letter of the color with 'S', so if you want to discard(Red,Skip), Press RS.
+     * Draw one card- Combine the first letter of the color with 'O', so if you want to discard(Red,Draw-One), Press RO.
      * Wild card- Press AW.
-     * Wild Draw two cards- Press AT.
+     * Wild Draw two card- Press AT.
      (A above stands for Action cards, W stands for Wild, T stands for draw Two)
    * To quit the game, Press Q or q. (This can happen at any point of time).
 
@@ -107,9 +107,9 @@ To run the test files, execute the application in the `bin` directory with `UNO-
 
 ## Documentation
 
-User documentation can be found in the Github repository at [UNO Express Card Game User Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/User-Manual).
+User documentation can be found in the Github repository at [UNO Express User Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/User-Manual).
 
-Additional developer documentation is found in the [UNO Express Card Game Developer Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/Developer-Manual).
+Additional developer documentation is found in the [UNO Express Developer Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/Developer-Manual).
 
 ## License 
 This project is licensed under the GPL 2.0 License. 

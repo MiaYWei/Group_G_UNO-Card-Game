@@ -314,12 +314,12 @@ Card_t draw_one_card(void)
 
     //Reshuffling
     if (get_pile_length(g_draw_pile) == 0) {
-        if (get_pile_length(g_discard_pile) == 0){
+        if (get_pile_length(g_discard_pile) == 0) {
             int list_length_human = get_pile_length(g_players[HUMAN].cards_on_hand);
             int list_length_computer = get_pile_length(g_players[COMPUTER].cards_on_hand);
-            if ((list_length_human + list_length_computer) == MAX_CARDS_NUM){
+            if ((list_length_human + list_length_computer) == MAX_CARDS_NUM) {
                 print_warning("Both Draw pile and Discard pile are empty. Game over!\n");
-                if (confirm_exit()){
+                if (confirm_exit()) {
                     quit_game();
                 }
             }

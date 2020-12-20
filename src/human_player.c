@@ -242,7 +242,7 @@ ret_type_e human_process_wild_draw_two_card(Card_t human_card_choice, CardColor_
 /**
  * @brief  Function to map the human player input to Card type structure
  * 
- * @details Should be called only after validation of the user input *
+ * @details Should be called only after validation of the user input
  * If user input is 3R, It will be mapped as follows
  *  card.color=Red, card.name=3
  *

@@ -33,14 +33,14 @@ typedef struct CARD {
 
 /* Deck struct, which is a Linked-list */
 typedef struct DECK {
-    Card_t card;                       /* The current card this deck holds */
+    Card_t card;                  /* The current card this deck holds */
     struct DECK* next;                 /* Pointer to the next deck item */
 } Deck_t;
 
 /* Player struct */
 typedef struct Player {
     PlayerType_e type;            /* The player type*/
-    Deck_t* cards_on_hand;       /* Pointer to the player's deck on hand */
+    Deck_t* cards_on_hand;      /* Pointer to the player's deck on hand */
 } Player_t;
 
 /* Global variables */

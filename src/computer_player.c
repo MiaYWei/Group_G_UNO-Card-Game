@@ -536,12 +536,14 @@ int computer_process_request_card(void)
 {
     int result = -1;
     Card_t draw_card = draw_one_card();
-    printf("Computer player draws a new card from the pile. \n");
+    printf("Computer player draws a new card from the pile.");
     if (is_playable_card(draw_card)) {
+        printf("\n");
         process_playable_card(draw_card);
         result = 0;
     }
     else {
+        printf("No playable card, so ending the turn.. \n");
         add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card);
         end_turn(COMPUTER);
         result = 1;
@@ -553,7 +555,7 @@ int computer_process_request_card(void)
 /**
  * @brief Computer player discards a playable card
  *
- * @param   reference to the playable card in th list, reference to hand card list
+ * @param playable_card  reference to the playable card in th list, reference to hand card list
  * 
  */
 void computer_process_playable_card(Deck_t* playable_card)
