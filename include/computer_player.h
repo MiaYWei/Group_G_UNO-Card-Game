@@ -145,10 +145,13 @@ bool check_after_action(CardColor_e color, Deck_t** hand_card);
 int computer_process_request_card(void);
 
 /**
- * @brief Computer player discards a playable card, which include Skip and DRAW_ONE card.
+ * @brief Computer player discards a playable card
+ *
+ * @param   reference to the playable card in th list, reference to hand card list
  *
  */
 void computer_process_playable_card(Deck_t* playable_card);
+
 
 /**
  * @brief Logic to discard card for computer player,
@@ -166,4 +169,10 @@ void computer_process_playable_card(Deck_t* playable_card);
  */
 int computer_take_turn(void);
 
+/**
+ * @brief Computer player discards a playable card
+ *
+ * @param card the card to be process by computer
+ */
+void process_playable_card(Card_t card);
 #endif //__COMPUTER_PLAYER_HEADER__
