@@ -55,7 +55,7 @@ void start_new_game(void)
                 print_winner("Game over. The winner is COMPUTER player", NULL);
             }
             else {
-                print_winner("Game over. The winner is HUMAN player:", g_human_player_name);
+                print_winner("Game over. The winner is ", g_human_player_name);
             }
 
             printf("\n");

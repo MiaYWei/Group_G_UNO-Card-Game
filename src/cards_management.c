@@ -26,9 +26,9 @@ bool is_playable_card(Card_t card);
 bool is_exist_card(Deck_t* p_pile, Card_t card);
 void swap_cards(Card_t* p_a, Card_t* p_b);
 Card_t draw_one_card(void);
-void initialize_card_on_table(void);
 void display_player_deck(PlayerType_e player);
 CardType_e get_card_type(Card_t card);
+void add_card_discard_pile(Card_t card);
 
 /**
  * @brief Initializes all the cards status and put them in remaining deck iteratively.
@@ -80,17 +80,18 @@ int initialize_cards(void)
     result += add_card_at_beginning(&g_draw_pile, card);
     result += add_card_at_beginning(&g_draw_pile, card);
 
-
     if (0 != shuffle_cards()){
         printf("Shuffle cards failed in initialization.");
     }
 
     g_discard_pile = (Deck_t*)malloc(sizeof(Deck_t));
-    if (g_discard_pile == NULL){
-        printf("Unable to allocate memory to initialize discard pile.");
+    if (g_discard_pile == NULL) {
+        printf("Unable to allocate memory to initialize draw_pile.");
         return -1;
     }
-    g_discard_pile->next = NULL;
+    g_discard_pile->card.color = INIT_COLOR;    // Link data field with data
+    g_discard_pile->card.name = INIT_NAME;
+    g_discard_pile->next = NULL;         // Link address field to NULL
 
     return result;
 }
@@ -171,6 +172,7 @@ int add_card_at_end(Deck_t *p_head, Card_t card)
         p_head->next = new_card; /* Add the new node at end */
     }
     
+    display_cards_list(g_discard_pile);
     return 0;
 }
 
@@ -307,23 +309,31 @@ Card_t draw_one_card(void)
     const Deck_t* temp_deck;
     int result = 1;
     Card_t invalid_card = { INVALID_COLOR, INVALID_NAME };
-
-    if (g_draw_pile == NULL){
-        while (g_discard_pile != NULL){
+    int count = 0;
+    if (get_pile_length(g_draw_pile) == 0) {
+        while (get_pile_length(g_discard_pile) != 0) {
+            printf("count is %d \n", count);
             temp_deck = remove_first_card_from_deck(&g_discard_pile);
-            result += add_card_at_end(g_draw_pile, temp_deck->card);
+            result += add_card_at_beginning(&g_draw_pile, temp_deck->card);
+            count++;
         }
     }
-
-    if (g_draw_pile != NULL){
+    printf("count outside is %d \n", count);
+    printf("Draw pile: \n");
+    display_cards_list(g_draw_pile);
+    printf("length of the draw pile is %d \n", get_pile_length(g_draw_pile));
+    printf("Discard pile: \n");
+    display_cards_list(g_discard_pile);
+    printf("length of the Discard pile is %d \n", get_pile_length(g_discard_pile));
+    if (get_pile_length(g_draw_pile) != 0) {
         draw_deck = remove_first_card_from_deck(&g_draw_pile);
         return draw_deck->card;
-    }else{
-        printf("No cards are available in Draw pile now.\n");
+    }
+    else {
+        printf("Reshuffling of discard pile failed.\n");
         return invalid_card;
     }
 }
-
 
 /**
  * @brief Recursively free the given deck
@@ -391,14 +401,13 @@ void initialize_card_on_table(void)
 {
     CardType_e card_type = INVALID_TYPE;
     Card_t draw_card;
-
     while (card_type != NORMAL)
     {
         draw_card = draw_one_card();
         card_type = get_card_type(draw_card);
-        add_card_at_end(g_discard_pile, draw_card);
+        add_card_discard_pile(draw_card);
     }
-
+    
     memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
 
     return;
@@ -492,4 +501,25 @@ CardType_e get_card_type(Card_t card)
     }
 
     return card_type;
+}
+
+void add_card_discard_pile(Card_t card)
+{
+    Card_t init_card = { INIT_COLOR, INIT_NAME };
+    
+    //Init
+    if ((get_pile_length(g_discard_pile) == 1) && (is_exist_card(g_discard_pile, init_card)))
+    {
+        add_card_at_end(g_discard_pile, card);
+        remove_card_from_deck(&g_discard_pile, init_card);
+    }
+    else if (get_pile_length(g_discard_pile) == 0) { //reshuff
+    
+        add_card_at_beginning(&g_discard_pile, card);
+    }
+    else { //Normal during the turn
+        add_card_at_end(g_discard_pile, card);
+    }
+    
+    return;
 }

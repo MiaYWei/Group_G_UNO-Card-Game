@@ -272,20 +272,12 @@ Card_t map_user_input(const char* user_input)
         }
     }
 
-    if (card.color == INVALID_COLOR){
-        return invalid_card;
-    }
-
     //maps the card name only if the card color is valid.
     for (i = 0; i < n; i++){
         if (user_input[1] == USER_INPUT_NAME[i]){
             card.name = i;
             break;
         }
-    }
-
-    if (card.name == INVALID_NAME){
-        return invalid_card;
     }
     
     return card;

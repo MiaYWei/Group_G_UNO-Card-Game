@@ -15,12 +15,12 @@
 
 typedef enum { HUMAN, COMPUTER, PlayerTypeNum } PlayerType_e;
 typedef enum { NORMAL, SKIP_T, DRAW_ONE_T, WILD_T, WILD_DRAW_TWO_T, INVALID_TYPE } CardType_e;
-typedef enum { RED, BLUE, GREEN, YELLOW, ACTION, INVALID_COLOR } CardColor_e;
-typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, SKIP, DRAW_ONE, WILD, WILD_DRAW_TWO, INVALID_NAME } CardName_e;
+typedef enum { RED, BLUE, GREEN, YELLOW, ACTION, INVALID_COLOR, INIT_COLOR} CardColor_e;
+typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, SKIP, DRAW_ONE, WILD, WILD_DRAW_TWO, INVALID_NAME, INIT_NAME } CardName_e;
 
 static const char* PLAYER_TYPE_STRING[] = { "Human", "Computer", "Invalid"};
-static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Skip", "Draw-One", "Wild", "Wild-Draw-Two", "Invalid" };
-static const char* CARD_COLOR_STRING[] = { "Red", "Blue", "Green", "Yellow", "Action", "Invalid" };
+static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Skip", "Draw-One", "Wild", "Wild-Draw-Two", "Invalid", "Init" };
+static const char* CARD_COLOR_STRING[] = { "Red", "Blue", "Green", "Yellow", "Action", "Invalid", "Init" };
 
 static const int USER_INPUT_COLOR[] = { 'R', 'B', 'G', 'Y', 'A'};
 static const int USER_INPUT_NAME[] = { '0', '1', '2', '3', '4', '5', '6' ,'7', '8', '9', 'S', 'O', 'W', 'T'};
