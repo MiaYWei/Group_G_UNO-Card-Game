@@ -5,7 +5,7 @@
 #include <stdio.h> 
 
 /* Totally 52 cards, which includes
-* Release 1: 10 cards per colour;
+* Release 1: 10 cards in each colour;
 * Release 2: 4 Skip cards; 4 Draw One cards; 2 Wild cards; 2 Wild Draw Two cards*/
 #define MAX_CARDS_NUM   52
 #define MALLOC_FAIL     1
@@ -18,7 +18,7 @@ typedef enum { NORMAL, SKIP_T, DRAW_ONE_T, WILD_T, WILD_DRAW_TWO_T, INVALID_TYPE
 typedef enum { RED, BLUE, GREEN, YELLOW, ACTION, INVALID_COLOR } CardColor_e;
 typedef enum { ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, SKIP, DRAW_ONE, WILD, WILD_DRAW_TWO, INVALID_NAME } CardName_e;
 
-static const char* PLAYER_TYPE_STRING[] = { "HUMAN", "COMPUTER", "INVALID"};
+static const char* PLAYER_TYPE_STRING[] = { "Human", "Computer", "Invalid"};
 static const char* CARD_NAME_STRING[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Skip", "Draw-One", "Wild", "Wild-Draw-Two", "Invalid" };
 static const char* CARD_COLOR_STRING[] = { "Red", "Blue", "Green", "Yellow", "Action", "Invalid" };
 
@@ -27,8 +27,8 @@ static const int USER_INPUT_NAME[] = { '0', '1', '2', '3', '4', '5', '6' ,'7', '
 
 /* Card struct */
 typedef struct CARD {
-    CardColor_e color;               /* Color code for card */
-    CardName_e name;                 /* Name code for card */
+    CardColor_e color;               /* Color code for the card */
+    CardName_e name;                 /* Name code for the card */
 } Card_t;
 
 /* Deck struct, which is a Linked-list */

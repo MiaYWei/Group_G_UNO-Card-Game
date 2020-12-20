@@ -111,7 +111,7 @@ User documentation can be found in the Github repository at [UNO Express User Do
 
 Additional developer documentation is found in the [UNO Express Developer Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/Developer-Manual).
 
-# License 
+## License 
 This project is licensed under the GPL 2.0 License. 
 
 </div>

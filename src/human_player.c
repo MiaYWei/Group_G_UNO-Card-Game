@@ -96,7 +96,7 @@ ret_type_e human_process_normal_card(Card_t human_card_choice)
     }
 
     if (remove_card_from_deck(&g_players[HUMAN].cards_on_hand, human_card_choice)){
-        add_card_at_beginning(g_discard_pile, human_card_choice);
+        add_card_at_end(g_discard_pile, human_card_choice);
         memcpy(&g_card_on_table, &human_card_choice, sizeof(Card_t));
         end_turn(HUMAN);
         g_card_requested = false;
@@ -209,7 +209,7 @@ ret_type_e card_color_change_inquiry(CardColor_e* color_changed)
 ret_type_e human_process_wild_card(Card_t human_card_choice, CardColor_e color_changed)
 {
     remove_card_from_deck(&(g_players[HUMAN].cards_on_hand), human_card_choice);
-    add_card_at_beginning(g_discard_pile, human_card_choice);
+    add_card_at_end(g_discard_pile, human_card_choice);
 
     //update the card on table
     g_card_on_table.color = color_changed;
