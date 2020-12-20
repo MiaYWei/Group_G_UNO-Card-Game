@@ -397,7 +397,7 @@ Deck_t* build_test_list_for_computer() {
         card3 = { GREEN, FIVE }, 
         card4 = { ACTION, WILD }, 
         card5 = { GREEN, TWO }, 
-        card6 = { GREEN, FOUR },  //*******Todo
+        card6 = { YELLOW, FOUR },  
         card7 = { RED, NINE }, 
         card8 = { RED, SKIP }, 
         card9 = { GREEN, DRAW_ONE };
