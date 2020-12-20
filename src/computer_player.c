@@ -502,18 +502,18 @@ void process_playable_card(Card_t card)
     {
         original_card.color = ACTION;
         original_card.name = card.name;
-        printf("COMPUTER dropped..(%s,%s). ", CARD_COLOR_STRING[ACTION], CARD_NAME_STRING[card.name]);
+        printf("Computer player dropped..(%s,%s). ", CARD_COLOR_STRING[ACTION], CARD_NAME_STRING[card.name]);
         printf("Color changed to %s\n", CARD_COLOR_STRING[card.color]);
         add_card_at_end(g_discard_pile, original_card);
     }
     else{
-        printf("COMPUTER dropped..(%s,%s)\n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
+        printf("Computer player dropped..(%s,%s)\n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
         add_card_at_end(g_discard_pile, g_card_on_table);
     }
     
     end_turn(COMPUTER);
     if (card.name == SKIP) {
-        print_info("COMPUTER discarded a Skip card, HUMAN will lose turn.\n");
+        print_info("Computer player dropped a Skip card, Human player loses turn.\n");
         g_player_on_turn = COMPUTER;
     }
     else if (card.name == DRAW_ONE) {
@@ -537,7 +537,7 @@ int computer_process_request_card(void)
 {
     int result = -1;
     Card_t draw_card = draw_one_card();
-    printf("COMPUTER draws a new card from the pile. \n");
+    printf("Computer player draws a new card from the pile. \n");
     if (is_playable_card(draw_card)) {
         process_playable_card(draw_card);
         result = 0;

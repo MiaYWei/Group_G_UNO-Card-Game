@@ -42,7 +42,7 @@ int request_card(PlayerType_e PlayerType)
 {
     g_card_requested = true;
     Card_t card = draw_one_card();
-    printf("The card from the draw pile is (%s,%s), it's added to HUMAN card list. \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
+    printf("The card from the draw pile is (%s,%s), it's added to Human player deck. \n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
 
     //Assigning the drawn card to the human player
     return add_card_at_end(g_players[HUMAN].cards_on_hand, card);
@@ -139,7 +139,7 @@ ret_type_e human_process_skip_card(Card_t human_card_choice)
     if (RET_SUCCESS == human_process_normal_card(human_card_choice)){
         //Next turn will be Human turn
         g_player_on_turn = HUMAN;
-        print_info("HUMAN discarded a Skip card, COMPUTER will lose turn.\n");
+        print_info("Human player dropped a Skip card, Computer player loses turn.\n");
         return RET_SUCCESS;
     }
 
