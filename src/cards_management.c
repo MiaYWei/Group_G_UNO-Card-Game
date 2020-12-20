@@ -89,7 +89,7 @@ int initialize_cards(void)
 
     g_discard_pile = (Deck_t*)malloc(sizeof(Deck_t));
     if (g_discard_pile == NULL) {
-        printf("Unable to allocate memory to initialize draw_pile.");
+        printf("Unable to allocate memory to initialize discard pile.");
         return -1;
     }
     g_discard_pile->card.color = INIT_COLOR;    // Link data field with data
