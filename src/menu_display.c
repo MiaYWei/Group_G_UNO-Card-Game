@@ -59,15 +59,15 @@ void display_rules(void)
     printf("  If no player is out of cards by the time the DRAW pile is depleted, the DISCARD pile is reshuffled and set as the draw pile. \n\n");
     printf("************************************************************************\n\n");
 
-    printf(" Inputs to play the game\n");
-    printf("  To request a card from the Draw pile, Press N or n. \n");
+    printf(" Inputs to play game\n");
+    printf("  To request a card from Draw pile, Press N or n. \n");
     printf("  To end turn, Press E or e. \n");
-    printf("  To quit the game, Press Q or q.\n");
-    printf("  To discard a normal card - Say you want to discard(RED,3), enter R3.\n");
-    printf("  To discard a action card - Eg:(RED, SKIP), enter RS\n");
-    printf("                                (BLUE, DRAW-ONE), enter BO\n");
-    printf("                                (ACTION, WILD), enter AW\n");
-    printf("                                (ACTION, WILD), enter AT\n");
+    printf("  To quit game, Press Q or q.\n");
+    printf("  To discard a normal card - Say you want to discard (Red,3), enter R3.\n");
+    printf("  To discard a action card - Eg:(Red, Skip), enter RS.\n");
+    printf("                                (Blue, Draw-One), enter BO.\n");
+    printf("                                (Action, Wild), enter AW.\n");
+    printf("                                (Action, Wild-Draw-Two), enter AT.\n");
     printf("************************************************************************\n\n");
 
     printf(" Functions of Action Cards\n");
