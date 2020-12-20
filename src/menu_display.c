@@ -72,9 +72,9 @@ void display_rules(void)
 
     printf(" Functions of Action Cards\n");
     printf("  1. Skip card - When a player uses this card, the next player loses his/her turn."
-        "This card may only be played on a matching color or another Skip card.\n");
+        "This card may only be played on a matching color or on another Skip card.\n");
     printf("  2. Draw One card - When a player uses this card, the next player must draw a card and lose their turn." 
-        "This card may only be played on a matching color or another Draw One card.\n");
+        "This card may only be played on a matching color or on another Draw One card.\n");
     printf("  3. Wild card - When a player uses this card, s/he gets to choose the color to continue the game (any color including" 
         "the color in play before the Wild card was laid down).You may play a Wild card on your turn even if you have another playable card in your hand.\n");
     printf("  4. Wild Draw TWO card - When a player uses this card, s/he gets to choose the color to continue the game PLUS the" 
