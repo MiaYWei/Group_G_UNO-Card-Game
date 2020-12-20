@@ -3,6 +3,9 @@
 #include <string.h>
 #include <time.h>
 #include "../include/cards_management.h"
+#include "../include/game.h"
+#include "../include/human_player.h"
+#include "../include/console_print.h"
 
 /* Global variables */
 Deck_t *g_draw_pile = NULL;            /* Draw cards pile */
@@ -26,9 +29,9 @@ bool is_playable_card(Card_t card);
 bool is_exist_card(Deck_t* p_pile, Card_t card);
 void swap_cards(Card_t* p_a, Card_t* p_b);
 Card_t draw_one_card(void);
-void initialize_card_on_table(void);
 void display_player_deck(PlayerType_e player);
 CardType_e get_card_type(Card_t card);
+void add_card_discard_pile(Card_t card);
 
 /**
  * @brief Initializes all the cards status and put them in remaining deck iteratively.
@@ -80,17 +83,18 @@ int initialize_cards(void)
     result += add_card_at_beginning(&g_draw_pile, card);
     result += add_card_at_beginning(&g_draw_pile, card);
 
-
     if (0 != shuffle_cards()){
         printf("Shuffle cards failed in initialization.");
     }
 
     g_discard_pile = (Deck_t*)malloc(sizeof(Deck_t));
-    if (g_discard_pile == NULL){
+    if (g_discard_pile == NULL) {
         printf("Unable to allocate memory to initialize discard pile.");
         return -1;
     }
-    g_discard_pile->next = NULL;
+    g_discard_pile->card.color = INIT_COLOR;    // Link data field with data
+    g_discard_pile->card.name = INIT_NAME;
+    g_discard_pile->next = NULL;         // Link address field to NULL
 
     return result;
 }
@@ -307,17 +311,32 @@ Card_t draw_one_card(void)
     const Deck_t* temp_deck;
     int result = 1;
     Card_t invalid_card = { INVALID_COLOR, INVALID_NAME };
-    if (g_draw_pile == NULL){
-        while (g_discard_pile != NULL){
+
+    //Reshuffling
+    if (get_pile_length(g_draw_pile) == 0) {
+        if (get_pile_length(g_discard_pile) == 0) {
+            int list_length_human = get_pile_length(g_players[HUMAN].cards_on_hand);
+            int list_length_computer = get_pile_length(g_players[COMPUTER].cards_on_hand);
+            if ((list_length_human + list_length_computer) == MAX_CARDS_NUM) {
+                print_warning("Both Draw pile and Discard pile are empty. Game over!\n");
+                if (confirm_exit()) {
+                    quit_game();
+                }
+            }
+        }
+
+        while (get_pile_length(g_discard_pile) != 0) {
             temp_deck = remove_first_card_from_deck(&g_discard_pile);
-            result += add_card_at_end(g_draw_pile, temp_deck->card);
+            result += add_card_at_beginning(&g_draw_pile, temp_deck->card);
         }
     }
-    if (g_draw_pile != NULL){
+
+    if (get_pile_length(g_draw_pile) != 0) {
         draw_deck = remove_first_card_from_deck(&g_draw_pile);
         return draw_deck->card;
-    }else{
-        printf("No cards are available in Draw pile now.\n");
+    }
+    else {
+        printf("Reshuffling of discard pile failed.\n");
         return invalid_card;
     }
 }
@@ -388,14 +407,13 @@ void initialize_card_on_table(void)
 {
     CardType_e card_type = INVALID_TYPE;
     Card_t draw_card;
-
     while (card_type != NORMAL)
     {
         draw_card = draw_one_card();
         card_type = get_card_type(draw_card);
-        add_card_at_end(g_discard_pile, draw_card);
+        add_card_discard_pile(draw_card);
     }
-
+    
     memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
 
     return;
@@ -489,4 +507,29 @@ CardType_e get_card_type(Card_t card)
     }
 
     return card_type;
+}
+
+/**
+ * @brief Function to add card to the discard pile
+ *
+ * @param card Card to be added
+ */
+void add_card_discard_pile(Card_t card)
+{
+    Card_t init_card = { INIT_COLOR, INIT_NAME };
+    
+    if ((get_pile_length(g_discard_pile) == 1) && (is_exist_card(g_discard_pile, init_card))) //Init
+    {
+        add_card_at_end(g_discard_pile, card);
+        remove_card_from_deck(&g_discard_pile, init_card);
+    }
+    else if (get_pile_length(g_discard_pile) == 0) { //Reshuff
+    
+        add_card_at_beginning(&g_discard_pile, card);
+    }
+    else { //Normal during the turn
+        add_card_at_end(g_discard_pile, card);
+    }
+    
+    return;
 }
