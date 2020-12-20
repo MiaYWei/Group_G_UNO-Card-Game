@@ -20,14 +20,14 @@ void test_process_playable_card(void);
 void test_computer_player(void)
 {
     write_log("\n--------------- Start Test: Computer Player Module  ---------------\n");
-    test_computer_take_turn();
+   /* test_computer_take_turn();
     test_find_most_color();
     test_find_largest_number();
     test_find_occurence_of_number();
     test_find_occurence_of_color();
     test_find_color_with_most_occurence();
     test_pick_case();
-    test_pick_card();
+    test_pick_card();*/
     test_process_playable_card();
     write_log("--------------- End of Test: Computer Player Module ---------------\n");
     return;
@@ -273,13 +273,16 @@ void test_process_playable_card(void)
     int expected_diff, before_lenth, after_lenth, actual_diff;
     PlayerType_e expected_player, actual_player;
     g_players[COMPUTER].cards_on_hand = build_test_list_for_computer();
+    g_players[HUMAN].cards_on_hand = build_test_list_for_computer();
 
     //Case 1 WILD card change turn 
     test_card.color = ACTION;
     test_card.name = WILD;
     expected_player = HUMAN;
+    Card_t expected_card_on_table = { RED, WILD };
     process_playable_card(test_card);
-    actual_player =  g_player_on_turn;
+    actual_player = g_player_on_turn;
+    Card_t actual_card_on_table = g_card_on_table;
 
     if (expected_player == actual_player) {
         write_log("Test-- - process_playable_card().Drop WILD......Successful!\n");;
@@ -287,6 +290,17 @@ void test_process_playable_card(void)
     else {
         write_log("Test-- - process_playable_card().Drop WILD.......failed!\n");
         write_fail_log("The return value of process_playable_card().Drop WILD: %s  %s\n", actual_player, expected_player);
+    }
+
+    if (0 == memcmp(&actual_card_on_table, &expected_card_on_table, sizeof(Card_t))){
+        write_log("Test-- - process_playable_card().Color of card on table updated......Successful!\n");;
+    }
+    else {
+        write_log("Test-- - process_playable_card().Color of card on table updated.......failed!\n");
+        write_fail_log("The card color of process_playable_card().Color of card on table updated:\n", 
+            actual_card_on_table.color, expected_card_on_table.color);
+        write_fail_log("The card name  of process_playable_card().Color of card on table updated:\n", 
+            actual_card_on_table.name, expected_card_on_table.name);
     }
 
     //Case 2:  WILD draw2 add 2 card & change turn
@@ -299,12 +313,12 @@ void test_process_playable_card(void)
     after_lenth = get_pile_length(g_players[HUMAN].cards_on_hand);
     actual_diff = after_lenth - before_lenth;
     actual_player = g_player_on_turn;
-    if (actual_diff == expected_diff && expected_player == actual_player) {
+    if ((actual_diff == expected_diff) && (expected_player == actual_player)) {
         write_log("Test-- - process_playable_card().Drop WILD DRAW TWO......Successful!\n");;
     }
     else {
         write_log("Test-- - Process_playable_card().Drop WILD DRAW TWO.....failed!\n");
-        write_fail_log("The return value of process_playable_card().Drop WILD: %s  %s\n", actual_diff, expected_diff);
+        write_fail_log("The return value of process_playable_card().Drop WILD DRAW TWO:\n", actual_diff, expected_diff);
     }
 
 
@@ -378,7 +392,15 @@ void append(Deck_t** head_ref, Card_t card) {
 
 Deck_t* build_test_list_for_computer() {
     /* define cards*/
-    struct CARD card1 = { RED, ONE }, card2 = { RED, FIVE }, card3 = { GREEN, FIVE }, card4 = { ACTION, WILD }, card5 = { GREEN, TWO }, card6 = { YELLOW, FOUR }, card7 = { RED, NINE }, card8 = { RED, SKIP }, card9 = { GREEN, DRAW_ONE };
+    struct CARD card1 = { RED, ONE }, 
+        card2 = { RED, FIVE }, 
+        card3 = { GREEN, FIVE }, 
+        card4 = { ACTION, WILD }, 
+        card5 = { GREEN, TWO }, 
+        card6 = { GREEN, FOUR },  //*******Todo
+        card7 = { RED, NINE }, 
+        card8 = { RED, SKIP }, 
+        card9 = { GREEN, DRAW_ONE };
     /* define hand card list */
     struct DECK* hand_card_list = NULL;
     struct DECK* ptr = NULL;

@@ -500,7 +500,7 @@ void process_playable_card(Card_t card)
     {
         printf("Computer player dropped..(%s,%s). ", CARD_COLOR_STRING[ACTION], CARD_NAME_STRING[card.name]);
         printf("Color changed to %s\n", CARD_COLOR_STRING[card.color]);
-        g_card_on_table.color = find_most_color(g_players[COMPUTER].cards_on_hand);
+        g_card_on_table.color = find_most_color(&g_players[COMPUTER].cards_on_hand);
     }
     else {
         printf("Computer player dropped..(%s,%s)\n", CARD_COLOR_STRING[card.color], CARD_NAME_STRING[card.name]);
