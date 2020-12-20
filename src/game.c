@@ -165,7 +165,7 @@ void end_turn(PlayerType_e player)
     }
     
     // Computer says UNO when only have one card on hand
-    if ((1 == get_pile_length(&g_players[player].cards_on_hand)) && (player == COMPUTER))
+    if ((1 == get_pile_length(g_players[player].cards_on_hand)) && (player == COMPUTER))
     {
         print_info("COMPUTER Palyer: UNO !!!\n");
     }
