@@ -52,7 +52,6 @@ void test_find_most_color(void)
     return;
 }
 
-
 void test_find_largest_number(void)
 {
     g_players[COMPUTER].cards_on_hand = build_test_list_for_computer();
@@ -68,7 +67,6 @@ void test_find_largest_number(void)
         write_fail_log("The return value of find_largest_number():\n", actual_ret, expected_ret);
     }
 }
-
 
 void test_find_occurence_of_number(void)
 {
@@ -184,19 +182,20 @@ void test_pick_card(void) {
     g_players[COMPUTER].cards_on_hand = build_test_list_for_computer();
 
 
+
     //CASE1 PLAY WILD
-    //expected_ret.color = RED;
-    //expected_ret.name = WILD;
-    //testCard1.color = BLUE;
-    //testCard1.name = SIX;
-    //actual_ret = pick_card(testCard1, &g_players[COMPUTER].cards_on_hand);
-    //if (actual_ret->card.name == expected_ret.name && actual_ret->card.color == expected_ret.color) {
-    //    write_log("Test-- - pick_card().CASE1  Play wild if there is no playable card......Successful!\n");
-    //}
-    //else {
-    //    write_log("Test-- -  pick_card(). CASE1  Play wild if there is no playable card......failed!\n");
-    //    //write_fail_log("The return value of pick_card().CASE1:)\n", actual_ret->card.name, expected_ret.name);
-    //}
+    expected_ret.color = RED;
+    expected_ret.name = WILD;
+    testCard1.color = BLUE;
+    testCard1.name = SIX;
+    actual_ret = pick_card(testCard1, &g_players[COMPUTER].cards_on_hand);
+    if (actual_ret->card.name == expected_ret.name && actual_ret->card.color == expected_ret.color) {
+        write_log("Test-- - pick_card().CASE1  Play wild if there is no playable card......Successful!\n");
+    }
+    else {
+        write_log("Test-- -  pick_card(). CASE1  Play wild if there is no playable card......failed!\n");
+        //write_fail_log("The return value of pick_card().CASE1:)\n", actual_ret->card.name, expected_ret.name);
+    }
 
     //CASE 1-1 NO WILD 
     Card_t WILDCard = { ACTION, WILD };
@@ -205,11 +204,11 @@ void test_pick_card(void) {
     expected_ret.color = INVALID_COLOR;
     expected_ret.name = INVALID_NAME;
     actual_ret = pick_card(testCard1, &g_players[COMPUTER].cards_on_hand);
-    if (actual_ret->card.name == expected_ret.name && actual_ret->card.color == expected_ret.color) {
-        write_log("Test-- - CASE1-1  Play nothing there is no playable card and wild card......Successful!\n");
+    if (actual_ret == NULL) {
+        write_log("Test-- - pick_card(). CASE1-1  Play nothing there is no playable card and no wild card......Successful!\n");
     }
     else {
-        write_log("Test-- -  pick_card(). CASE1-1  Play nothing there is no playable card and wild card......failed!\n");
+        write_log("Test-- - pick_card(). CASE1-1  Play nothing there is no playable card and wild card......failed!\n");
         //write_fail_log("The return value of pick_card().CASE1-1:\n", actual_ret->card.name, expected_ret.name);
     }
 
@@ -220,26 +219,13 @@ void test_pick_card(void) {
     testCard1.name = SEVEN;
     actual_ret = pick_card(testCard1, &g_players[COMPUTER].cards_on_hand);
     if (actual_ret->card.name == expected_ret.name && actual_ret->card.color == expected_ret.color) {
-        write_log("Test-- - CASE2  Play matched action card if matched color > 2......Successful!\n");
+        write_log("Test-- - pick_card().CASE2  Play matched action card if matched color > 2......Successful!\n");
     }
     else {
-        write_log("Test-- -  pick_card(). CASE2  Play matched action card if matched color > 2......failed!\n");
+        write_log("Test-- - pick_card(). CASE2  Play matched action card if matched color > 2......failed!\n");
         //write_fail_log("The return value of pick_card().CASE2:\n", actual_ret->card.name, expected_ret.name);
     }
 
-    //CASE2-1
-    expected_ret.color = YELLOW;
-    expected_ret.name = FOUR;
-    testCard1.color = YELLOW;
-    testCard1.name = THREE;
-    actual_ret = pick_card(testCard1, &g_players[COMPUTER].cards_on_hand);
-    if (actual_ret->card.name == expected_ret.name && actual_ret->card.color == expected_ret.color) {
-        write_log("Test-- -  CASE2-1  Play matched card with largest number if matched color < 2......Successful!\n");
-    }
-    else {
-        write_log("Test-- -  pick_card().  CASE2-1  Play matched card with largest number if matched color < 2......failed!\n");
-        //write_fail_log("The return value of pick_card().CASE2-1:\n", actual_ret->card.name, expected_ret.name);
-    }
 
 
     //CASE3    
@@ -249,7 +235,7 @@ void test_pick_card(void) {
     testCard1.name = FIVE;
     actual_ret = pick_card(testCard1, &g_players[COMPUTER].cards_on_hand);
     if (actual_ret->card.name == expected_ret.name && actual_ret->card.color == expected_ret.color) {
-        write_log("Test-- -  CASE3 Play color you have the most with that number......Successful!\n");
+        write_log("Test-- - pick_card().CASE3 Play color you have the most with that number......Successful!\n");
     }
     else {
         write_log("Test-- -  pick_card().  CASE3 Play color you have the most with that number......failed!\n");
@@ -261,13 +247,13 @@ void test_pick_card(void) {
     expected_ret.color = RED;
     expected_ret.name = FOUR;
     testCard1.color = RED;
-    testCard1.name = NINE;
+    testCard1.name = SKIP;
     actual_ret = pick_card(testCard1, &g_players[COMPUTER].cards_on_hand);
-    if (actual_ret->card.name == expected_ret.name && actual_ret->card.color == expected_ret.color) {
-        write_log("Test-- -  CASE4 play if input color = most_color......Successful!\n");
+    if (actual_ret->card.color == expected_ret.color) {
+        write_log("Test-- - pick_card().CASE4 play if input color = most_color......Successful!\n");
     }
     else {
-        write_log("Test-- -  pick_card().  CASE4 play if input color = most_colorr......failed!\n");
+        write_log("Test-- - pick_card().  CASE4 play if input color = most_colorr......failed!\n");
         //write_fail_log("The return value of pick_card().CASE4:\n", actual_ret->card.name, expected_ret.name);
     }
 
@@ -278,7 +264,7 @@ void test_pick_card(void) {
     testCard1.name = FIVE;
     actual_ret = pick_card(testCard1, &g_players[COMPUTER].cards_on_hand);
     if (actual_ret->card.name == expected_ret.name && actual_ret->card.color == expected_ret.color) {
-        write_log("Test-- -  CASE4-1 find and play the most color with that number if input color! = most_color......Successful!\n");
+        write_log("Test-- - pick_card().CASE4-1 find and play the most color with that number if input color! = most_color......Successful!\n");
     }
     else {
         write_log("Test-- -  pick_card().  CASE4-1 find and play the most color with that number if input color! = most_colo......failed!\n");
@@ -298,14 +284,14 @@ void test_process_playable_card(void)
     test_card.name = WILD;
     expected_player = HUMAN;
     process_playable_card(test_card);
-     actual_player =  g_player_on_turn;
+    actual_player =  g_player_on_turn;
 
     if (expected_player == actual_player) {
         write_log("Test-- - process_playable_card().Drop WILD......Successful!\n");;
     }
     else {
         write_log("Test-- - process_playable_card().Drop WILD.......failed!\n");
-        write_fail_log("The return value of process_playable_card().Drop WILD: %s  %s\n", actual_diff, expected_diff);
+        write_fail_log("The return value of process_playable_card().Drop WILD: %s  %s\n", actual_player, expected_player);
     }
 
     //Case 2:  WILD draw2 add 2 card & change turn
@@ -398,10 +384,8 @@ void append(Deck_t** head_ref, Card_t card) {
 Deck_t* build_test_list_for_computer() {
     /* define cards*/
     struct CARD card1 = { RED, ONE }, card2 = { RED, FIVE }, card3 = { GREEN, FIVE }, card4 = { ACTION, WILD }, card5 = { GREEN, TWO }, card6 = { YELLOW, FOUR }, card7 = { RED, NINE }, card8 = { RED, SKIP }, card9 = { GREEN, DRAW_ONE };
-    struct CARD testCard1 = { BLUE, SIX }, testCard2 = { GREEN , SEVEN }, testCard3 = { BLUE, FIVE }, testCard4 = { BLUE, ONE }, testCard5 = { GREEN, FOUR }, testWILD = { BLUE, WILD }, testDRAW = { BLUE, DRAW_ONE };
-
     /* define hand card list */
-    struct DECK* hand_card_list = NULL, * played = NULL;
+    struct DECK* hand_card_list = NULL;
     struct DECK* ptr = NULL;
     append(&hand_card_list, card1);
     append(&hand_card_list, card2);
@@ -424,152 +408,6 @@ void test_computer_take_turn(void)
     if (initialize_game()) {
         write_log("Test --- computer_take_turn()......Initialize game failed! \n");
     }
-
-
-    ////function - pick card CASE1
-    //expected_ret = 1;
-    //Card_t  expectCard = { RED, WILD };
-    //actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard1, expectCard);
-    //if (actual_ret == expected_ret) {
-    //    write_log("Test-- - pick_card(). CASE1  Play wild if there is no playable card......Successful!\n");
-    //}
-    //else {
-    //    write_log("Test-- -  pick_card(). CASE1  Play wild if there is no playable card......failed!\n");
-    //    write_fail_log("The return value of pick_card().CASE1:\n", actual_ret, expected_ret);
-    //}
-
-    ////function - pick card CASE1-1
-    //expected_ret = 1;
-    ////pop wild from list
-    //Card_t WILDCard = { ACTION, WILD };
-    //play_card(find_address(&g_players[COMPUTER].cards_on_hand, WILDCard), &g_players[COMPUTER].cards_on_hand);
-    //Card_t NULLcard = { INVALID_COLOR, INVALID_NAME };
-    //actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard1, NULLcard);
-    //if (actual_ret == expected_ret) {
-    //    write_log("Test-- - pick_card(). CASE1-1  Play nothing there is no playable card and wild card......Successful!\n");
-    //}
-    //else {
-    //    write_log("Test-- -  pick_card(). CASE1-1  Play nothing there is no playable card and wild card......failed!\n");
-    //    write_fail_log("The return value of pick_card(). CASE 1-1:\n", actual_ret, expected_ret);
-    //}
-
-    ////function - pick card CASE2
-    //expected_ret = 1;
-    //Card_t expectCard2 = { GREEN, DRAW_ONE };
-    //actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard2, expectCard2);
-    //if (actual_ret == expected_ret) {
-    //    write_log("Test-- - pick_card(). CASE2  Play matched action card if matched color > 2 ......Successful!\n");
-    //}
-    //else {
-    //    write_log("Test-- -  pick_card(). CASE2  Play matched action card if matched color > 2......failed!\n");
-    //    write_fail_log("The return value of pick_card(). CASE 2:\n", actual_ret, expected_ret);
-    //}
-
-
-    ////function - pick card CASE2-1
-    //expected_ret = 1;
-    //display_cards_list(g_players[COMPUTER].cards_on_hand);
-    //Card_t testCard6 = { YELLOW, THREE };
-    //Card_t expectCard3 = { YELLOW, FOUR };
-    //actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard6, expectCard3);
-    //if (actual_ret == expected_ret) {
-    //    write_log("Test-- - pick_card(). CASE2-1  Play matched card with largest number if matched color < 2 ......Successful!\n");
-    //}
-    //else {
-    //    write_log("Test-- -  pick_card(). CASE2-1 Play matched card with largest number if matched color < 2......failed!\n");
-    //    write_fail_log("The return value of pick_card(). CASE 2-1:\n", actual_ret, expected_ret);
-    //}
-
-
-    ////function - pick card CASE3
-    //expected_ret = 1;
-    //display_cards_list(g_players[COMPUTER].cards_on_hand);
-    //Card_t testCard7 = { BLUE, FIVE };
-    //Card_t expectCard4 = { RED, FIVE };
-    //actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard7, expectCard4);
-    //if (actual_ret == expected_ret) {
-    //    write_log("Test-- - pick_card(). CASE3 Play color you have the most with that number......Successful!\n");
-    //}
-    //else {
-    //    write_log("Test-- -  pick_card(). CASE3 Play the number with most color you have with that number......failed!\n");
-    //    write_fail_log("The return value of pick_card(). CASE 3:\n", actual_ret, expected_ret);
-    //}
-
-    ////function - pick card CASE4
-    //expected_ret = 1;
-    //display_cards_list(g_players[COMPUTER].cards_on_hand);
-    //Card_t testCard8 = { RED, FOUR };
-    //Card_t expectCard5 = { RED, NINE };
-    //actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard8, expectCard5);
-    //if (actual_ret == expected_ret) {
-    //    write_log("Test-- - pick_card(). CASE4 play if input color = most_color......Successful!\n");
-    //}
-    //else {
-    //    write_log("Test-- -  pick_card(). CASE4 play if input color = most_color......failed!\n");
-    //    write_fail_log("The return value of pick_card(). CASE 4:\n", actual_ret, expected_ret);
-    //}
-
-    ////function - pick card CASE4
-    //expected_ret = 1;
-    //display_cards_list(g_players[COMPUTER].cards_on_hand);
-    //Card_t testCard9 = { YELLOW, FIVE };
-    //Card_t expectCard6 = { RED, FIVE };
-    //actual_ret = test_pick_card(&g_players[COMPUTER].cards_on_hand, testCard9, expectCard6);
-    //if (actual_ret == expected_ret) {
-    //    write_log("Test-- - pick_card(). CASE4-1 find and play the most color with that number if input color! = most_color......Successful!\n");
-    //}
-    //else {
-    //    write_log("Test-- -  pick_card(). CASE4-1 find and play the most color with that number if input color! = most_color......failed!\n");
-    //    write_fail_log("The return value of pick_card(). CASE 4-1:\n", actual_ret, expected_ret);
-    //}
-
-
-    ////function process playable card CASE1 no playable card
-    //g_card_on_table.color = BLUE;
-    //g_card_on_table.name = EIGHT;
-    //g_player_on_turn = COMPUTER;
-
-    //expected_ret = 1;
-    //g_players[COMPUTER].cards_on_hand = create_test_list(RED, ONE, FOUR);
-    //g_draw_pile = create_test_list(YELLOW, FIVE, NINE);
-    //actual_ret = computer_take_turn();
-    //if (expected_ret == actual_ret) {
-    //    write_log("Test-- - computer_take_turn().Case 1:No Playable Card Discarded, End Turn, Game Continues......Successful!\n");
-    //}
-    //else {
-    //    write_log("Test-- - computer_take_turn().Case 1:No Playable Card Discarded, End Turn, Game Continues......failed!\n");
-    //    write_fail_log("The return value of computer_take_turn():\n", actual_ret, expected_ret);
-    //}
-
-
-    //// function computer_take_turn Case 2: Computer: discard cards successful
-    //g_card_on_table.color = RED;
-    //g_card_on_table.name = TWO;
-    //g_player_on_turn = COMPUTER;
-
-    //expected_ret = 0;
-    //g_players[COMPUTER].cards_on_hand = create_test_list(RED, ONE, FOUR);
-    //actual_ret = computer_take_turn();
-    //if (expected_ret == actual_ret) {
-    //    write_log("Test-- - computer_take_turn().Case 2:Playable Card Discarded, End Turn......Successful!\n");
-    //}
-    //else {
-    //    write_log("Test-- - computer_take_turn().Case 2:Playable Card Discarded, End Turn......failed!\n");
-    //    write_fail_log("The return value of computer_take_turn():\n", actual_ret, expected_ret);
-    //}
-
-    //// function computer_take_turn Case 3: Not Computer Turn.
-    //g_player_on_turn = HUMAN;
-    //expected_ret = 2;
-    //actual_ret = computer_take_turn();
-    //if (expected_ret == actual_ret) {
-    //    write_log("Test-- - computer_take_turn().Case 3:Invalid Player......Successful!\n");
-    //}
-    //else {
-    //    write_log("Test-- - computer_take_turn().Case 3:Invalid Player......failed!\n");
-    //    write_fail_log("The return value of computer_take_turn():\n", actual_ret, expected_ret);
-    //}
-
-    return;
+     return;
 }
 
