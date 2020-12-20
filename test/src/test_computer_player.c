@@ -396,10 +396,8 @@ Deck_t* build_test_list_for_computer() {
     return hand_card_list;
 }
 
-
 void test_computer_take_turn(void)
 {
-    int expected_ret, actual_ret = 0;
     if (initialize_game()) {
         write_log("Test --- computer_take_turn()......Initialize game failed! \n");
     }

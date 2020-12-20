@@ -175,7 +175,6 @@ int add_card_at_end(Deck_t *p_head, Card_t card)
         p_head->next = new_card; /* Add the new node at end */
     }
     
-    display_cards_list(g_discard_pile);
     return 0;
 }
 
