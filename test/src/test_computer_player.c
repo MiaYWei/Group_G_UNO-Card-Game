@@ -20,14 +20,14 @@ void test_process_playable_card(void);
 void test_computer_player(void)
 {
     write_log("\n--------------- Start Test: Computer Player Module  ---------------\n");
-   /* test_computer_take_turn();
+    test_computer_take_turn();
     test_find_most_color();
     test_find_largest_number();
     test_find_occurence_of_number();
     test_find_occurence_of_color();
     test_find_color_with_most_occurence();
     test_pick_case();
-    test_pick_card();*/
+    test_pick_card();
     test_process_playable_card();
     write_log("--------------- End of Test: Computer Player Module ---------------\n");
     return;
