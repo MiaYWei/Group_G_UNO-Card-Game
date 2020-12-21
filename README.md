@@ -92,10 +92,12 @@ Complete instructions regarding installation of this project can be found here [
 The following make commands are available to help compile and build the application:
 
 * `make all` (default) Will build the application and test application.
+* Ensure to initialize the project using `make clean` to remove all build artifacts.
 
 ### Run Application
 
-To run the application after installation, execute the application in the `bin` directory with  the command `UNO-Card-Game.exe`.
+* To run the application after installation, execute the application in the `bin` directory with  the command `UNO-Card-Game.exe`.
+* Alternatively, you can run the application by using the command 'make run'.
 
 
 Additional details can be found in the [user and developer documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki).
@@ -107,9 +109,11 @@ To run the test files, execute the application in the `bin` directory with `UNO-
 
 ## Documentation
 
-User documentation can be found in the Github repository at [UNO Express User Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/User-Manual).
+* To generate the doxygen documentation run 'make doxygen'. An html folder will be created and you can open the index.html in it  
+  to view the html page created by doxygen.
+* User documentation can be found in the Github repository at [UNO Express Card Game User Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/User-Manual).
 
-Additional developer documentation is found in the [UNO Express Developer Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/Developer-Manual).
+Additional developer documentation is found in the [UNO Express Card Game Developer Documentation](https://github.com/MiaYWei/Group_G_UNO-Card-Game/wiki/Developer-Manual).
 
 ## License 
 This project is licensed under the GPL 2.0 License. 
