@@ -5,6 +5,8 @@
 #include "../include/test.h"
 #include "../include/test_cards_management.h"
 #include "../include/test_game.h"
+#include "../include/test_computer_player.h"
+#include "../include/test_human_player.h"
 #include "../../include/cards_management.h"
 
 Deck_t* g_draw_pile_test = NULL;            /* Draw cards pile */
@@ -18,15 +20,16 @@ void main(void)
     init_test();
     test_cards_mgmt();
     test_game();
-    test_hunman_player();
+    test_computer_player();
+    test_human_player();
+
 	return;
 }
 
 void init_log(void)
 {
     FILE* output_file;
-    char* output_file_name = ".\\test_log.txt";
-    //char* output_file_name = "..\\test\\data\\test_log.txt";
+    char* output_file_name = "..\\test\\data\\test_log.txt";
     output_file = fopen(output_file_name, "w");
     if (output_file != NULL)
     {
@@ -43,11 +46,10 @@ void init_log(void)
 void write_log(const char* string)
 {
     FILE* output_file;
-    char* output_file_name = ".\\test_log.txt";
+    char* output_file_name = "..\\test\\data\\test_log.txt";
     output_file = fopen(output_file_name, "a");
     if (output_file != NULL)
     {
-        //fprintf(output_file, "this is a test %d\n", integer);
         fprintf(output_file, string);
         fclose(output_file);
     }
@@ -62,7 +64,7 @@ void write_log(const char* string)
 void write_fail_log(const char* string, int actual, int expected)
 {
     FILE* output_file;
-    char* output_file_name = ".\\test_log.txt";
+    char* output_file_name = "..\\test\\data\\test_log.txt";
     output_file = fopen(output_file_name, "a");
     if (output_file != NULL)
     {

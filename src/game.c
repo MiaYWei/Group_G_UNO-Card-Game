@@ -2,22 +2,25 @@
 #include <stddef.h>  
 #include <stdlib.h>   
 #include <string.h>
-#include "../include/cards_management.h"
-#include "../include/human_player_module.h"
 #include "../include/game.h"
-
-#define PLAYERS_NAME_LENGTH  20
+#include "../include/computer_player.h"
+#include "../include/human_player.h"
+#include "../include/console_print.h"
 
 bool g_end_game = false;
 char g_human_player_name[PLAYERS_NAME_LENGTH] = "HumanPlayer";
 
-void start_new_game(void);
-bool confirm_exit(void);
 int initialize_game(void);
+void initialize_players(void);
+void start_new_game(void);
+void player_name_inquiry(void);
+bool confirm_exit(void);
 void end_turn(PlayerType_e player);
 bool if_end_game(PlayerType_e player);
 void handle_computer_turn(void);
-void player_name_inquiry(void);
+ret_type_e handle_human_turn(void);
+int player_process_draw_one_card(PlayerType_e player);
+int player_process_wild_draw_two_card(PlayerType_e player);
 
 /**
  * @brief Starts a new game
@@ -27,40 +30,34 @@ void start_new_game(void)
 {
     player_name_inquiry();
 
-    if (0 != initialize_game())
-    {
+    if (0 != initialize_game()){
         printf("Initialize game failed.\n ");
         return;
     }
 
     printf("\nGame begins now...\n");
-    printf("Human Player Deck: ");
-    display_cards_list((const Deck_t*)g_players[HUMAN].cards_on_hand);
-    //For Testing only
-    //printf("Computer Player Deck: ");
-    //display_cards_list((const Deck_t*)g_players[COMPUTER].cards_on_hand);
     printf("\n\n");
 
-    while (1)
-    {
-        printf("Card on the table now: (%s, %s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
-        printf("Current player is %s.\n", PLAYER_TYPE_STRING[g_player_on_turn]);
-        if (g_player_on_turn == HUMAN) 
-        {
+    while (true){
+        printf("Card on the table now: (%s,%s).\n", CARD_COLOR_STRING[g_card_on_table.color], CARD_NAME_STRING[g_card_on_table.name]);
+        printf("Current player is ");
+        print_info(PLAYER_TYPE_STRING[g_player_on_turn]);
+
+        if (g_player_on_turn == HUMAN){
             handle_human_turn();
         }
-        else
-        {
+        else{
             handle_computer_turn();
         }
 
-        if (g_end_game)
-        {
-            printf("Game over. The winner is %s", PLAYER_TYPE_STRING[g_game_winner]);
-            if (g_game_winner == HUMAN) 
-            {
-                printf(": %s", g_human_player_name);
+        if (g_end_game){
+            if (g_game_winner == COMPUTER) {
+                print_winner("Game over. The winner is COMPUTER player", NULL);
             }
+            else {
+                print_winner("Game over. The winner is ", g_human_player_name);
+            }
+
             printf("\n");
             return;
         }
@@ -90,21 +87,21 @@ void player_name_inquiry(void)
  */
 bool confirm_exit(void)
 {
-    char char_choice[4] = {0,0,0,0};
+    char char_choice[10] = {0,0,0,0};
     char exit_string[] = "Yes";
 
-    printf("Exit Game?\n");
-    printf("Please enter 'Yes' to confirm the Exit. Press any other key to cancel Exit.\n");
-    scanf("%s", char_choice);
-    printf("Entered choice is %s \n", char_choice);
+    print_info("Exit Game?");
+    print_info("Please enter 'Yes' to confirm the Exit. Press any other key and enter to cancel Exit. \n");
 
-    if (0 == strcmp(char_choice, exit_string)) 
-    {
-        printf("Exit the game...\n");
+    scanf("%s", char_choice);
+    printf("Entered choice is %s. \n", char_choice);
+
+    if (0 == strcmp(char_choice, exit_string)){
+        print_info("Exit the game...\n");
         exit(0);
     } 
-    else 
-    {
+    else{
+        print_info("Back to game... \n");
         return false;
     }
 }
@@ -121,8 +118,31 @@ int initialize_game(void)
     result += deal_cards();
     initialize_card_on_table();
 
-    printf("Hi %s! Let's start a new game.\n", g_human_player_name);
+    printf("\nHello %s! Welcome to UNO Express Card Game.\n\n", g_human_player_name);
+    printf("Inputs to play game\n");
+    printf("  To request a card from Draw pile, Press N or n. \n");
+    printf("  To end turn, Press E or e. \n");
+    printf("  To quit game, Press Q or q.\n");
+    printf("  To discard a normal card - Say you want to discard (Red,3), enter R3.\n");
+    printf("  To discard a action card - Eg:(Red, Skip), enter RS.\n");
+    printf("                                (Blue, Draw-One), enter BO.\n");
+    printf("                                (Action, Wild), enter AW.\n");
+    printf("                                (Action, Wild-Draw-Two), enter AT.\n\n");
     return result;
+}
+
+/**
+ * @brief Initializes players global variables
+ *
+ */
+void initialize_players(void)
+{
+    for (int i = 0; i < PLAYERS_NUM; i++){
+        g_players[i].type = (PlayerType_e)i;
+        g_players[i].cards_on_hand = NULL;
+    }
+
+    return;
 }
 
 /**
@@ -137,16 +157,20 @@ void end_turn(PlayerType_e player)
     printf(". \n");
     printf(". \n");
 
-    if (if_end_game(player))
-    {
+    if (if_end_game(player)){
         g_end_game = true;
-        g_game_winner = player;
+        g_game_winner = player;   
     } 
-    else 
-    {
+    else{
         g_player_on_turn = next_turn_type;
     }
     
+    // Computer says UNO when only have one card on hand
+    if ((1 == get_pile_length(g_players[player].cards_on_hand)) && (player == COMPUTER))
+    {
+        print_info("COMPUTER Palyer: UNO !!!\n");
+    }
+
     return;
 }
 
@@ -160,83 +184,76 @@ void end_turn(PlayerType_e player)
 bool if_end_game(PlayerType_e player)
 {
     bool ret = false;
-    if (0 == get_pile_length(g_players[player].cards_on_hand)) 
-    {
+    if (0 == get_pile_length(g_players[player].cards_on_hand)){
         ret = true;
     }
     return ret;
 }
 
 /**
- * @brief This function handles the functionality to support computer player's turn 
- * 
+ * @brief This function handles the functionality to support human player's turn
+ *
  */
-void handle_computer_turn(void)
+ret_type_e handle_human_turn(void)
 {
-    int ret = computer_take_turn();
-    if ((0 == ret) || (1 == ret))
-    {
-        end_turn(COMPUTER);
-    }
-    else
-    {
-        printf("Error: Not Computer's turn now.\n");
-    }
-
-    return;
+    display_player_deck(HUMAN);
+    return record_human_input();
 }
 
 /**
- * @brief Logic to discard card for computer player,
- *        1.Firstly search for a  playable card in the on hand cards list.
- *        2.If there is playable card, then remove the first playable card out of player's deck,
- *        update card_on_table global variable
- *        then place the discarded card into discard deck, and update player's deck length,
- *        3.If there is no playable card, draw a card from the draw pile and again check if it's playable.
- *        If yes, goto step 2. If no, end turn.
- *        4.Set winner if the last card is discarded from the player
+ * @brief This function handles the functionality to support computer player's turn
  *
- * @return int   0 - Discarding card is successful, end of turn, game continues.
- *               1 - No playable card to discard, end of turn, game continues.
- *               2 - Invalid player.
  */
-int computer_take_turn(void)
+void handle_computer_turn(void)
 {
-    int result = 0;
-    Card_t draw_card;
-    const Deck_t* playable_card;
+    computer_take_turn();
+}
 
-    if (g_player_on_turn != COMPUTER)
-    {
-        return 2;
+/**
+ * @brief Draw a new card and add it to the next player's cards on hand list.
+ *
+ * @param player  The player who discards a draw-one card.
+ * @return int 0 - Successful;
+ *             1 - Failed due to error in malloc;
+ */
+int player_process_draw_one_card(PlayerType_e player)
+{
+    PlayerType_e be_applied_player = (player + 1) % PLAYERS_NUM;
+    Card_t draw_card = draw_one_card();
+    int ret = add_card_at_end(g_players[be_applied_player].cards_on_hand, draw_card);
+    if (player == HUMAN) {
+        print_info("HUMAN discarded a Draw-One card, COMPUTER loses turn, and a new card is added to COMPUTER card list.\n");
+    }
+    else {
+        print_info("COMPUTER discarded a Draw-One card, HUMAN loses turn, and a new card is added to HUMAN card list.\n");
     }
 
-    playable_card = find_playable_card(COMPUTER);
-    if (NULL == playable_card)
-    { /* If no playable card on hand */
-        draw_card = draw_one_card();
-        printf("Conputer draws a new card from the draw pile \n");
-        printf("No playable card on hand, drawing a new card from deck (%s,%s).\n", CARD_COLOR_STRING[draw_card.color], CARD_NAME_STRING[draw_card.name]);//TODO Remove this line after testing
-        if (is_playable_card(draw_card))
-        {
-            memcpy(&g_card_on_table, &draw_card, sizeof(Card_t));
-            add_card_at_end(g_discard_pile, g_card_on_table);
-            result = 0;
-        }
-        else
-        {          
-            add_card_at_end(g_players[COMPUTER].cards_on_hand, draw_card);
-            result = 1;
-        }
-    }
-    else
-    {   /*If there is playable card, then remove the first playable card from on hand cards list*/
-        Deck_t* discard_card = remove_first_playable_card(&g_players[COMPUTER].cards_on_hand);
-        printf("Computer Drops..(%s, %s)\n", CARD_COLOR_STRING[discard_card->card.color], CARD_NAME_STRING[discard_card->card.name]);
-        memcpy(&g_card_on_table, &discard_card->card, sizeof(Card_t));      
-        add_card_at_end(g_discard_pile, g_card_on_table);
-        result = 0;
-    }
+    return ret;
+}
 
-    return result;
+/**
+ * @brief Draw two new cards and add them to the next player's cards on hand list.
+ *
+ * @param player  The player who discards a wild-draw-two card.
+ * @return int 0 - Successful;
+ *             1 - Failed due to error in malloc;
+ */
+int player_process_wild_draw_two_card(PlayerType_e player)
+{
+    PlayerType_e be_applied_player = (player + 1) % PLAYERS_NUM;
+
+    Card_t draw_card = draw_one_card();
+    int ret = add_card_at_end(g_players[be_applied_player].cards_on_hand, draw_card);
+
+    draw_card = draw_one_card();
+    ret += add_card_at_end(g_players[be_applied_player].cards_on_hand, draw_card);
+
+    if (player == HUMAN) {
+        print_info("HUMAN discarded a Wild-Draw-Two card, COMPUTER loses turn, and two new cards are added to COMPUTER card list.\n");
+    }
+    else {
+        print_info("COMPUTER discarded a Wild-Draw-Two card, HUMAN loses turn, and two new cards are added to HUMAN card list.\n");
+    }
+  
+    return ret;
 }

@@ -12,17 +12,13 @@
  * 
  */
 
-
 typedef enum {
     RET_SUCCESS,                //0
     RET_FAILURE,                //1 - Generic failure
-    RET_BUSY,                   //2
-    RET_TIMEOUT,                //3
-    RET_INVALID_LEN,            //4
-    RET_ARG_NULL,               //5
-    RET_INSUFFICIENT_MEM,       //6
-    RET_INVALID_CARD,           //7
-    RET_EMPTY_LIST,             //8 
+    RET_INVALID_CARD,           //2
+    RET_EMPTY_LIST,             //3 
+    RET_INVALID_INPUT,          //4
+    RET_NOT_PLAYABLE_CARD,      //5
 }
 ret_type_e;
 
@@ -31,4 +27,4 @@ ret_type_e;
                             return x;\
                         }
 
-#endif // __RETURN_TYPES_HEADER__#pragma once
+#endif //__RETURN_TYPES_HEADER__

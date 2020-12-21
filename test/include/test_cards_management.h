@@ -2,4 +2,5 @@
 #define __TEST_CARDS_MANAGEMENT_HEADER__
 
 int test_cards_mgmt(void);
-#endif // __TEST_CARDS_MANAGEMENT_HEADER__
+Deck_t* create_test_list(CardColor_e color, CardName_e name_from, CardName_e name_to);
+#endif //__TEST_CARDS_MANAGEMENT_HEADER__
