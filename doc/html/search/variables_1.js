@@ -1,0 +1,14 @@
+var searchData=
+[
+  ['g_5fcard_5fon_5ftable_365',['g_card_on_table',['../cards__management_8h.html#a9ddaed0b1915a8711f40e9393a0dbaef',1,'g_card_on_table():&#160;cards_management.c'],['../cards__management_8c.html#a9ddaed0b1915a8711f40e9393a0dbaef',1,'g_card_on_table():&#160;cards_management.c']]],
+  ['g_5fcard_5frequested_366',['g_card_requested',['../human__player_8h.html#a48008da07d1d108178fbc4fe9dd443fb',1,'g_card_requested():&#160;human_player.c'],['../human__player_8c.html#a48008da07d1d108178fbc4fe9dd443fb',1,'g_card_requested():&#160;human_player.c']]],
+  ['g_5fdiscard_5fpile_367',['g_discard_pile',['../cards__management_8h.html#a7762e495da4d6dac3ac038d7ac86fd06',1,'g_discard_pile():&#160;cards_management.c'],['../cards__management_8c.html#a7762e495da4d6dac3ac038d7ac86fd06',1,'g_discard_pile():&#160;cards_management.c']]],
+  ['g_5fdiscard_5fpile_5ftest_368',['g_discard_pile_test',['../test_8h.html#ac9a860092a270311f34f1d31e45af0e8',1,'g_discard_pile_test():&#160;test.c'],['../test_8c.html#ac9a860092a270311f34f1d31e45af0e8',1,'g_discard_pile_test():&#160;test.c']]],
+  ['g_5fdraw_5fpile_369',['g_draw_pile',['../cards__management_8h.html#a3618eaedec9d51f7a27b2fa860f053c1',1,'g_draw_pile():&#160;cards_management.c'],['../cards__management_8c.html#a3618eaedec9d51f7a27b2fa860f053c1',1,'g_draw_pile():&#160;cards_management.c']]],
+  ['g_5fdraw_5fpile_5ftest_370',['g_draw_pile_test',['../test_8h.html#aa375b0bdb6218c6e5b4a3abf82826874',1,'g_draw_pile_test():&#160;test.c'],['../test_8c.html#aa375b0bdb6218c6e5b4a3abf82826874',1,'g_draw_pile_test():&#160;test.c']]],
+  ['g_5fend_5fgame_371',['g_end_game',['../game_8h.html#a58257da9f6265015fa2bb0f026a40b17',1,'g_end_game():&#160;game.c'],['../game_8c.html#a58257da9f6265015fa2bb0f026a40b17',1,'g_end_game():&#160;game.c']]],
+  ['g_5fgame_5fwinner_372',['g_game_winner',['../cards__management_8h.html#a2e0d3a8829cae8da328c1ff69635e095',1,'g_game_winner():&#160;cards_management.c'],['../cards__management_8c.html#a2e0d3a8829cae8da328c1ff69635e095',1,'g_game_winner():&#160;cards_management.c']]],
+  ['g_5fhuman_5fplayer_5fname_373',['g_human_player_name',['../game_8h.html#a84eff7c0f9f2cd8d947972baaf33d3db',1,'g_human_player_name():&#160;game.c'],['../game_8c.html#a84eff7c0f9f2cd8d947972baaf33d3db',1,'g_human_player_name():&#160;game.c']]],
+  ['g_5fplayer_5fon_5fturn_374',['g_player_on_turn',['../cards__management_8h.html#aaa7433c2fb149f00dbcb3a2ece9cf7cf',1,'g_player_on_turn():&#160;cards_management.c'],['../cards__management_8c.html#aaa7433c2fb149f00dbcb3a2ece9cf7cf',1,'g_player_on_turn():&#160;cards_management.c']]],
+  ['g_5fplayers_375',['g_players',['../cards__management_8h.html#afc9d91fe9755e51229997fe06e16d5f5',1,'g_players():&#160;cards_management.c'],['../cards__management_8c.html#afc9d91fe9755e51229997fe06e16d5f5',1,'g_players():&#160;cards_management.c']]]
+];
