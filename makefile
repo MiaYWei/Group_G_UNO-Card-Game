@@ -11,6 +11,7 @@
 # 2020-12-12: Generate two executables (main program + test program)
 # 2020-12-18: Relocate test object files to the obj folder, instead of test/obj
 # 2020-12-20: Adding command for running the application
+# 2020-12-21: Adding doxygen command
 #
 # ------------------------------------------------
 # project name (generate executable with this name)
@@ -71,6 +72,10 @@ clean:
 # To run the game
 run: 
 	bin/UNO-Card-Game
+	
+# Command to generate the doxygen files
+doxygen:	
+	doxygen doc/Doxyfile_config
 
 
 
